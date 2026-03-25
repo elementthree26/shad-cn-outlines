@@ -1,0 +1,198 @@
+import { PageTemplate } from "../types";
+
+export const servicesPage: PageTemplate = {
+  id: "services",
+  slug: "services",
+  name: "Services / Solutions",
+  description:
+    "Overview of all services or solutions offered, with pathways to individual service detail pages.",
+  icon: "Layers",
+  contentThemes: [
+    {
+      id: "services-hero",
+      name: "Services Hero/Introduction",
+      frequencyTier: "high",
+      componentOptions: [
+        "Hero with services-oriented headline",
+        "Breadcrumb + heading layout",
+        "Full-width intro with supporting imagery",
+        "Split section with overview text + service navigation",
+      ],
+      considerations: [
+        "Should this serve as both introduction and navigation?",
+        "Is there a unified services message or brand positioning?",
+        "Should the hero hint at the breadth of services?",
+      ],
+      clientDiscoveryQuestions: [
+        "Do you have a unifying theme or message across all services?",
+        "What should visitors understand about your service approach before diving into specifics?",
+        "How do you want to position your services relative to competitors?",
+      ],
+      informationAndAssets: [
+        "Services page headline and introductory copy",
+        "Supporting imagery (team at work, facility, or abstract)",
+        "Overview of service philosophy or approach",
+      ],
+      industryNotes: [
+        "B2B companies often position services as solutions to problems",
+        "Manufacturing may frame capabilities rather than traditional services",
+        "Service companies should communicate end-to-end or comprehensive offerings",
+      ],
+    },
+    {
+      id: "services-grid",
+      name: "Services Grid/Listing",
+      frequencyTier: "high",
+      componentOptions: [
+        "Card grid with icons and descriptions",
+        "Alternating image + text sections",
+        "Tab interface with detailed service areas",
+        "Accordion for service categories",
+        "Icon grid linking to detail pages",
+      ],
+      considerations: [
+        "How many services to display?",
+        "Should each service link to a dedicated detail page?",
+        "Are there natural categories or groupings?",
+        "How much detail should be on the overview page vs. detail pages?",
+        "Should there be a featured/primary service?",
+      ],
+      clientDiscoveryQuestions: [
+        "How many distinct services or solution areas do you offer?",
+        "Should services be grouped by category, audience, or another dimension?",
+        "Which services generate the most revenue or strategic interest?",
+        "Are there new or emerging services to highlight?",
+        "Do services have a natural hierarchy (primary vs. supporting)?",
+      ],
+      informationAndAssets: [
+        "Service names and descriptions (varying lengths for different displays)",
+        "Icons or imagery for each service",
+        "Service categories or groupings",
+        "Links to individual service pages",
+        "Featured service details",
+      ],
+      industryNotes: [
+        "3-8 services is typical; more than 10 may need categorization",
+        "B2B2X often organizes by customer segment rather than service type",
+        "Manufacturing may present as capabilities or processes",
+        "Consultative businesses often show interconnected service ecosystems",
+      ],
+    },
+    {
+      id: "services-differentiators",
+      name: "Why Choose Us for Services",
+      frequencyTier: "medium",
+      componentOptions: [
+        "Icon grid with differentiators",
+        "Stats bar (years, customers, certifications)",
+        "Split section with comparison points",
+        "Testimonial-backed differentiator cards",
+      ],
+      considerations: [
+        "What makes service delivery unique?",
+        "Should differentiators be backed by data or testimonials?",
+        "Are there certifications or credentials specific to services?",
+        "Should this section address common buyer objections?",
+      ],
+      clientDiscoveryQuestions: [
+        "What do customers say about your service delivery?",
+        "What certifications or credentials support your services?",
+        "How does your service approach differ from competitors?",
+        "What guarantees or SLAs do you offer?",
+      ],
+      informationAndAssets: [
+        "Service differentiators with descriptions",
+        "Supporting statistics or metrics",
+        "Relevant certifications and credentials",
+        "Customer testimonials about service quality",
+      ],
+      industryNotes: [
+        "B2B buyers often evaluate multiple providers — clear differentiators are essential",
+        "Manufacturing emphasizes quality metrics, certifications, and reliability",
+        "Service companies benefit from response time commitments and satisfaction data",
+      ],
+    },
+    {
+      id: "services-process",
+      name: "Service Process/How We Work",
+      frequencyTier: "medium",
+      componentOptions: [
+        "Numbered step process",
+        "Icon timeline",
+        "Accordion with phase details",
+        "Interactive process diagram",
+      ],
+      considerations: [
+        "Is the process the same across all services?",
+        "How many steps should be shown?",
+        "Should timeline or duration be included?",
+        "Is the process a key differentiator?",
+      ],
+      clientDiscoveryQuestions: [
+        "Do you have a standard process for delivering services?",
+        "What does the customer experience look like from start to finish?",
+        "Are there distinct phases to your engagement model?",
+        "How long does a typical engagement take?",
+      ],
+      informationAndAssets: [
+        "Process steps with descriptions",
+        "Timeline or phase durations",
+        "Icons or imagery for each step",
+        "Any proprietary methodology details",
+      ],
+      industryNotes: [
+        "Consultative B2B companies benefit from transparent process communication",
+        "Manufacturing may show production workflow or quality checkpoints",
+        "Showing process builds confidence for first-time buyers",
+      ],
+    },
+    {
+      id: "services-cta",
+      name: "Services CTA / Next Steps",
+      frequencyTier: "high",
+      componentOptions: [
+        "Full-width CTA banner",
+        "Split CTA (consultation + general inquiry)",
+        "Quote request form",
+        "Service selector + form combo",
+      ],
+      considerations: [
+        "Should CTA be service-specific or general?",
+        "Is a quote request or consultation the right action?",
+        "Should the form pre-select a service of interest?",
+        "Where should CTA sections appear in the page flow?",
+      ],
+      clientDiscoveryQuestions: [
+        "What action do you want visitors to take after reviewing services?",
+        "Should visitors be able to request quotes for specific services?",
+        "Do you offer free consultations, assessments, or demos?",
+        "Is there a service selection process that should be started online?",
+      ],
+      informationAndAssets: [
+        "CTA headline and copy",
+        "Form fields if embedded",
+        "Phone number for consultations",
+        "Any offer or incentive for inquiries",
+      ],
+      industryNotes: [
+        "B2B service pages should have CTAs early and often — don't make visitors scroll to bottom",
+        "Manufacturing may drive to quote requests with project specifications",
+        "Consider mid-page CTAs alongside end-of-page for longer pages",
+      ],
+    },
+  ],
+  contentArchitecture: [
+    "Hero: Overview of service philosophy and what the company delivers",
+    "Services Grid: Clear navigation to all service areas with enough detail to inform",
+    "Differentiators: Why choose this company for these services",
+    "Process: How engagements work from start to finish",
+    "Social Proof: Testimonials and case studies specific to services",
+    "CTA: Clear next step (quote, consultation, or contact)",
+  ],
+  generalNotes: [
+    "The services page often serves as both a content page and a navigation hub.",
+    "Balance enough detail to be useful with brevity that encourages clicking through to detail pages.",
+    "If services are closely related, explain how they work together or can be combined.",
+    "Consider audience-based navigation if services apply to different buyer personas.",
+  ],
+};
