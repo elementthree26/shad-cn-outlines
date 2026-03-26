@@ -114,6 +114,213 @@ function HeroCarousel({ className }: WireframeBlockProps) {
   );
 }
 
+function HeroMinimalText({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      {/* Large centered headline */}
+      <rect x="80" y="60" width="240" height="16" rx="2" fill="currentColor" fillOpacity="0.18" />
+      <rect x="110" y="86" width="180" height="12" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {/* Body text */}
+      <rect x="90" y="116" width="220" height="6" rx="1" fill="currentColor" fillOpacity="0.07" />
+      <rect x="105" y="130" width="190" height="6" rx="1" fill="currentColor" fillOpacity="0.07" />
+      {/* CTA */}
+      <rect x="155" y="158" width="90" height="28" rx="4" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.2" />
+      <rect x="172" y="169" width="56" height="6" rx="1" fill="currentColor" fillOpacity="0.15" />
+    </WireframeSvg>
+  );
+}
+
+function HeroVideo({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      {/* Video area */}
+      <rect x="16" y="16" width="368" height="160" rx="4" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeOpacity="0.12" />
+      {/* Play button */}
+      <circle cx="200" cy="96" r="22" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.2" />
+      <path d="M193 84 L213 96 L193 108Z" fill="currentColor" fillOpacity="0.25" />
+      {/* Headline */}
+      <rect x="120" y="192" width="160" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {/* Subhead */}
+      <rect x="140" y="210" width="120" height="7" rx="2" fill="currentColor" fillOpacity="0.07" />
+      {/* CTA */}
+      <rect x="160" y="230" width="80" height="20" rx="4" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.18" />
+    </WireframeSvg>
+  );
+}
+
+function HeroAnimated({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      {/* Animated bg suggestion - diagonal lines */}
+      <rect x="16" y="16" width="368" height="140" rx="4" fill="currentColor" fillOpacity="0.06" stroke="currentColor" strokeOpacity="0.12" />
+      <line x1="16" y1="56" x2="84" y2="16" stroke="currentColor" strokeOpacity="0.06" />
+      <line x1="16" y1="96" x2="144" y2="16" stroke="currentColor" strokeOpacity="0.06" />
+      <line x1="16" y1="136" x2="204" y2="16" stroke="currentColor" strokeOpacity="0.06" />
+      <line x1="56" y1="156" x2="264" y2="16" stroke="currentColor" strokeOpacity="0.06" />
+      <line x1="136" y1="156" x2="324" y2="16" stroke="currentColor" strokeOpacity="0.06" />
+      <line x1="216" y1="156" x2="384" y2="16" stroke="currentColor" strokeOpacity="0.06" />
+      {/* Motion indicator */}
+      <rect x="165" y="60" width="70" height="50" rx="6" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.15" strokeDasharray="3 3" />
+      <rect x="185" y="78" width="30" height="14" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {/* Headline */}
+      <rect x="100" y="175" width="200" height="12" rx="2" fill="currentColor" fillOpacity="0.15" />
+      <rect x="130" y="195" width="140" height="8" rx="2" fill="currentColor" fillOpacity="0.08" />
+      {/* CTA */}
+      <rect x="160" y="218" width="80" height="24" rx="4" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.2" />
+    </WireframeSvg>
+  );
+}
+
+function HeroBreadcrumb({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      {/* Breadcrumb nav */}
+      <rect x="16" y="20" width="40" height="6" rx="1" fill="currentColor" fillOpacity="0.08" />
+      <rect x="62" y="20" width="6" height="6" rx="1" fill="currentColor" fillOpacity="0.06" />
+      <rect x="74" y="20" width="60" height="6" rx="1" fill="currentColor" fillOpacity="0.1" />
+      {/* Large page heading */}
+      <rect x="16" y="50" width="260" height="18" rx="2" fill="currentColor" fillOpacity="0.18" />
+      {/* Description */}
+      <rect x="16" y="82" width="300" height="7" rx="1" fill="currentColor" fillOpacity="0.07" />
+      <rect x="16" y="96" width="250" height="7" rx="1" fill="currentColor" fillOpacity="0.07" />
+      {/* Divider */}
+      <line x1="16" y1="120" x2="384" y2="120" stroke="currentColor" strokeOpacity="0.1" />
+      {/* Content area below */}
+      <rect x="16" y="132" width="368" height="112" rx="4" fill="currentColor" fillOpacity="0.04" stroke="currentColor" strokeOpacity="0.08" />
+    </WireframeSvg>
+  );
+}
+
+// ─── Text / Content ─────────────────────────────────────
+
+function TextCentered({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      {/* Section heading */}
+      <rect x="130" y="30" width="140" height="12" rx="2" fill="currentColor" fillOpacity="0.15" />
+      {/* Body text centered */}
+      <rect x="60" y="60" width="280" height="6" rx="1" fill="currentColor" fillOpacity="0.08" />
+      <rect x="75" y="74" width="250" height="6" rx="1" fill="currentColor" fillOpacity="0.08" />
+      <rect x="90" y="88" width="220" height="6" rx="1" fill="currentColor" fillOpacity="0.08" />
+      <rect x="80" y="102" width="240" height="6" rx="1" fill="currentColor" fillOpacity="0.08" />
+      {/* Supporting graphic */}
+      <rect x="140" y="128" width="120" height="80" rx="6" fill="currentColor" fillOpacity="0.06" stroke="currentColor" strokeOpacity="0.1" />
+      <circle cx="200" cy="160" r="14" fill="currentColor" fillOpacity="0.08" />
+      {/* CTA */}
+      <rect x="160" y="224" width="80" height="22" rx="4" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.15" />
+    </WireframeSvg>
+  );
+}
+
+function TextSplitImage({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      {/* Left: text */}
+      <rect x="16" y="30" width="170" height="12" rx="2" fill="currentColor" fillOpacity="0.15" />
+      <rect x="16" y="54" width="175" height="6" rx="1" fill="currentColor" fillOpacity="0.07" />
+      <rect x="16" y="66" width="160" height="6" rx="1" fill="currentColor" fillOpacity="0.07" />
+      <rect x="16" y="78" width="170" height="6" rx="1" fill="currentColor" fillOpacity="0.07" />
+      <rect x="16" y="90" width="150" height="6" rx="1" fill="currentColor" fillOpacity="0.07" />
+      <rect x="16" y="102" width="165" height="6" rx="1" fill="currentColor" fillOpacity="0.07" />
+      <rect x="16" y="126" width="90" height="24" rx="4" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.18" />
+      {/* Right: image */}
+      <rect x="210" y="24" width="174" height="140" rx="4" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeOpacity="0.12" />
+      <rect x="260" y="65" width="60" height="45" rx="3" fill="currentColor" fillOpacity="0.1" />
+      <circle cx="275" cy="80" r="6" fill="currentColor" fillOpacity="0.15" />
+      <path d="M263 105 L280 88 L295 100 L305 92 L317 105Z" fill="currentColor" fillOpacity="0.12" />
+    </WireframeSvg>
+  );
+}
+
+function TextFullwidth({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      {/* Full-width background */}
+      <rect x="16" y="16" width="368" height="228" rx="4" fill="currentColor" fillOpacity="0.04" />
+      {/* Heading */}
+      <rect x="100" y="40" width="200" height="14" rx="2" fill="currentColor" fillOpacity="0.15" />
+      {/* Paragraph lines */}
+      <rect x="50" y="72" width="300" height="6" rx="1" fill="currentColor" fillOpacity="0.08" />
+      <rect x="55" y="86" width="290" height="6" rx="1" fill="currentColor" fillOpacity="0.08" />
+      <rect x="60" y="100" width="280" height="6" rx="1" fill="currentColor" fillOpacity="0.08" />
+      <rect x="50" y="114" width="300" height="6" rx="1" fill="currentColor" fillOpacity="0.08" />
+      <rect x="65" y="128" width="270" height="6" rx="1" fill="currentColor" fillOpacity="0.08" />
+      {/* Second paragraph */}
+      <rect x="50" y="152" width="300" height="6" rx="1" fill="currentColor" fillOpacity="0.06" />
+      <rect x="55" y="166" width="290" height="6" rx="1" fill="currentColor" fillOpacity="0.06" />
+      <rect x="60" y="180" width="280" height="6" rx="1" fill="currentColor" fillOpacity="0.06" />
+      <rect x="70" y="194" width="260" height="6" rx="1" fill="currentColor" fillOpacity="0.06" />
+    </WireframeSvg>
+  );
+}
+
+function TextBlockquote({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      {/* Large quote mark */}
+      <text x="40" y="80" fontSize="60" fill="currentColor" fillOpacity="0.1" fontFamily="Georgia, serif">&ldquo;</text>
+      {/* Quote text */}
+      <rect x="60" y="80" width="280" height="8" rx="2" fill="currentColor" fillOpacity="0.12" />
+      <rect x="60" y="96" width="260" height="8" rx="2" fill="currentColor" fillOpacity="0.12" />
+      <rect x="60" y="112" width="220" height="8" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {/* Left accent bar */}
+      <rect x="44" y="78" width="4" height="50" rx="2" fill="currentColor" fillOpacity="0.2" />
+      {/* Attribution */}
+      <rect x="60" y="148" width="100" height="6" rx="1" fill="currentColor" fillOpacity="0.1" />
+      <rect x="60" y="162" width="70" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+      {/* Supporting image */}
+      <rect x="300" y="140" width="60" height="40" rx="4" fill="currentColor" fillOpacity="0.06" stroke="currentColor" strokeOpacity="0.1" />
+    </WireframeSvg>
+  );
+}
+
+function IconRow({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      {/* Section heading */}
+      <rect x="130" y="20" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {/* 4 icons in a row */}
+      {[0, 1, 2, 3].map((i) => {
+        const x = 36 + i * 90;
+        return (
+          <g key={i}>
+            <circle cx={x + 35} cy={60} r="18" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeOpacity="0.12" />
+            <rect x={x + 27} y={52} width="16" height="16" rx="2" fill="currentColor" fillOpacity="0.12" />
+            <rect x={x + 10} y={90} width="50" height="7" rx="1" fill="currentColor" fillOpacity="0.1" />
+            <rect x={x + 5} y={104} width="60" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+            <rect x={x + 8} y={114} width="54" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+          </g>
+        );
+      })}
+    </WireframeSvg>
+  );
+}
+
+function IconGrid3({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      {/* Section heading */}
+      <rect x="130" y="16" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {/* 3x2 icon grid */}
+      {[0, 1, 2].map((col) =>
+        [0, 1].map((row) => {
+          const x = 20 + col * 128;
+          const y = 40 + row * 110;
+          return (
+            <g key={`${col}-${row}`}>
+              <rect x={x} y={y} width="116" height="96" rx="4" fill="currentColor" fillOpacity="0.04" stroke="currentColor" strokeOpacity="0.08" />
+              <circle cx={x + 58} cy={y + 24} r="12" fill="currentColor" fillOpacity="0.1" />
+              <rect x={x + 28} y={y + 44} width="60" height="7" rx="1" fill="currentColor" fillOpacity="0.12" />
+              <rect x={x + 18} y={y + 58} width="80" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+              <rect x={x + 23} y={y + 68} width="70" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+            </g>
+          );
+        })
+      )}
+    </WireframeSvg>
+  );
+}
+
 // ─── Registry ───────────────────────────────────────────
 
 const wireframeRegistry: Record<WireframeBlockId, React.FC<WireframeBlockProps>> = {
@@ -121,16 +328,16 @@ const wireframeRegistry: Record<WireframeBlockId, React.FC<WireframeBlockProps>>
   // Remaining blocks use a placeholder for now
   "hero-split": HeroSplit,
   "hero-carousel": HeroCarousel,
-  "hero-animated": Placeholder,
-  "hero-minimal-text": Placeholder,
-  "hero-video": Placeholder,
-  "hero-breadcrumb": Placeholder,
-  "text-centered": Placeholder,
-  "text-split-image": Placeholder,
-  "text-fullwidth": Placeholder,
-  "text-blockquote": Placeholder,
-  "icon-row": Placeholder,
-  "icon-grid-3": Placeholder,
+  "hero-animated": HeroAnimated,
+  "hero-minimal-text": HeroMinimalText,
+  "hero-video": HeroVideo,
+  "hero-breadcrumb": HeroBreadcrumb,
+  "text-centered": TextCentered,
+  "text-split-image": TextSplitImage,
+  "text-fullwidth": TextFullwidth,
+  "text-blockquote": TextBlockquote,
+  "icon-row": IconRow,
+  "icon-grid-3": IconGrid3,
   "icon-grid-4": Placeholder,
   "icon-list": Placeholder,
   "stats-bar": Placeholder,
