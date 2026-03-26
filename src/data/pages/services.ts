@@ -13,10 +13,10 @@ export const servicesPage: PageTemplate = {
       name: "Services Hero/Introduction",
       frequencyTier: "high",
       componentOptions: [
-        "Hero with services-oriented headline",
-        "Breadcrumb + heading layout",
-        "Full-width intro with supporting imagery",
-        "Split section with overview text + service navigation",
+        { name: "Hero Services Headline", wireframeId: "hero-fullwidth-image" },
+        { name: "Breadcrumb Heading", wireframeId: "hero-breadcrumb" },
+        { name: "Full-Width Intro Image", wireframeId: "text-fullwidth" },
+        { name: "Split Overview + Nav", wireframeId: "hero-split" },
       ],
       considerations: [
         "Should this serve as both introduction and navigation?",
@@ -44,11 +44,11 @@ export const servicesPage: PageTemplate = {
       name: "Services Grid/Listing",
       frequencyTier: "high",
       componentOptions: [
-        "Card grid with icons and descriptions",
-        "Alternating image + text sections",
-        "Tab interface with detailed service areas",
-        "Accordion for service categories",
-        "Icon grid linking to detail pages",
+        { name: "Card Grid Icons 3x", wireframeId: "card-grid-3" },
+        { name: "Alternating Image Text", wireframeId: "text-split-image" },
+        { name: "Tab Interface Services", wireframeId: "tab-interface" },
+        { name: "Accordion Categories", wireframeId: "accordion-simple" },
+        { name: "Icon Grid Detail Pages", wireframeId: "icon-grid-3" },
       ],
       considerations: [
         "How many services to display?",
@@ -83,10 +83,10 @@ export const servicesPage: PageTemplate = {
       name: "Why Choose Us for Services",
       frequencyTier: "medium",
       componentOptions: [
-        "Icon grid with differentiators",
-        "Stats bar (years, customers, certifications)",
-        "Split section with comparison points",
-        "Testimonial-backed differentiator cards",
+        { name: "Icon Grid Differentiators", wireframeId: "icon-grid-3" },
+        { name: "Stats Bar Credentials", wireframeId: "stats-bar" },
+        { name: "Split Comparison Points", wireframeId: "text-split-image" },
+        { name: "Testimonial Cards", wireframeId: "testimonial-cards" },
       ],
       considerations: [
         "What makes service delivery unique?",
@@ -117,10 +117,10 @@ export const servicesPage: PageTemplate = {
       name: "Service Process/How We Work",
       frequencyTier: "medium",
       componentOptions: [
-        "Numbered step process",
-        "Icon timeline",
-        "Accordion with phase details",
-        "Interactive process diagram",
+        { name: "Steps Numbered Process", wireframeId: "steps-numbered" },
+        { name: "Icon Timeline Steps", wireframeId: "steps-icon" },
+        { name: "Accordion Phase Details", wireframeId: "accordion-simple" },
+        { name: "Process Diagram Interactive", wireframeId: "process-diagram" },
       ],
       considerations: [
         "Is the process the same across all services?",
@@ -151,10 +151,10 @@ export const servicesPage: PageTemplate = {
       name: "Services CTA / Next Steps",
       frequencyTier: "high",
       componentOptions: [
-        "Full-width CTA banner",
-        "Split CTA (consultation + general inquiry)",
-        "Quote request form",
-        "Service selector + form combo",
+        { name: "CTA Banner Full-Width", wireframeId: "cta-banner-fullwidth" },
+        { name: "CTA Split Dual Action", wireframeId: "cta-split" },
+        { name: "Quote Request Form", wireframeId: "form-quote-request" },
+        { name: "Service Selector + Form", wireframeId: "form-selector-combo" },
       ],
       considerations: [
         "Should CTA be service-specific or general?",

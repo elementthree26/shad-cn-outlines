@@ -13,10 +13,10 @@ export const locationsPage: PageTemplate = {
       name: "Location Hero/Header",
       frequencyTier: "high",
       componentOptions: [
-        "Hero with facility photo",
-        "Map integration as hero background",
-        "Location name + address header",
-        "Split layout with photo + key details",
+        { name: "Hero Facility Photo", wireframeId: "hero-fullwidth-image" },
+        { name: "Map Hero Background", wireframeId: "map-interactive" },
+        { name: "Location Name Header", wireframeId: "hero-minimal-text" },
+        { name: "Split Photo + Details", wireframeId: "hero-split" },
       ],
       considerations: [
         "Should the hero feature a photo of the facility or the area?",
@@ -48,10 +48,10 @@ export const locationsPage: PageTemplate = {
       name: "Contact & Details",
       frequencyTier: "high",
       componentOptions: [
-        "Structured contact card",
-        "Map + contact info side-by-side",
-        "Tab interface (contact, hours, directions)",
-        "Click-to-call buttons for mobile",
+        { name: "Structured Contact Card", wireframeId: "contact-card" },
+        { name: "Map + Contact Side-by-Side", wireframeId: "map-contact-overlay" },
+        { name: "Contact Tabs Interface", wireframeId: "contact-tabs" },
+        { name: "Click-to-Call Mobile", wireframeId: "cta-simple" },
       ],
       considerations: [
         "Should contact form be embedded on this page?",
@@ -84,10 +84,10 @@ export const locationsPage: PageTemplate = {
       name: "Location-Specific Services",
       frequencyTier: "high",
       componentOptions: [
-        "Card grid of available services",
-        "Icon list with descriptions",
-        "Tab interface by service category",
-        "Comparison table (what this location offers vs. others)",
+        { name: "Card Grid Services", wireframeId: "card-grid-3" },
+        { name: "Icon List Descriptions", wireframeId: "icon-list" },
+        { name: "Tab Interface Categories", wireframeId: "tab-interface" },
+        { name: "Comparison Table Locations", wireframeId: "comparison-table" },
       ],
       considerations: [
         "Do services vary by location?",
@@ -118,9 +118,9 @@ export const locationsPage: PageTemplate = {
       name: "Location Staff/Team",
       frequencyTier: "medium",
       componentOptions: [
-        "Card grid with headshots",
-        "Simple list with name, title, and contact",
-        "Featured manager/leader with supporting team list",
+        { name: "Team Grid Headshots", wireframeId: "team-grid" },
+        { name: "Team Simple List", wireframeId: "team-simple" },
+        { name: "Featured Manager + Team", wireframeId: "team-featured" },
       ],
       considerations: [
         "Should all staff be listed or just key contacts?",
@@ -150,10 +150,10 @@ export const locationsPage: PageTemplate = {
       name: "Location-Specific Testimonials",
       frequencyTier: "medium",
       componentOptions: [
-        "Quote cards from local customers",
-        "Google/Yelp review integration",
-        "Star rating display",
-        "Video testimonial from local customer",
+        { name: "Quote Cards Local", wireframeId: "testimonial-cards" },
+        { name: "Review Integration", wireframeId: "star-rating" },
+        { name: "Star Rating Display", wireframeId: "star-rating" },
+        { name: "Video Testimonial Local", wireframeId: "testimonial-video" },
       ],
       considerations: [
         "Are there reviews or testimonials specific to this location?",
@@ -184,10 +184,10 @@ export const locationsPage: PageTemplate = {
       name: "Service Area/Coverage Map",
       frequencyTier: "medium",
       componentOptions: [
-        "Interactive map with coverage radius",
-        "List of cities/counties served",
-        "Region-based coverage with boundaries",
-        "Zip code lookup tool",
+        { name: "Map Coverage Radius", wireframeId: "map-coverage" },
+        { name: "Cities Counties List", wireframeId: "list-simple" },
+        { name: "Region Coverage Boundaries", wireframeId: "region-coverage" },
+        { name: "Zip Code Lookup Tool", wireframeId: "zipcode-lookup" },
       ],
       considerations: [
         "Is coverage area defined by radius, territory, or zip codes?",

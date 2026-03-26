@@ -16,13 +16,17 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { ContentTheme } from "@/data/types";
+import { ContentTheme, ComponentOption, WireframeBlockId } from "@/data/types";
 import { ContentThemeCard } from "./content-theme-card";
 
 export function SortableThemeList({
   initialThemes,
+  selections,
+  onSelectOption,
 }: {
   initialThemes: ContentTheme[];
+  selections?: Record<string, WireframeBlockId>;
+  onSelectOption?: (themeId: string, option: ComponentOption) => void;
 }) {
   const [themes, setThemes] = useState(initialThemes);
 
@@ -58,7 +62,13 @@ export function SortableThemeList({
       >
         <div className="space-y-3">
           {themes.map((theme, index) => (
-            <ContentThemeCard key={theme.id} theme={theme} index={index} />
+            <ContentThemeCard
+              key={theme.id}
+              theme={theme}
+              index={index}
+              selectedWireframeId={selections?.[theme.id]}
+              onSelectOption={onSelectOption}
+            />
           ))}
         </div>
       </SortableContext>

@@ -13,9 +13,9 @@ export const contactPage: PageTemplate = {
       name: "Contact Header/Intro",
       frequencyTier: "high",
       componentOptions: [
-        "Simple heading with supporting text",
-        "Hero with contact-oriented imagery",
-        "Split layout with intro text + quick contact options",
+        { name: "Simple Heading Text", wireframeId: "hero-minimal-text" },
+        { name: "Hero Contact Imagery", wireframeId: "hero-fullwidth-image" },
+        { name: "Split Intro + Quick Contact", wireframeId: "hero-split" },
       ],
       considerations: [
         "Should the intro set expectations for response time?",
@@ -43,11 +43,11 @@ export const contactPage: PageTemplate = {
       name: "Contact Form",
       frequencyTier: "high",
       componentOptions: [
-        "Simple form (name, email, message)",
-        "Multi-step form with routing",
-        "Department-specific forms with tabs",
-        "Quote request form with specifications",
-        "Meeting scheduler integration",
+        { name: "Form Simple Contact", wireframeId: "form-simple" },
+        { name: "Form Multi-Step Routing", wireframeId: "form-multi-step" },
+        { name: "Form Tabbed Departments", wireframeId: "form-tabbed" },
+        { name: "Form Quote Request", wireframeId: "form-quote-request" },
+        { name: "Meeting Scheduler", wireframeId: "form-scheduler" },
       ],
       considerations: [
         "How many fields are necessary?",
@@ -81,10 +81,10 @@ export const contactPage: PageTemplate = {
       name: "Contact Information & Map",
       frequencyTier: "high",
       componentOptions: [
-        "Map embed with contact card overlay",
-        "Multi-location selector with map",
-        "Contact info grid (phone, email, address, hours)",
-        "Interactive map with pins for multiple locations",
+        { name: "Map + Contact Overlay", wireframeId: "map-contact-overlay" },
+        { name: "Multi-Location Map Pins", wireframeId: "map-multi-pin" },
+        { name: "Contact Info Grid", wireframeId: "contact-grid" },
+        { name: "Interactive Map Locations", wireframeId: "map-interactive" },
       ],
       considerations: [
         "Single location or multiple locations?",
@@ -117,10 +117,10 @@ export const contactPage: PageTemplate = {
       name: "FAQ / Common Questions",
       frequencyTier: "medium",
       componentOptions: [
-        "Accordion with expandable answers",
-        "Categorized FAQ with tabs",
-        "Search-enabled FAQ",
-        "Simple Q&A list",
+        { name: "FAQ Accordion", wireframeId: "accordion-simple" },
+        { name: "FAQ Categorized Tabs", wireframeId: "accordion-categorized" },
+        { name: "FAQ Searchable", wireframeId: "faq-searchable" },
+        { name: "FAQ Simple List", wireframeId: "list-simple" },
       ],
       considerations: [
         "What are the most common inquiries received?",

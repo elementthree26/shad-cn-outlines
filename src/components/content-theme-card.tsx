@@ -24,7 +24,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { ContentTheme } from "@/data/types";
+import { ContentTheme, ComponentOption, WireframeBlockId } from "@/data/types";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
@@ -88,12 +88,54 @@ function DetailSection({
   );
 }
 
+function OptionBadges({
+  options,
+  selectedWireframeId,
+  onSelect,
+}: {
+  options: ComponentOption[];
+  selectedWireframeId?: WireframeBlockId;
+  onSelect?: (option: ComponentOption) => void;
+}) {
+  return (
+    <div className="flex items-center gap-1.5 mt-2 flex-wrap">
+      <LayoutGrid className="h-3.5 w-3.5 text-muted-foreground" />
+      {options.map((opt, i) => {
+        const isSelected = selectedWireframeId === opt.wireframeId;
+        return (
+          <Badge
+            key={i}
+            variant={isSelected ? "default" : "secondary"}
+            className={`text-xs font-normal transition-colors ${
+              onSelect ? "cursor-pointer hover:bg-primary/20" : ""
+            } ${isSelected ? "bg-primary text-primary-foreground" : ""}`}
+            onClick={
+              onSelect
+                ? (e) => {
+                    e.stopPropagation();
+                    onSelect(opt);
+                  }
+                : undefined
+            }
+          >
+            {opt.name}
+          </Badge>
+        );
+      })}
+    </div>
+  );
+}
+
 export function ContentThemeCard({
   theme,
   index,
+  selectedWireframeId,
+  onSelectOption,
 }: {
   theme: ContentTheme;
   index: number;
+  selectedWireframeId?: WireframeBlockId;
+  onSelectOption?: (themeId: string, option: ComponentOption) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
   const {
@@ -140,18 +182,15 @@ export function ContentThemeCard({
                   {frequencyLabels[theme.frequencyTier]}
                 </Badge>
               </div>
-              <div className="flex items-center gap-1.5 mt-2 flex-wrap">
-                <LayoutGrid className="h-3.5 w-3.5 text-muted-foreground" />
-                {theme.componentOptions.map((opt, i) => (
-                  <Badge
-                    key={i}
-                    variant="secondary"
-                    className="text-xs font-normal"
-                  >
-                    {opt}
-                  </Badge>
-                ))}
-              </div>
+              <OptionBadges
+                options={theme.componentOptions}
+                selectedWireframeId={selectedWireframeId}
+                onSelect={
+                  onSelectOption
+                    ? (opt) => onSelectOption(theme.id, opt)
+                    : undefined
+                }
+              />
             </div>
             <button
               onClick={() => setExpanded(!expanded)}
@@ -200,9 +239,13 @@ export function ContentThemeCard({
 export function ContentThemeCardStatic({
   theme,
   index,
+  selectedWireframeId,
+  onSelectOption,
 }: {
   theme: ContentTheme;
   index: number;
+  selectedWireframeId?: WireframeBlockId;
+  onSelectOption?: (themeId: string, option: ComponentOption) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
 
@@ -223,18 +266,15 @@ export function ContentThemeCardStatic({
                 {frequencyLabels[theme.frequencyTier]}
               </Badge>
             </div>
-            <div className="flex items-center gap-1.5 mt-2 flex-wrap">
-              <LayoutGrid className="h-3.5 w-3.5 text-muted-foreground" />
-              {theme.componentOptions.map((opt, i) => (
-                <Badge
-                  key={i}
-                  variant="secondary"
-                  className="text-xs font-normal"
-                >
-                  {opt}
-                </Badge>
-              ))}
-            </div>
+            <OptionBadges
+              options={theme.componentOptions}
+              selectedWireframeId={selectedWireframeId}
+              onSelect={
+                onSelectOption
+                  ? (opt) => onSelectOption(theme.id, opt)
+                  : undefined
+              }
+            />
           </div>
           <button
             onClick={() => setExpanded(!expanded)}

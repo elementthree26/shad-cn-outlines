@@ -13,10 +13,10 @@ export const careersPage: PageTemplate = {
       name: "Careers Hero/Recruitment Message",
       frequencyTier: "high",
       componentOptions: [
-        "Hero section with team photo",
-        "Text overlay with recruitment headline",
-        "CTA to browse open positions",
-        "Video hero with employee testimonials",
+        { name: "Hero Team Photo", wireframeId: "hero-fullwidth-image" },
+        { name: "Hero Recruitment Text", wireframeId: "hero-minimal-text" },
+        { name: "CTA Browse Positions", wireframeId: "cta-simple" },
+        { name: "Hero Video Testimonials", wireframeId: "hero-video" },
       ],
       considerations: [
         "Should this feel corporate or casual/authentic?",
@@ -46,10 +46,10 @@ export const careersPage: PageTemplate = {
       name: "Culture & Values",
       frequencyTier: "high",
       componentOptions: [
-        "Icon grid with value descriptions",
-        "Photo gallery with culture captions",
-        "Split sections alternating image + text",
-        "Video montage of workplace life",
+        { name: "Icon Grid Values", wireframeId: "icon-grid-3" },
+        { name: "Photo Gallery Culture", wireframeId: "photo-gallery" },
+        { name: "Alternating Image Text", wireframeId: "text-split-image" },
+        { name: "Video Montage Workplace", wireframeId: "video-embed" },
       ],
       considerations: [
         "Are culture values formalized or more informal?",
@@ -81,10 +81,10 @@ export const careersPage: PageTemplate = {
       name: "Benefits & Perks",
       frequencyTier: "high",
       componentOptions: [
-        "Icon grid with benefit categories",
-        "Card layout with expandable details",
-        "Tab interface by benefit type (health, financial, lifestyle)",
-        "Comparison table (if multiple tiers)",
+        { name: "Icon Grid Benefits", wireframeId: "icon-grid-4" },
+        { name: "Card Expandable Details", wireframeId: "card-grid-3" },
+        { name: "Tab Interface Benefits", wireframeId: "tab-interface" },
+        { name: "Comparison Table Tiers", wireframeId: "comparison-table" },
       ],
       considerations: [
         "How many benefits to highlight?",
@@ -116,11 +116,11 @@ export const careersPage: PageTemplate = {
       name: "Open Positions/Job Listings",
       frequencyTier: "high",
       componentOptions: [
-        "Filterable job board (by department, location, type)",
-        "Accordion grouped by department",
-        "Card grid with key details",
-        "ATS integration/embed",
-        "Simple linked list",
+        { name: "Jobs Filterable Board", wireframeId: "jobs-filterable" },
+        { name: "Jobs Accordion Departments", wireframeId: "jobs-accordion" },
+        { name: "Jobs Card Grid", wireframeId: "jobs-cards" },
+        { name: "ATS Embed Integration", wireframeId: "jobs-ats-embed" },
+        { name: "Jobs Simple List", wireframeId: "jobs-list" },
       ],
       considerations: [
         "Should jobs be managed in a CMS or pulled from an ATS?",
@@ -154,10 +154,10 @@ export const careersPage: PageTemplate = {
       name: "Employee Testimonials/Stories",
       frequencyTier: "medium",
       componentOptions: [
-        "Quote carousel with photos",
-        "Video testimonials",
-        "Card grid with employee spotlights",
-        "Long-form story sections",
+        { name: "Quote Carousel Photos", wireframeId: "testimonial-carousel" },
+        { name: "Video Testimonials", wireframeId: "testimonial-video" },
+        { name: "Employee Spotlight Cards", wireframeId: "testimonial-cards" },
+        { name: "Long-Form Story Sections", wireframeId: "text-split-image" },
       ],
       considerations: [
         "How many employees should be featured?",
@@ -188,10 +188,10 @@ export const careersPage: PageTemplate = {
       name: "Career Growth & Development",
       frequencyTier: "medium",
       componentOptions: [
-        "Step/pathway diagram",
-        "Icon list with program descriptions",
-        "Split section with imagery",
-        "Statistics callout (% promoted internally, training hours, etc.)",
+        { name: "Step Pathway Diagram", wireframeId: "steps-numbered" },
+        { name: "Icon List Programs", wireframeId: "icon-list" },
+        { name: "Split Section Imagery", wireframeId: "text-split-image" },
+        { name: "Stats Callout Growth", wireframeId: "stats-callout" },
       ],
       considerations: [
         "Are there formal training programs or mentorship opportunities?",
@@ -223,10 +223,10 @@ export const careersPage: PageTemplate = {
       name: "Diversity, Equity & Inclusion",
       frequencyTier: "low",
       componentOptions: [
-        "Full-width statement with supporting imagery",
-        "Icon grid with initiative descriptions",
-        "Statistics and goals display",
-        "Employee resource group showcase",
+        { name: "Full-Width Statement Image", wireframeId: "text-fullwidth" },
+        { name: "Icon Grid Initiatives", wireframeId: "icon-grid-3" },
+        { name: "Stats Goals Display", wireframeId: "stats-callout" },
+        { name: "ERG Showcase Cards", wireframeId: "card-grid-3" },
       ],
       considerations: [
         "Does the company have formal DEI commitments or programs?",
