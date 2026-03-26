@@ -60,12 +60,37 @@ function HeroFullwidthImage({ className }: WireframeBlockProps) {
   );
 }
 
+function HeroSplit({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      {/* Left: text content */}
+      <rect x="16" y="16" width="180" height="228" rx="4" fill="currentColor" fillOpacity="0.03" />
+      {/* Headline */}
+      <rect x="30" y="50" width="140" height="12" rx="2" fill="currentColor" fillOpacity="0.15" />
+      <rect x="30" y="70" width="110" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {/* Body text lines */}
+      <rect x="30" y="96" width="150" height="6" rx="1" fill="currentColor" fillOpacity="0.07" />
+      <rect x="30" y="108" width="130" height="6" rx="1" fill="currentColor" fillOpacity="0.07" />
+      <rect x="30" y="120" width="145" height="6" rx="1" fill="currentColor" fillOpacity="0.07" />
+      {/* CTA button */}
+      <rect x="30" y="148" width="90" height="26" rx="4" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.2" />
+      <rect x="48" y="158" width="54" height="6" rx="1" fill="currentColor" fillOpacity="0.15" />
+      {/* Right: image placeholder */}
+      <rect x="204" y="16" width="180" height="228" rx="4" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeOpacity="0.12" />
+      {/* Image icon */}
+      <rect x="264" y="90" width="60" height="45" rx="3" fill="currentColor" fillOpacity="0.1" />
+      <circle cx="279" cy="105" r="6" fill="currentColor" fillOpacity="0.15" />
+      <path d="M267 130 L284 113 L299 125 L309 117 L321 130Z" fill="currentColor" fillOpacity="0.12" />
+    </WireframeSvg>
+  );
+}
+
 // ─── Registry ───────────────────────────────────────────
 
 const wireframeRegistry: Record<WireframeBlockId, React.FC<WireframeBlockProps>> = {
   "hero-fullwidth-image": HeroFullwidthImage,
   // Remaining blocks use a placeholder for now
-  "hero-split": Placeholder,
+  "hero-split": HeroSplit,
   "hero-carousel": Placeholder,
   "hero-animated": Placeholder,
   "hero-minimal-text": Placeholder,
