@@ -85,13 +85,42 @@ function HeroSplit({ className }: WireframeBlockProps) {
   );
 }
 
+function HeroCarousel({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      {/* Main slide area */}
+      <rect x="40" y="16" width="320" height="150" rx="4" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeOpacity="0.12" />
+      {/* Image icon in slide */}
+      <rect x="160" y="45" width="60" height="45" rx="3" fill="currentColor" fillOpacity="0.1" />
+      <circle cx="175" cy="60" r="6" fill="currentColor" fillOpacity="0.15" />
+      <path d="M163 85 L180 68 L195 80 L205 72 L217 85Z" fill="currentColor" fillOpacity="0.12" />
+      {/* Left arrow */}
+      <rect x="16" y="76" width="20" height="20" rx="10" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.15" />
+      <path d="M29 82 L23 86 L29 90" stroke="currentColor" strokeOpacity="0.3" strokeWidth="1.5" fill="none" />
+      {/* Right arrow */}
+      <rect x="364" y="76" width="20" height="20" rx="10" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.15" />
+      <path d="M371 82 L377 86 L371 90" stroke="currentColor" strokeOpacity="0.3" strokeWidth="1.5" fill="none" />
+      {/* Dots indicator */}
+      <circle cx="185" cy="178" r="4" fill="currentColor" fillOpacity="0.2" />
+      <circle cx="200" cy="178" r="4" fill="currentColor" fillOpacity="0.08" />
+      <circle cx="215" cy="178" r="4" fill="currentColor" fillOpacity="0.08" />
+      {/* Headline */}
+      <rect x="120" y="196" width="160" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {/* Subhead */}
+      <rect x="145" y="214" width="110" height="7" rx="2" fill="currentColor" fillOpacity="0.07" />
+      {/* CTA */}
+      <rect x="163" y="232" width="74" height="20" rx="4" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.18" />
+    </WireframeSvg>
+  );
+}
+
 // ─── Registry ───────────────────────────────────────────
 
 const wireframeRegistry: Record<WireframeBlockId, React.FC<WireframeBlockProps>> = {
   "hero-fullwidth-image": HeroFullwidthImage,
   // Remaining blocks use a placeholder for now
   "hero-split": HeroSplit,
-  "hero-carousel": Placeholder,
+  "hero-carousel": HeroCarousel,
   "hero-animated": Placeholder,
   "hero-minimal-text": Placeholder,
   "hero-video": Placeholder,
