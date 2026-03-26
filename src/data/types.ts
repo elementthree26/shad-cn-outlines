@@ -1,16 +1,23 @@
+import { WireframeBlockId } from "./wireframe-types";
+
 export type FrequencyTier = "high" | "medium" | "low";
+
+export interface ComponentOption {
+  /** Display name using shadcn block naming */
+  name: string;
+  /** Which wireframe to render */
+  wireframeId: WireframeBlockId;
+}
 
 export interface ContentTheme {
   id: string;
   name: string;
   frequencyTier: FrequencyTier;
-  componentOptions: string[];
+  componentOptions: ComponentOption[];
   considerations: string[];
   clientDiscoveryQuestions: string[];
   informationAndAssets: string[];
   industryNotes: string[];
-  /** Optional screenshot/preview image paths for recommended modules */
-  modulePreviewImages?: string[];
 }
 
 export interface PageTemplate {
