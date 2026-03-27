@@ -789,6 +789,196 @@ function CtaSplit({ className }: WireframeBlockProps) {
   );
 }
 
+function CtaFormEmbed({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="16" y="30" width="368" height="200" rx="6" fill="currentColor" fillOpacity="0.05" stroke="currentColor" strokeOpacity="0.1" />
+      <rect x="30" y="50" width="160" height="12" rx="2" fill="currentColor" fillOpacity="0.15" />
+      <rect x="30" y="72" width="170" height="6" rx="1" fill="currentColor" fillOpacity="0.07" />
+      <rect x="30" y="84" width="150" height="6" rx="1" fill="currentColor" fillOpacity="0.07" />
+      {/* Form */}
+      <rect x="220" y="46" width="148" height="170" rx="4" fill="currentColor" fillOpacity="0.04" stroke="currentColor" strokeOpacity="0.1" />
+      <rect x="232" y="60" width="124" height="20" rx="3" fill="currentColor" fillOpacity="0.06" stroke="currentColor" strokeOpacity="0.1" />
+      <rect x="232" y="88" width="124" height="20" rx="3" fill="currentColor" fillOpacity="0.06" stroke="currentColor" strokeOpacity="0.1" />
+      <rect x="232" y="116" width="124" height="40" rx="3" fill="currentColor" fillOpacity="0.06" stroke="currentColor" strokeOpacity="0.1" />
+      <rect x="232" y="168" width="124" height="28" rx="4" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.2" />
+    </WireframeSvg>
+  );
+}
+
+function CtaSimple({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="80" y="80" width="240" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      <rect x="100" y="100" width="200" height="7" rx="1" fill="currentColor" fillOpacity="0.07" />
+      <rect x="140" y="126" width="120" height="36" rx="5" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.2" />
+      <rect x="165" y="140" width="70" height="8" rx="1" fill="currentColor" fillOpacity="0.18" />
+    </WireframeSvg>
+  );
+}
+
+// ─── Forms ──────────────────────────────────────────────
+
+function FormSimple({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="80" y="16" width="240" height="228" rx="6" fill="currentColor" fillOpacity="0.03" stroke="currentColor" strokeOpacity="0.1" />
+      <rect x="140" y="28" width="120" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {[0, 1, 2].map((i) => (
+        <g key={i}>
+          <rect x="100" y={52 + i * 36} width="60" height="6" rx="1" fill="currentColor" fillOpacity="0.08" />
+          <rect x="100" y={64 + i * 36} width="200" height="22" rx="3" fill="currentColor" fillOpacity="0.05" stroke="currentColor" strokeOpacity="0.1" />
+        </g>
+      ))}
+      <rect x="100" y="160" width="200" height="36" rx="3" fill="currentColor" fillOpacity="0.05" stroke="currentColor" strokeOpacity="0.1" />
+      <rect x="100" y="206" width="200" height="24" rx="4" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.2" />
+    </WireframeSvg>
+  );
+}
+
+function FormMultiStep({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      {/* Step indicators */}
+      {[0, 1, 2].map((i) => {
+        const cx = 140 + i * 60;
+        const isActive = i === 0;
+        return (
+          <g key={i}>
+            <circle cx={cx} cy={28} r="10" fill="currentColor" fillOpacity={isActive ? "0.15" : "0.06"} stroke="currentColor" strokeOpacity={isActive ? "0.25" : "0.1"} />
+            {i < 2 && <line x1={cx + 12} y1={28} x2={cx + 48} y2={28} stroke="currentColor" strokeOpacity="0.1" />}
+          </g>
+        );
+      })}
+      <rect x="60" y="50" width="280" height="180" rx="6" fill="currentColor" fillOpacity="0.03" stroke="currentColor" strokeOpacity="0.08" />
+      <rect x="80" y="66" width="160" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {[0, 1].map((i) => (
+        <rect key={i} x="80" y={90 + i * 36} width="240" height="22" rx="3" fill="currentColor" fillOpacity="0.05" stroke="currentColor" strokeOpacity="0.1" />
+      ))}
+      <rect x="240" y="196" width="80" height="22" rx="4" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.2" />
+    </WireframeSvg>
+  );
+}
+
+function FormTabbed({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      {[0, 1, 2].map((i) => {
+        const x = 60 + i * 100;
+        const isActive = i === 0;
+        return (
+          <rect key={i} x={x} y={16} width="90" height="26" rx="3" fill="currentColor" fillOpacity={isActive ? "0.1" : "0.03"} />
+        );
+      })}
+      <rect x="60" y="42" width="90" height="2" fill="currentColor" fillOpacity="0.2" />
+      <rect x="60" y="50" width="280" height="190" rx="4" fill="currentColor" fillOpacity="0.03" stroke="currentColor" strokeOpacity="0.08" />
+      {[0, 1, 2].map((i) => (
+        <rect key={i} x="80" y={68 + i * 36} width="240" height="20" rx="3" fill="currentColor" fillOpacity="0.05" stroke="currentColor" strokeOpacity="0.1" />
+      ))}
+      <rect x="80" y="210" width="240" height="22" rx="4" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.2" />
+    </WireframeSvg>
+  );
+}
+
+function FormQuoteRequest({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="40" y="12" width="320" height="236" rx="6" fill="currentColor" fillOpacity="0.03" stroke="currentColor" strokeOpacity="0.1" />
+      <rect x="120" y="22" width="160" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {[0, 1].map((row) =>
+        [0, 1].map((col) => (
+          <rect key={`${row}-${col}`} x={60 + col * 150} y={50 + row * 36} width="130" height="22" rx="3" fill="currentColor" fillOpacity="0.05" stroke="currentColor" strokeOpacity="0.1" />
+        ))
+      )}
+      <rect x="60" y="122" width="280" height="22" rx="3" fill="currentColor" fillOpacity="0.05" stroke="currentColor" strokeOpacity="0.1" />
+      <rect x="60" y="152" width="280" height="44" rx="3" fill="currentColor" fillOpacity="0.05" stroke="currentColor" strokeOpacity="0.1" />
+      <rect x="60" y="206" width="280" height="24" rx="4" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.2" />
+    </WireframeSvg>
+  );
+}
+
+function FormScheduler({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="40" y="12" width="320" height="236" rx="6" fill="currentColor" fillOpacity="0.03" stroke="currentColor" strokeOpacity="0.1" />
+      <rect x="130" y="22" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {/* Calendar */}
+      <rect x="60" y="44" width="180" height="140" rx="4" fill="currentColor" fillOpacity="0.04" stroke="currentColor" strokeOpacity="0.1" />
+      {[0, 1, 2, 3].map((row) =>
+        [0, 1, 2, 3, 4, 5, 6].map((col) => (
+          <rect key={`${row}-${col}`} x={66 + col * 24} y={60 + row * 28} width="16" height="16" rx="2" fill="currentColor" fillOpacity={row === 1 && col === 3 ? "0.2" : "0.04"} />
+        ))
+      )}
+      {/* Time slots */}
+      <rect x="256" y="44" width="88" height="140" rx="4" fill="currentColor" fillOpacity="0.04" stroke="currentColor" strokeOpacity="0.1" />
+      {[0, 1, 2, 3, 4].map((i) => (
+        <rect key={i} x={264} y={56 + i * 24} width="72" height="16" rx="3" fill="currentColor" fillOpacity={i === 1 ? "0.15" : "0.06"} />
+      ))}
+      <rect x="60" y="196" width="280" height="24" rx="4" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.2" />
+    </WireframeSvg>
+  );
+}
+
+function FormSelectorCombo({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="40" y="12" width="320" height="236" rx="6" fill="currentColor" fillOpacity="0.03" stroke="currentColor" strokeOpacity="0.1" />
+      <rect x="120" y="24" width="160" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {/* Service selector pills */}
+      {[0, 1, 2, 3].map((i) => (
+        <rect key={i} x={60 + i * 70} y={46} width="60" height="24" rx="12" fill="currentColor" fillOpacity={i === 0 ? "0.15" : "0.06"} stroke="currentColor" strokeOpacity={i === 0 ? "0.2" : "0.08"} />
+      ))}
+      {[0, 1].map((i) => (
+        <rect key={i} x="60" y={86 + i * 34} width="280" height="22" rx="3" fill="currentColor" fillOpacity="0.05" stroke="currentColor" strokeOpacity="0.1" />
+      ))}
+      <rect x="60" y="154" width="280" height="40" rx="3" fill="currentColor" fillOpacity="0.05" stroke="currentColor" strokeOpacity="0.1" />
+      <rect x="60" y="206" width="280" height="24" rx="4" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.2" />
+    </WireframeSvg>
+  );
+}
+
+// ─── Timeline / Process ─────────────────────────────────
+
+function TimelineVertical({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="130" y="10" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      <line x1="80" y1="34" x2="80" y2="248" stroke="currentColor" strokeOpacity="0.1" strokeWidth="2" />
+      {[0, 1, 2, 3].map((i) => {
+        const y = 38 + i * 54;
+        return (
+          <g key={i}>
+            <circle cx="80" cy={y + 6} r="6" fill="currentColor" fillOpacity="0.15" stroke="currentColor" strokeOpacity="0.2" />
+            <rect x="100" y={y - 2} width="60" height="7" rx="1" fill="currentColor" fillOpacity="0.12" />
+            <rect x="100" y={y + 12} width="260" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+            <rect x="100" y={y + 22} width="240" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+          </g>
+        );
+      })}
+    </WireframeSvg>
+  );
+}
+
+function TimelineHorizontal({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="130" y="14" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      <line x1="30" y1="90" x2="370" y2="90" stroke="currentColor" strokeOpacity="0.1" strokeWidth="2" />
+      {[0, 1, 2, 3, 4].map((i) => {
+        const x = 40 + i * 72;
+        return (
+          <g key={i}>
+            <circle cx={x} cy={90} r="6" fill="currentColor" fillOpacity="0.15" stroke="currentColor" strokeOpacity="0.2" />
+            <rect x={x - 16} y={48} width="32" height="7" rx="1" fill="currentColor" fillOpacity="0.1" />
+            <rect x={x - 28} y={110} width="56" height="6" rx="1" fill="currentColor" fillOpacity="0.08" />
+            <rect x={x - 24} y={122} width="48" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+          </g>
+        );
+      })}
+    </WireframeSvg>
+  );
+}
+
 // ─── Registry ───────────────────────────────────────────
 
 const wireframeRegistry: Record<WireframeBlockId, React.FC<WireframeBlockProps>> = {
@@ -826,16 +1016,16 @@ const wireframeRegistry: Record<WireframeBlockId, React.FC<WireframeBlockProps>>
   "logo-marquee": LogoMarquee,
   "cta-banner-fullwidth": CtaBannerFullwidth,
   "cta-split": CtaSplit,
-  "cta-form-embed": Placeholder,
-  "cta-simple": Placeholder,
-  "form-simple": Placeholder,
-  "form-multi-step": Placeholder,
-  "form-tabbed": Placeholder,
-  "form-quote-request": Placeholder,
-  "form-scheduler": Placeholder,
-  "form-selector-combo": Placeholder,
-  "timeline-vertical": Placeholder,
-  "timeline-horizontal": Placeholder,
+  "cta-form-embed": CtaFormEmbed,
+  "cta-simple": CtaSimple,
+  "form-simple": FormSimple,
+  "form-multi-step": FormMultiStep,
+  "form-tabbed": FormTabbed,
+  "form-quote-request": FormQuoteRequest,
+  "form-scheduler": FormScheduler,
+  "form-selector-combo": FormSelectorCombo,
+  "timeline-vertical": TimelineVertical,
+  "timeline-horizontal": TimelineHorizontal,
   "steps-numbered": Placeholder,
   "steps-icon": Placeholder,
   "process-diagram": Placeholder,
