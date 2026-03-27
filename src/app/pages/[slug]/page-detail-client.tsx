@@ -40,7 +40,6 @@ export function PageDetailClient({ page }: { page: PageTemplate }) {
     Record<string, WireframeBlockId>
   >({});
   const [activeThemeId, setActiveThemeId] = useState<string | null>(null);
-  const [activeOptionName, setActiveOptionName] = useState<string | null>(null);
 
   const handleSelectOption = useCallback(
     (themeId: string, option: ComponentOption) => {
@@ -49,17 +48,9 @@ export function PageDetailClient({ page }: { page: PageTemplate }) {
         [themeId]: option.wireframeId,
       }));
       setActiveThemeId(themeId);
-      setActiveOptionName(option.name);
     },
     []
   );
-
-  const activeWireframeId = activeThemeId
-    ? selections[activeThemeId] ?? null
-    : null;
-  const activeTheme = activeThemeId
-    ? page.contentThemes.find((t) => t.id === activeThemeId)
-    : null;
 
   const highThemes = page.contentThemes.filter(
     (t) => t.frequencyTier === "high"
@@ -267,11 +258,11 @@ export function PageDetailClient({ page }: { page: PageTemplate }) {
 
           {/* Right: sticky wireframe preview */}
           <div className="hidden lg:block w-[340px] flex-shrink-0">
-            <div className="sticky top-[73px]">
+            <div className="sticky top-[73px] max-h-[calc(100vh-90px)] overflow-y-auto">
               <WireframePreviewPanel
-                wireframeId={activeWireframeId}
-                themeName={activeTheme?.name}
-                optionName={activeOptionName ?? undefined}
+                themes={page.contentThemes}
+                selections={selections}
+                activeThemeId={activeThemeId}
               />
             </div>
           </div>
