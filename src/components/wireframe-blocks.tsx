@@ -565,6 +565,230 @@ function TabInterface({ className }: WireframeBlockProps) {
   );
 }
 
+function TabCategory({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      {/* Category tabs - pill style */}
+      <rect x="16" y="16" width="368" height="30" rx="4" fill="currentColor" fillOpacity="0.03" />
+      {[0, 1, 2, 3, 4].map((i) => {
+        const x = 24 + i * 72;
+        const isActive = i === 1;
+        return (
+          <g key={i}>
+            <rect x={x} y={20} width="64" height="22" rx="11" fill="currentColor" fillOpacity={isActive ? "0.15" : "0.05"} stroke="currentColor" strokeOpacity={isActive ? "0.2" : "0.08"} />
+            <rect x={x + 14} y={28} width="36" height="6" rx="1" fill="currentColor" fillOpacity={isActive ? "0.2" : "0.08"} />
+          </g>
+        );
+      })}
+      {/* Content cards below */}
+      {[0, 1, 2].map((i) => {
+        const x = 16 + i * 128;
+        return (
+          <g key={i}>
+            <rect x={x} y={60} width="120" height="184" rx="4" fill="currentColor" fillOpacity="0.03" stroke="currentColor" strokeOpacity="0.08" />
+            <rect x={x + 4} y={64} width="112" height="65" rx="3" fill="currentColor" fillOpacity="0.07" />
+            <rect x={x + 10} y={140} width="80" height="7" rx="1" fill="currentColor" fillOpacity="0.1" />
+            <rect x={x + 10} y={154} width="100" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+            <rect x={x + 10} y={164} width="90" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+          </g>
+        );
+      })}
+    </WireframeSvg>
+  );
+}
+
+// ─── Testimonials / Social proof ────────────────────────
+
+function TestimonialCarousel({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="130" y="14" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {/* Quote card */}
+      <rect x="60" y="38" width="280" height="140" rx="6" fill="currentColor" fillOpacity="0.04" stroke="currentColor" strokeOpacity="0.1" />
+      {/* Quote mark */}
+      <text x="75" y="72" fontSize="30" fill="currentColor" fillOpacity="0.1" fontFamily="Georgia, serif">&ldquo;</text>
+      {/* Quote text */}
+      <rect x="80" y="72" width="240" height="6" rx="1" fill="currentColor" fillOpacity="0.08" />
+      <rect x="80" y="84" width="220" height="6" rx="1" fill="currentColor" fillOpacity="0.08" />
+      <rect x="80" y="96" width="200" height="6" rx="1" fill="currentColor" fillOpacity="0.08" />
+      {/* Avatar + name */}
+      <circle cx="100" cy="132" r="14" fill="currentColor" fillOpacity="0.1" />
+      <rect x="120" y="126" width="80" height="6" rx="1" fill="currentColor" fillOpacity="0.1" />
+      <rect x="120" y="138" width="60" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+      {/* Arrows */}
+      <rect x="30" y="98" width="20" height="20" rx="10" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeOpacity="0.12" />
+      <rect x="350" y="98" width="20" height="20" rx="10" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeOpacity="0.12" />
+      {/* Dots */}
+      <circle cx="185" cy="196" r="3" fill="currentColor" fillOpacity="0.06" />
+      <circle cx="200" cy="196" r="3" fill="currentColor" fillOpacity="0.18" />
+      <circle cx="215" cy="196" r="3" fill="currentColor" fillOpacity="0.06" />
+    </WireframeSvg>
+  );
+}
+
+function TestimonialCards({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="130" y="12" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {[0, 1, 2].map((i) => {
+        const x = 16 + i * 128;
+        return (
+          <g key={i}>
+            <rect x={x} y={34} width="120" height="210" rx="4" fill="currentColor" fillOpacity="0.03" stroke="currentColor" strokeOpacity="0.1" />
+            <text x={x + 12} y={60} fontSize="24" fill="currentColor" fillOpacity="0.1" fontFamily="Georgia, serif">&ldquo;</text>
+            <rect x={x + 12} y={64} width="96" height="5" rx="1" fill="currentColor" fillOpacity="0.08" />
+            <rect x={x + 12} y={75} width="88" height="5" rx="1" fill="currentColor" fillOpacity="0.08" />
+            <rect x={x + 12} y={86} width="80" height="5" rx="1" fill="currentColor" fillOpacity="0.08" />
+            {/* Stars */}
+            {[0, 1, 2, 3, 4].map((s) => (
+              <rect key={s} x={x + 12 + s * 12} y={104} width="8" height="8" rx="1" fill="currentColor" fillOpacity="0.12" />
+            ))}
+            {/* Avatar + name */}
+            <circle cx={x + 26} cy={136} r="12" fill="currentColor" fillOpacity="0.1" />
+            <rect x={x + 44} y={130} width="60" height="6" rx="1" fill="currentColor" fillOpacity="0.1" />
+            <rect x={x + 44} y={140} width="45" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+          </g>
+        );
+      })}
+    </WireframeSvg>
+  );
+}
+
+function TestimonialVideo({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="130" y="14" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {/* Video thumbnail */}
+      <rect x="40" y="36" width="200" height="130" rx="4" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeOpacity="0.12" />
+      <circle cx="140" cy="101" r="18" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.18" />
+      <path d="M134 92 L150 101 L134 110Z" fill="currentColor" fillOpacity="0.2" />
+      {/* Quote text on right */}
+      <rect x="256" y="42" width="128" height="6" rx="1" fill="currentColor" fillOpacity="0.08" />
+      <rect x="256" y="54" width="120" height="6" rx="1" fill="currentColor" fillOpacity="0.08" />
+      <rect x="256" y="66" width="110" height="6" rx="1" fill="currentColor" fillOpacity="0.08" />
+      {/* Name */}
+      <rect x="256" y="90" width="80" height="7" rx="1" fill="currentColor" fillOpacity="0.12" />
+      <rect x="256" y="104" width="60" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+      {/* More videos thumbnails */}
+      {[0, 1, 2].map((i) => {
+        const x = 40 + i * 128;
+        return (
+          <g key={i}>
+            <rect x={x} y={184} width="118" height="60" rx="3" fill="currentColor" fillOpacity="0.06" stroke="currentColor" strokeOpacity="0.08" />
+            <circle cx={x + 59} cy={214} r="8" fill="currentColor" fillOpacity="0.08" />
+          </g>
+        );
+      })}
+    </WireframeSvg>
+  );
+}
+
+function TestimonialQuote({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      {/* Logo bar top */}
+      <rect x="16" y="16" width="368" height="50" rx="4" fill="currentColor" fillOpacity="0.03" />
+      {[0, 1, 2, 3, 4, 5].map((i) => (
+        <rect key={i} x={30 + i * 60} y={28} width="44" height="26" rx="3" fill="currentColor" fillOpacity="0.07" />
+      ))}
+      {/* Quote section below */}
+      <rect x="40" y="82" width="320" height="150" rx="6" fill="currentColor" fillOpacity="0.04" stroke="currentColor" strokeOpacity="0.08" />
+      <text x="55" y="116" fontSize="30" fill="currentColor" fillOpacity="0.1" fontFamily="Georgia, serif">&ldquo;</text>
+      <rect x="60" y="116" width="280" height="7" rx="1" fill="currentColor" fillOpacity="0.08" />
+      <rect x="60" y="130" width="260" height="7" rx="1" fill="currentColor" fillOpacity="0.08" />
+      <rect x="60" y="144" width="220" height="7" rx="1" fill="currentColor" fillOpacity="0.08" />
+      {/* Attribution */}
+      <circle cx="80" cy="180" r="12" fill="currentColor" fillOpacity="0.1" />
+      <rect x="98" y="174" width="80" height="6" rx="1" fill="currentColor" fillOpacity="0.1" />
+      <rect x="98" y="186" width="60" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+    </WireframeSvg>
+  );
+}
+
+// ─── Logo displays ──────────────────────────────────────
+
+function LogoBar({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="16" y="80" width="368" height="100" rx="6" fill="currentColor" fillOpacity="0.03" />
+      <rect x="130" y="60" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.1" />
+      {[0, 1, 2, 3, 4, 5].map((i) => (
+        <rect key={i} x={30 + i * 60} y={106} width="44" height="30" rx="4" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeOpacity="0.08" />
+      ))}
+    </WireframeSvg>
+  );
+}
+
+function LogoGrid({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="130" y="14" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {[0, 1, 2, 3].map((col) =>
+        [0, 1, 2].map((row) => {
+          const x = 30 + col * 90;
+          const y = 36 + row * 72;
+          return (
+            <rect key={`${col}-${row}`} x={x} y={y} width="70" height="56" rx="4" fill="currentColor" fillOpacity="0.06" stroke="currentColor" strokeOpacity="0.08" />
+          );
+        })
+      )}
+    </WireframeSvg>
+  );
+}
+
+function LogoMarquee({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="130" y="90" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.1" />
+      {/* First row scrolling right */}
+      <rect x="16" y="110" width="368" height="44" rx="4" fill="currentColor" fillOpacity="0.02" />
+      {[0, 1, 2, 3, 4, 5, 6].map((i) => (
+        <rect key={`a${i}`} x={-10 + i * 58} y={118} width="48" height="28" rx="3" fill="currentColor" fillOpacity={0.04 + i * 0.01} stroke="currentColor" strokeOpacity="0.06" />
+      ))}
+      {/* Arrow hint */}
+      <path d="M374 132 L384 132" stroke="currentColor" strokeOpacity="0.15" strokeWidth="1.5" />
+      <path d="M380 128 L384 132 L380 136" stroke="currentColor" strokeOpacity="0.15" strokeWidth="1.5" fill="none" />
+    </WireframeSvg>
+  );
+}
+
+// ─── CTA sections ───────────────────────────────────────
+
+function CtaBannerFullwidth({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="16" y="50" width="368" height="160" rx="6" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeOpacity="0.12" />
+      {/* Headline */}
+      <rect x="100" y="80" width="200" height="14" rx="2" fill="currentColor" fillOpacity="0.18" />
+      {/* Subhead */}
+      <rect x="110" y="104" width="180" height="7" rx="1" fill="currentColor" fillOpacity="0.1" />
+      <rect x="130" y="118" width="140" height="7" rx="1" fill="currentColor" fillOpacity="0.08" />
+      {/* CTA button */}
+      <rect x="150" y="144" width="100" height="32" rx="5" fill="currentColor" fillOpacity="0.15" stroke="currentColor" strokeOpacity="0.25" />
+      <rect x="170" y="156" width="60" height="8" rx="1" fill="currentColor" fillOpacity="0.2" />
+    </WireframeSvg>
+  );
+}
+
+function CtaSplit({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      {/* Left CTA */}
+      <rect x="16" y="40" width="180" height="180" rx="6" fill="currentColor" fillOpacity="0.06" stroke="currentColor" strokeOpacity="0.1" />
+      <rect x="40" y="70" width="130" height="10" rx="2" fill="currentColor" fillOpacity="0.15" />
+      <rect x="40" y="90" width="140" height="6" rx="1" fill="currentColor" fillOpacity="0.07" />
+      <rect x="40" y="102" width="120" height="6" rx="1" fill="currentColor" fillOpacity="0.07" />
+      <rect x="40" y="130" width="90" height="28" rx="4" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.2" />
+      {/* Right CTA */}
+      <rect x="204" y="40" width="180" height="180" rx="6" fill="currentColor" fillOpacity="0.04" stroke="currentColor" strokeOpacity="0.1" />
+      <rect x="228" y="70" width="130" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      <rect x="228" y="90" width="140" height="6" rx="1" fill="currentColor" fillOpacity="0.07" />
+      <rect x="228" y="102" width="120" height="6" rx="1" fill="currentColor" fillOpacity="0.07" />
+      <rect x="228" y="130" width="90" height="28" rx="4" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeOpacity="0.15" />
+    </WireframeSvg>
+  );
+}
+
 // ─── Registry ───────────────────────────────────────────
 
 const wireframeRegistry: Record<WireframeBlockId, React.FC<WireframeBlockProps>> = {
@@ -592,16 +816,16 @@ const wireframeRegistry: Record<WireframeBlockId, React.FC<WireframeBlockProps>>
   "card-featured-plus": CardFeaturedPlus,
   "card-image-hover": CardImageHover,
   "tab-interface": TabInterface,
-  "tab-category": Placeholder,
-  "testimonial-carousel": Placeholder,
-  "testimonial-cards": Placeholder,
-  "testimonial-video": Placeholder,
-  "testimonial-quote": Placeholder,
-  "logo-bar": Placeholder,
-  "logo-grid": Placeholder,
-  "logo-marquee": Placeholder,
-  "cta-banner-fullwidth": Placeholder,
-  "cta-split": Placeholder,
+  "tab-category": TabCategory,
+  "testimonial-carousel": TestimonialCarousel,
+  "testimonial-cards": TestimonialCards,
+  "testimonial-video": TestimonialVideo,
+  "testimonial-quote": TestimonialQuote,
+  "logo-bar": LogoBar,
+  "logo-grid": LogoGrid,
+  "logo-marquee": LogoMarquee,
+  "cta-banner-fullwidth": CtaBannerFullwidth,
+  "cta-split": CtaSplit,
   "cta-form-embed": Placeholder,
   "cta-simple": Placeholder,
   "form-simple": Placeholder,
