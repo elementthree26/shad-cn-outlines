@@ -1202,6 +1202,582 @@ function TeamCarousel({ className }: WireframeBlockProps) {
   );
 }
 
+function TeamModal({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      {/* Background cards */}
+      {[0, 1, 2, 3].map((i) => {
+        const x = 16 + i * 94;
+        return (
+          <g key={i} opacity="0.4">
+            <rect x={x} y={30} width="86" height="90" rx="4" fill="currentColor" fillOpacity="0.04" stroke="currentColor" strokeOpacity="0.06" />
+            <circle cx={x + 43} cy={56} r="16" fill="currentColor" fillOpacity="0.06" />
+          </g>
+        );
+      })}
+      {/* Modal overlay */}
+      <rect x="80" y="40" width="240" height="190" rx="6" fill="currentColor" fillOpacity="0.06" stroke="currentColor" strokeOpacity="0.18" />
+      <circle cx="200" cy={80} r="26" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.1" />
+      <rect x="155" y="116" width="90" height="8" rx="2" fill="currentColor" fillOpacity="0.14" />
+      <rect x="165" y="130" width="70" height="6" rx="1" fill="currentColor" fillOpacity="0.08" />
+      <rect x="100" y="150" width="200" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+      <rect x="110" y="162" width="180" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+      <rect x="105" y="174" width="190" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+      {/* Close button */}
+      <rect x="298" y="46" width="16" height="16" rx="8" fill="currentColor" fillOpacity="0.08" />
+    </WireframeSvg>
+  );
+}
+
+function TeamSimple({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="130" y="10" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {[0, 1, 2, 3, 4].map((i) => {
+        const y = 32 + i * 42;
+        return (
+          <g key={i}>
+            <circle cx="50" cy={y + 14} r="14" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeOpacity="0.08" />
+            <rect x="74" y={y + 4} width="100" height="7" rx="1" fill="currentColor" fillOpacity="0.12" />
+            <rect x="74" y={y + 18} width="70" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+            <rect x="300" y={y + 8} width="60" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+            {i < 4 && <line x1="30" y1={y + 38} x2="370" y2={y + 38} stroke="currentColor" strokeOpacity="0.05" />}
+          </g>
+        );
+      })}
+    </WireframeSvg>
+  );
+}
+
+function TeamFeatured({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      {/* Featured person */}
+      <rect x="16" y="16" width="180" height="228" rx="4" fill="currentColor" fillOpacity="0.03" stroke="currentColor" strokeOpacity="0.1" />
+      <circle cx="106" cy={66} r="30" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeOpacity="0.1" />
+      <rect x="56" y="108" width="100" height="9" rx="2" fill="currentColor" fillOpacity="0.14" />
+      <rect x="66" y="124" width="80" height="6" rx="1" fill="currentColor" fillOpacity="0.08" />
+      <rect x="30" y="144" width="152" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+      <rect x="34" y="156" width="144" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+      <rect x="30" y="168" width="152" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+      {/* Supporting team list */}
+      {[0, 1, 2, 3].map((i) => {
+        const y = 20 + i * 56;
+        return (
+          <g key={i}>
+            <rect x="210" y={y} width="174" height="50" rx="3" fill="currentColor" fillOpacity="0.03" stroke="currentColor" strokeOpacity="0.08" />
+            <circle cx="236" cy={y + 25} r="12" fill="currentColor" fillOpacity="0.07" />
+            <rect x="256" y={y + 14} width="80" height="7" rx="1" fill="currentColor" fillOpacity="0.1" />
+            <rect x="256" y={y + 28} width="60" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+          </g>
+        );
+      })}
+    </WireframeSvg>
+  );
+}
+
+// ─── Map / Location ─────────────────────────────────────
+
+function MapInteractive({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="16" y="16" width="368" height="228" rx="4" fill="currentColor" fillOpacity="0.06" stroke="currentColor" strokeOpacity="0.12" />
+      {/* Map-like shapes */}
+      <path d="M60 180 Q120 100, 200 140 Q260 170, 340 120" stroke="currentColor" strokeOpacity="0.08" fill="none" strokeWidth="2" />
+      <path d="M40 200 Q100 160, 180 190 Q240 210, 360 170" stroke="currentColor" strokeOpacity="0.06" fill="none" strokeWidth="2" />
+      {/* Pins */}
+      <circle cx="150" cy="100" r="6" fill="currentColor" fillOpacity="0.2" />
+      <circle cx="250" cy="130" r="6" fill="currentColor" fillOpacity="0.2" />
+      <circle cx="310" cy="90" r="6" fill="currentColor" fillOpacity="0.15" />
+      {/* Zoom controls */}
+      <rect x="350" y="24" width="24" height="50" rx="4" fill="currentColor" fillOpacity="0.06" stroke="currentColor" strokeOpacity="0.1" />
+      <rect x="356" y="34" width="12" height="2" rx="1" fill="currentColor" fillOpacity="0.15" />
+      <rect x="360" y="30" width="4" height="10" rx="1" fill="currentColor" fillOpacity="0.15" />
+      <rect x="356" y="58" width="12" height="2" rx="1" fill="currentColor" fillOpacity="0.15" />
+    </WireframeSvg>
+  );
+}
+
+function MapContactOverlay({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      {/* Map background */}
+      <rect x="16" y="16" width="368" height="228" rx="4" fill="currentColor" fillOpacity="0.06" stroke="currentColor" strokeOpacity="0.12" />
+      <path d="M40 200 Q140 140, 240 180 Q320 210, 384 160" stroke="currentColor" strokeOpacity="0.06" fill="none" />
+      <circle cx="200" cy="120" r="6" fill="currentColor" fillOpacity="0.2" />
+      {/* Contact card overlay */}
+      <rect x="24" y="24" width="180" height="130" rx="6" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeOpacity="0.15" />
+      <rect x="36" y="36" width="120" height="8" rx="2" fill="currentColor" fillOpacity="0.15" />
+      <rect x="36" y="54" width="150" height="5" rx="1" fill="currentColor" fillOpacity="0.08" />
+      <rect x="36" y="66" width="140" height="5" rx="1" fill="currentColor" fillOpacity="0.08" />
+      <rect x="36" y="82" width="100" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+      <rect x="36" y="96" width="80" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+      <rect x="36" y="118" width="80" height="22" rx="3" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.15" />
+    </WireframeSvg>
+  );
+}
+
+function MapCoverage({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="16" y="16" width="368" height="228" rx="4" fill="currentColor" fillOpacity="0.05" stroke="currentColor" strokeOpacity="0.12" />
+      <path d="M60 190 Q130 130, 220 160 Q290 180, 360 140" stroke="currentColor" strokeOpacity="0.06" fill="none" />
+      {/* Coverage circle */}
+      <circle cx="200" cy="120" r="60" fill="currentColor" fillOpacity="0.06" stroke="currentColor" strokeOpacity="0.12" strokeDasharray="4 4" />
+      <circle cx="200" cy="120" r="4" fill="currentColor" fillOpacity="0.25" />
+      {/* Legend */}
+      <rect x="28" y="200" width="8" height="8" rx="2" fill="currentColor" fillOpacity="0.12" />
+      <rect x="42" y="201" width="60" height="6" rx="1" fill="currentColor" fillOpacity="0.08" />
+    </WireframeSvg>
+  );
+}
+
+function MapMultiPin({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="16" y="16" width="368" height="228" rx="4" fill="currentColor" fillOpacity="0.06" stroke="currentColor" strokeOpacity="0.12" />
+      <path d="M50 190 Q140 140, 230 170 Q310 190, 380 150" stroke="currentColor" strokeOpacity="0.06" fill="none" />
+      {/* Multiple pins */}
+      {[[100, 90], [160, 140], [230, 100], [280, 150], [330, 110]].map(([cx, cy], i) => (
+        <g key={i}>
+          <circle cx={cx} cy={cy} r="8" fill="currentColor" fillOpacity="0.15" stroke="currentColor" strokeOpacity="0.2" />
+          <rect x={cx! - 3} y={cy! - 3} width="6" height="6" rx="1" fill="currentColor" fillOpacity="0.2" />
+        </g>
+      ))}
+      {/* Location list sidebar */}
+      <rect x="24" y="24" width="100" height="140" rx="4" fill="currentColor" fillOpacity="0.06" stroke="currentColor" strokeOpacity="0.1" />
+      {[0, 1, 2, 3].map((i) => (
+        <rect key={i} x="32" y={34 + i * 32} width="84" height="22" rx="2" fill="currentColor" fillOpacity={i === 0 ? "0.1" : "0.04"} />
+      ))}
+    </WireframeSvg>
+  );
+}
+
+// ─── Jobs ───────────────────────────────────────────────
+
+function JobsFilterable({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      {/* Filter bar */}
+      <rect x="16" y="14" width="368" height="30" rx="4" fill="currentColor" fillOpacity="0.04" stroke="currentColor" strokeOpacity="0.08" />
+      {[0, 1, 2].map((i) => (
+        <rect key={i} x={24 + i * 100} y={20} width="88" height="18" rx="3" fill="currentColor" fillOpacity="0.06" stroke="currentColor" strokeOpacity="0.08" />
+      ))}
+      <rect x="340" y={20} width="36" height="18" rx="3" fill="currentColor" fillOpacity="0.1" />
+      {/* Job rows */}
+      {[0, 1, 2, 3, 4].map((i) => {
+        const y = 54 + i * 40;
+        return (
+          <g key={i}>
+            <rect x="16" y={y} width="368" height="34" rx="3" fill="currentColor" fillOpacity="0.03" stroke="currentColor" strokeOpacity="0.06" />
+            <rect x="26" y={y + 8} width="140" height="7" rx="1" fill="currentColor" fillOpacity="0.12" />
+            <rect x="26" y={y + 20} width="80" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+            <rect x="280" y={y + 8} width="50" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+            <rect x="340" y={y + 7} width="34" height="18" rx="3" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeOpacity="0.1" />
+          </g>
+        );
+      })}
+    </WireframeSvg>
+  );
+}
+
+function JobsAccordion({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="130" y="10" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {[0, 1, 2].map((i) => {
+        const y = 30 + i * 76;
+        const isOpen = i === 0;
+        return (
+          <g key={i}>
+            <rect x="30" y={y} width="340" height={isOpen ? 68 : 28} rx="3" fill="currentColor" fillOpacity={isOpen ? "0.05" : "0.03"} stroke="currentColor" strokeOpacity="0.1" />
+            <rect x="44" y={y + 8} width="120" height="7" rx="1" fill="currentColor" fillOpacity="0.14" />
+            <rect x="330" y={y + 6} width="28" height="12" rx="2" fill="currentColor" fillOpacity="0.06" />
+            {isOpen && [0, 1].map((j) => (
+              <g key={j}>
+                <rect x="56" y={y + 28 + j * 18} width="160" height="6" rx="1" fill="currentColor" fillOpacity="0.08" />
+                <rect x="280" y={y + 27 + j * 18} width="50" height="14" rx="3" fill="currentColor" fillOpacity="0.07" stroke="currentColor" strokeOpacity="0.08" />
+              </g>
+            ))}
+          </g>
+        );
+      })}
+    </WireframeSvg>
+  );
+}
+
+function JobsCards({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="130" y="10" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {[0, 1, 2].map((col) =>
+        [0, 1].map((row) => {
+          const x = 16 + col * 128;
+          const y = 28 + row * 118;
+          return (
+            <g key={`${col}-${row}`}>
+              <rect x={x} y={y} width="120" height="110" rx="4" fill="currentColor" fillOpacity="0.03" stroke="currentColor" strokeOpacity="0.1" />
+              <rect x={x + 10} y={y + 12} width="80" height="7" rx="1" fill="currentColor" fillOpacity="0.12" />
+              <rect x={x + 10} y={y + 26} width="50" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+              <rect x={x + 10} y={y + 38} width="40" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+              <rect x={x + 10} y={y + 56} width="100" height="5" rx="1" fill="currentColor" fillOpacity="0.05" />
+              <rect x={x + 10} y={y + 66} width="90" height="5" rx="1" fill="currentColor" fillOpacity="0.05" />
+              <rect x={x + 10} y={y + 82} width="60" height="18" rx="3" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeOpacity="0.12" />
+            </g>
+          );
+        })
+      )}
+    </WireframeSvg>
+  );
+}
+
+function JobsAtsEmbed({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="40" y="12" width="320" height="236" rx="6" fill="currentColor" fillOpacity="0.03" stroke="currentColor" strokeOpacity="0.1" strokeDasharray="4 4" />
+      <rect x="130" y="24" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.1" />
+      <rect x="150" y="40" width="100" height="6" rx="1" fill="currentColor" fillOpacity="0.06" />
+      {/* Embedded widget */}
+      <rect x="60" y="58" width="280" height="170" rx="4" fill="currentColor" fillOpacity="0.04" stroke="currentColor" strokeOpacity="0.08" />
+      <rect x="72" y="68" width="200" height="18" rx="3" fill="currentColor" fillOpacity="0.06" stroke="currentColor" strokeOpacity="0.08" />
+      {[0, 1, 2, 3].map((i) => (
+        <g key={i}>
+          <rect x="72" y={98 + i * 30} width="180" height="6" rx="1" fill="currentColor" fillOpacity="0.08" />
+          <rect x="280" y={96 + i * 30} width="44" height="16" rx="3" fill="currentColor" fillOpacity="0.06" stroke="currentColor" strokeOpacity="0.08" />
+        </g>
+      ))}
+    </WireframeSvg>
+  );
+}
+
+function JobsList({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="130" y="10" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {[0, 1, 2, 3, 4, 5, 6].map((i) => {
+        const y = 30 + i * 32;
+        return (
+          <g key={i}>
+            <rect x="30" y={y} width="200" height="7" rx="1" fill="currentColor" fillOpacity="0.1" />
+            <rect x="30" y={y + 12} width="100" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+            <rect x="320" y={y + 2} width="50" height="16" rx="3" fill="currentColor" fillOpacity="0.07" stroke="currentColor" strokeOpacity="0.1" />
+            {i < 6 && <line x1="30" y1={y + 28} x2="370" y2={y + 28} stroke="currentColor" strokeOpacity="0.05" />}
+          </g>
+        );
+      })}
+    </WireframeSvg>
+  );
+}
+
+// ─── Media ──────────────────────────────────────────────
+
+function VideoEmbed({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="40" y="24" width="320" height="180" rx="4" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeOpacity="0.12" />
+      <circle cx="200" cy="114" r="24" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.2" />
+      <path d="M192 102 L214 114 L192 126Z" fill="currentColor" fillOpacity="0.25" />
+      {/* Progress bar */}
+      <rect x="48" y="192" width="304" height="4" rx="2" fill="currentColor" fillOpacity="0.06" />
+      <rect x="48" y="192" width="100" height="4" rx="2" fill="currentColor" fillOpacity="0.15" />
+      <rect x="120" y="220" width="160" height="6" rx="1" fill="currentColor" fillOpacity="0.08" />
+    </WireframeSvg>
+  );
+}
+
+function VideoModal({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      {/* Thumbnail */}
+      <rect x="100" y="40" width="200" height="120" rx="4" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeOpacity="0.12" />
+      <circle cx="200" cy="100" r="22" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.2" />
+      <path d="M193 89 L211 100 L193 111Z" fill="currentColor" fillOpacity="0.25" />
+      {/* "Click to play" text */}
+      <rect x="150" y="174" width="100" height="6" rx="1" fill="currentColor" fillOpacity="0.08" />
+      {/* Modal frame hint */}
+      <rect x="60" y="28" width="280" height="180" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.06" strokeDasharray="4 4" />
+    </WireframeSvg>
+  );
+}
+
+function VideoBackground({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="16" y="16" width="368" height="228" rx="4" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.12" />
+      {/* Diagonal motion lines */}
+      <line x1="16" y1="80" x2="120" y2="16" stroke="currentColor" strokeOpacity="0.05" />
+      <line x1="16" y1="140" x2="200" y2="16" stroke="currentColor" strokeOpacity="0.05" />
+      <line x1="16" y1="200" x2="280" y2="16" stroke="currentColor" strokeOpacity="0.05" />
+      <line x1="60" y1="244" x2="360" y2="16" stroke="currentColor" strokeOpacity="0.05" />
+      {/* Overlay content */}
+      <rect x="100" y="80" width="200" height="14" rx="2" fill="currentColor" fillOpacity="0.2" />
+      <rect x="120" y="104" width="160" height="8" rx="2" fill="currentColor" fillOpacity="0.12" />
+      <rect x="150" y="130" width="100" height="30" rx="4" fill="currentColor" fillOpacity="0.15" stroke="currentColor" strokeOpacity="0.25" />
+    </WireframeSvg>
+  );
+}
+
+function PhotoGallery({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="130" y="10" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {/* Large featured image */}
+      <rect x="16" y="28" width="240" height="140" rx="4" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeOpacity="0.1" />
+      {/* Side thumbnails */}
+      <rect x="264" y="28" width="120" height="68" rx="3" fill="currentColor" fillOpacity="0.07" stroke="currentColor" strokeOpacity="0.08" />
+      <rect x="264" y="100" width="120" height="68" rx="3" fill="currentColor" fillOpacity="0.07" stroke="currentColor" strokeOpacity="0.08" />
+      {/* Bottom row */}
+      {[0, 1, 2, 3].map((i) => (
+        <rect key={i} x={16 + i * 94} y={176} width="86" height="68" rx="3" fill="currentColor" fillOpacity="0.06" stroke="currentColor" strokeOpacity="0.08" />
+      ))}
+    </WireframeSvg>
+  );
+}
+
+// ─── Misc ───────────────────────────────────────────────
+
+function BadgeSealDisplay({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="130" y="14" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {[0, 1, 2, 3, 4].map((i) => {
+        const x = 26 + i * 72;
+        return (
+          <g key={i}>
+            <circle cx={x + 30} cy={80} r="26" fill="currentColor" fillOpacity="0.06" stroke="currentColor" strokeOpacity="0.12" />
+            <circle cx={x + 30} cy={80} r="18" fill="currentColor" fillOpacity="0.04" stroke="currentColor" strokeOpacity="0.08" />
+            <rect x={x + 20} y={76} width="20" height="8" rx="1" fill="currentColor" fillOpacity="0.1" />
+            <rect x={x + 10} y={118} width="40" height="6" rx="1" fill="currentColor" fillOpacity="0.08" />
+          </g>
+        );
+      })}
+    </WireframeSvg>
+  );
+}
+
+function ComparisonTable({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="130" y="8" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {/* Header row */}
+      <rect x="16" y="24" width="368" height="26" rx="3" fill="currentColor" fillOpacity="0.08" />
+      {[0, 1, 2, 3].map((i) => (
+        <rect key={i} x={24 + i * 92} y={32} width="72" height="7" rx="1" fill="currentColor" fillOpacity="0.12" />
+      ))}
+      {/* Data rows */}
+      {[0, 1, 2, 3, 4, 5, 6].map((row) => {
+        const y = 54 + row * 28;
+        return (
+          <g key={row}>
+            <rect x="16" y={y} width="368" height="24" rx="0" fill="currentColor" fillOpacity={row % 2 === 0 ? "0.03" : "0.0"} />
+            <rect x="24" y={y + 6} width="60" height="6" rx="1" fill="currentColor" fillOpacity="0.08" />
+            {[1, 2, 3].map((col) => (
+              <circle key={col} cx={60 + col * 92} cy={y + 12} r="5" fill="currentColor" fillOpacity="0.1" />
+            ))}
+          </g>
+        );
+      })}
+    </WireframeSvg>
+  );
+}
+
+function ContactCard({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="80" y="30" width="240" height="200" rx="6" fill="currentColor" fillOpacity="0.04" stroke="currentColor" strokeOpacity="0.12" />
+      <rect x="140" y="46" width="120" height="10" rx="2" fill="currentColor" fillOpacity="0.14" />
+      {/* Contact rows */}
+      {[0, 1, 2, 3].map((i) => {
+        const y = 76 + i * 34;
+        return (
+          <g key={i}>
+            <circle cx="110" cy={y + 4} r="8" fill="currentColor" fillOpacity="0.08" />
+            <rect x="126" y={y - 2} width="100" height="6" rx="1" fill="currentColor" fillOpacity="0.08" />
+            <rect x="126" y={y + 8} width="140" height="5" rx="1" fill="currentColor" fillOpacity="0.12" />
+          </g>
+        );
+      })}
+    </WireframeSvg>
+  );
+}
+
+function ContactGrid({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="130" y="10" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {[0, 1, 2].map((i) => {
+        const x = 16 + i * 128;
+        return (
+          <g key={i}>
+            <rect x={x} y={30} width="120" height="140" rx="4" fill="currentColor" fillOpacity="0.03" stroke="currentColor" strokeOpacity="0.1" />
+            <circle cx={x + 60} cy={60} r="16" fill="currentColor" fillOpacity="0.08" />
+            <rect x={x + 20} y={86} width="80" height="7" rx="1" fill="currentColor" fillOpacity="0.12" />
+            <rect x={x + 16} y={102} width="88" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+            <rect x={x + 22} y={114} width="76" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+            <rect x={x + 24} y={126} width="72" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+            <rect x={x + 20} y={142} width="80" height="18" rx="3" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeOpacity="0.1" />
+          </g>
+        );
+      })}
+    </WireframeSvg>
+  );
+}
+
+function ContactTabs({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      {[0, 1, 2].map((i) => {
+        const x = 60 + i * 100;
+        return <rect key={i} x={x} y={16} width="90" height="24" rx="3" fill="currentColor" fillOpacity={i === 0 ? "0.1" : "0.04"} />;
+      })}
+      <rect x="60" y="40" width="90" height="2" fill="currentColor" fillOpacity="0.2" />
+      <rect x="40" y="50" width="320" height="190" rx="4" fill="currentColor" fillOpacity="0.03" stroke="currentColor" strokeOpacity="0.08" />
+      {/* Contact details */}
+      {[0, 1, 2, 3].map((i) => (
+        <g key={i}>
+          <circle cx="72" cy={76 + i * 36} r="10" fill="currentColor" fillOpacity="0.08" />
+          <rect x="92" y={70 + i * 36} width="120" height="6" rx="1" fill="currentColor" fillOpacity="0.08" />
+          <rect x="92" y={82 + i * 36} width="180" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+        </g>
+      ))}
+    </WireframeSvg>
+  );
+}
+
+function Infographic({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="130" y="10" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {/* Mixed visual elements */}
+      <circle cx="100" cy="80" r="30" fill="currentColor" fillOpacity="0.06" stroke="currentColor" strokeOpacity="0.1" />
+      <rect x="82" y="72" width="36" height="16" rx="2" fill="currentColor" fillOpacity="0.12" />
+      <rect x="160" y="50" width="80" height="60" rx="4" fill="currentColor" fillOpacity="0.05" stroke="currentColor" strokeOpacity="0.08" />
+      <rect x="168" y="58" width="64" height="8" rx="1" fill="currentColor" fillOpacity="0.1" />
+      <rect x="168" y="74" width="56" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+      <rect x="168" y="86" width="60" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+      <rect x="270" y="50" width="100" height="60" rx="4" fill="currentColor" fillOpacity="0.05" stroke="currentColor" strokeOpacity="0.08" />
+      {/* Bar chart hint */}
+      {[0, 1, 2, 3].map((i) => (
+        <rect key={i} x={280 + i * 18} y={110 - (i + 1) * 12} width="12" height={(i + 1) * 12} rx="1" fill="currentColor" fillOpacity="0.1" />
+      ))}
+      {/* Arrow connections */}
+      <line x1="132" y1="80" x2="158" y2="80" stroke="currentColor" strokeOpacity="0.08" strokeDasharray="3 3" />
+      <line x1="242" y1="80" x2="268" y2="80" stroke="currentColor" strokeOpacity="0.08" strokeDasharray="3 3" />
+    </WireframeSvg>
+  );
+}
+
+function DiagramInteractive({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="130" y="10" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {/* Nodes and connections */}
+      <rect x="30" y="50" width="100" height="50" rx="6" fill="currentColor" fillOpacity="0.06" stroke="currentColor" strokeOpacity="0.12" />
+      <rect x="50" y="68" width="60" height="8" rx="1" fill="currentColor" fillOpacity="0.1" />
+      <rect x="150" y="40" width="100" height="50" rx="6" fill="currentColor" fillOpacity="0.06" stroke="currentColor" strokeOpacity="0.12" />
+      <rect x="170" y="58" width="60" height="8" rx="1" fill="currentColor" fillOpacity="0.1" />
+      <rect x="270" y="50" width="100" height="50" rx="6" fill="currentColor" fillOpacity="0.06" stroke="currentColor" strokeOpacity="0.12" />
+      <rect x="290" y="68" width="60" height="8" rx="1" fill="currentColor" fillOpacity="0.1" />
+      <line x1="130" y1="75" x2="150" y2="65" stroke="currentColor" strokeOpacity="0.1" />
+      <line x1="250" y1="65" x2="270" y2="75" stroke="currentColor" strokeOpacity="0.1" />
+      {/* Second row */}
+      <rect x="90" y="130" width="100" height="50" rx="6" fill="currentColor" fillOpacity="0.06" stroke="currentColor" strokeOpacity="0.12" />
+      <rect x="210" y="130" width="100" height="50" rx="6" fill="currentColor" fillOpacity="0.06" stroke="currentColor" strokeOpacity="0.12" />
+      <line x1="200" y1="90" x2="140" y2="130" stroke="currentColor" strokeOpacity="0.08" />
+      <line x1="200" y1="90" x2="260" y2="130" stroke="currentColor" strokeOpacity="0.08" />
+    </WireframeSvg>
+  );
+}
+
+function FaqSearchable({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="130" y="10" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {/* Search bar */}
+      <rect x="80" y="30" width="240" height="28" rx="14" fill="currentColor" fillOpacity="0.05" stroke="currentColor" strokeOpacity="0.12" />
+      <circle cx="100" cy="44" r="6" fill="none" stroke="currentColor" strokeOpacity="0.15" />
+      <rect x="116" y="41" width="80" height="6" rx="1" fill="currentColor" fillOpacity="0.06" />
+      {/* FAQ items */}
+      {[0, 1, 2, 3].map((i) => {
+        const y = 68 + i * 44;
+        const isOpen = i === 0;
+        return (
+          <g key={i}>
+            <rect x="40" y={y} width="320" height={isOpen ? 38 : 24} rx="3" fill="currentColor" fillOpacity={isOpen ? "0.06" : "0.03"} stroke="currentColor" strokeOpacity="0.08" />
+            <rect x="54" y={y + 6} width="200" height="7" rx="1" fill="currentColor" fillOpacity="0.1" />
+            {isOpen && <rect x="54" y={y + 22} width="280" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />}
+          </g>
+        );
+      })}
+    </WireframeSvg>
+  );
+}
+
+function ZipcodeLookup({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="130" y="20" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      <rect x="100" y="44" width="140" height="6" rx="1" fill="currentColor" fillOpacity="0.06" />
+      {/* Input + button */}
+      <rect x="100" y="64" width="140" height="30" rx="4" fill="currentColor" fillOpacity="0.05" stroke="currentColor" strokeOpacity="0.12" />
+      <rect x="248" y="64" width="60" height="30" rx="4" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.2" />
+      {/* Result area */}
+      <rect x="60" y="110" width="280" height="120" rx="6" fill="currentColor" fillOpacity="0.04" stroke="currentColor" strokeOpacity="0.08" />
+      <circle cx="130" cy="170" r="40" fill="currentColor" fillOpacity="0.05" stroke="currentColor" strokeOpacity="0.08" strokeDasharray="3 3" />
+      <circle cx="130" cy="170" r="3" fill="currentColor" fillOpacity="0.2" />
+      <rect x="200" y="140" width="120" height="7" rx="1" fill="currentColor" fillOpacity="0.1" />
+      <rect x="200" y="156" width="100" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+      <rect x="200" y="170" width="110" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+    </WireframeSvg>
+  );
+}
+
+function RegionCoverage({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="130" y="10" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {/* Map with region fills */}
+      <rect x="16" y="28" width="260" height="210" rx="4" fill="currentColor" fillOpacity="0.05" stroke="currentColor" strokeOpacity="0.1" />
+      <path d="M40 140 L80 80 L140 100 L160 140 L120 180Z" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.1" />
+      <path d="M140 100 L200 70 L230 120 L160 140Z" fill="currentColor" fillOpacity="0.06" stroke="currentColor" strokeOpacity="0.08" />
+      <path d="M160 140 L230 120 L250 180 L180 200Z" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeOpacity="0.08" />
+      {/* Legend */}
+      <rect x="290" y="36" width="94" height="120" rx="4" fill="currentColor" fillOpacity="0.03" stroke="currentColor" strokeOpacity="0.08" />
+      {[0, 1, 2].map((i) => (
+        <g key={i}>
+          <rect x="300" y={50 + i * 32} width="12" height="12" rx="2" fill="currentColor" fillOpacity={0.06 + i * 0.04} />
+          <rect x="320" y={52 + i * 32} width="50" height="6" rx="1" fill="currentColor" fillOpacity="0.08" />
+        </g>
+      ))}
+    </WireframeSvg>
+  );
+}
+
+function StarRating({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="80" y="30" width="240" height="200" rx="6" fill="currentColor" fillOpacity="0.04" stroke="currentColor" strokeOpacity="0.08" />
+      {/* Large rating number */}
+      <rect x="155" y="46" width="90" height="36" rx="4" fill="currentColor" fillOpacity="0.15" />
+      {/* Stars */}
+      {[0, 1, 2, 3, 4].map((i) => (
+        <rect key={i} x={145 + i * 24} y={96} width="16" height="16" rx="2" fill="currentColor" fillOpacity={i < 4 ? "0.2" : "0.06"} />
+      ))}
+      <rect x="150" y="122" width="100" height="6" rx="1" fill="currentColor" fillOpacity="0.08" />
+      {/* Rating bars */}
+      {[0, 1, 2, 3, 4].map((i) => {
+        const width = [200, 150, 60, 20, 10][i]!;
+        return (
+          <g key={i}>
+            <rect x="104" y={146 + i * 16} width="12" height="8" rx="1" fill="currentColor" fillOpacity="0.08" />
+            <rect x="122" y={148 + i * 16} width={width} height="4" rx="2" fill="currentColor" fillOpacity="0.12" />
+          </g>
+        );
+      })}
+    </WireframeSvg>
+  );
+}
+
 // ─── Registry ───────────────────────────────────────────
 
 const wireframeRegistry: Record<WireframeBlockId, React.FC<WireframeBlockProps>> = {
@@ -1259,33 +1835,33 @@ const wireframeRegistry: Record<WireframeBlockId, React.FC<WireframeBlockProps>>
   "list-simple": ListSimple,
   "team-grid": TeamGrid,
   "team-carousel": TeamCarousel,
-  "team-modal": Placeholder,
-  "team-simple": Placeholder,
-  "team-featured": Placeholder,
-  "map-interactive": Placeholder,
-  "map-contact-overlay": Placeholder,
-  "map-coverage": Placeholder,
-  "map-multi-pin": Placeholder,
-  "jobs-filterable": Placeholder,
-  "jobs-accordion": Placeholder,
-  "jobs-cards": Placeholder,
-  "jobs-ats-embed": Placeholder,
-  "jobs-list": Placeholder,
-  "video-embed": Placeholder,
-  "video-modal": Placeholder,
-  "video-background": Placeholder,
-  "photo-gallery": Placeholder,
-  "badge-seal-display": Placeholder,
-  "comparison-table": Placeholder,
-  "contact-card": Placeholder,
-  "contact-grid": Placeholder,
-  "contact-tabs": Placeholder,
-  "infographic": Placeholder,
-  "diagram-interactive": Placeholder,
-  "faq-searchable": Placeholder,
-  "zipcode-lookup": Placeholder,
-  "region-coverage": Placeholder,
-  "star-rating": Placeholder,
+  "team-modal": TeamModal,
+  "team-simple": TeamSimple,
+  "team-featured": TeamFeatured,
+  "map-interactive": MapInteractive,
+  "map-contact-overlay": MapContactOverlay,
+  "map-coverage": MapCoverage,
+  "map-multi-pin": MapMultiPin,
+  "jobs-filterable": JobsFilterable,
+  "jobs-accordion": JobsAccordion,
+  "jobs-cards": JobsCards,
+  "jobs-ats-embed": JobsAtsEmbed,
+  "jobs-list": JobsList,
+  "video-embed": VideoEmbed,
+  "video-modal": VideoModal,
+  "video-background": VideoBackground,
+  "photo-gallery": PhotoGallery,
+  "badge-seal-display": BadgeSealDisplay,
+  "comparison-table": ComparisonTable,
+  "contact-card": ContactCard,
+  "contact-grid": ContactGrid,
+  "contact-tabs": ContactTabs,
+  "infographic": Infographic,
+  "diagram-interactive": DiagramInteractive,
+  "faq-searchable": FaqSearchable,
+  "zipcode-lookup": ZipcodeLookup,
+  "region-coverage": RegionCoverage,
+  "star-rating": StarRating,
 };
 
 function Placeholder({ className }: WireframeBlockProps) {
