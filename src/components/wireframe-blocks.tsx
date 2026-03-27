@@ -979,6 +979,229 @@ function TimelineHorizontal({ className }: WireframeBlockProps) {
   );
 }
 
+function StepsNumbered({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="130" y="10" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {[0, 1, 2, 3, 4].map((i) => {
+        const x = 24 + i * 74;
+        return (
+          <g key={i}>
+            <circle cx={x + 30} cy={50} r="16" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.15" />
+            <rect x={x + 24} y={44} width="12" height="12" rx="1" fill="currentColor" fillOpacity="0.15" />
+            <rect x={x + 8} y={78} width="44" height="7" rx="1" fill="currentColor" fillOpacity="0.1" />
+            <rect x={x + 4} y={92} width="52" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+            <rect x={x + 8} y={102} width="44" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+            {i < 4 && <line x1={x + 48} y1={50} x2={x + 72} y2={50} stroke="currentColor" strokeOpacity="0.08" strokeDasharray="3 3" />}
+          </g>
+        );
+      })}
+    </WireframeSvg>
+  );
+}
+
+function StepsIcon({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="130" y="10" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {[0, 1, 2, 3].map((i) => {
+        const x = 30 + i * 90;
+        return (
+          <g key={i}>
+            <rect x={x} y={36} width="76" height="76" rx="6" fill="currentColor" fillOpacity="0.04" stroke="currentColor" strokeOpacity="0.1" />
+            <circle cx={x + 38} cy={60} r="14" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeOpacity="0.1" />
+            <rect x={x + 30} y={54} width="16" height="12" rx="2" fill="currentColor" fillOpacity="0.1" />
+            <rect x={x + 12} y={86} width="52" height="6" rx="1" fill="currentColor" fillOpacity="0.1" />
+            <rect x={x + 6} y={100} width="64" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+            {i < 3 && <path d={`M${x + 78} 74 L${x + 88} 74`} stroke="currentColor" strokeOpacity="0.1" strokeDasharray="2 2" />}
+          </g>
+        );
+      })}
+    </WireframeSvg>
+  );
+}
+
+function ProcessDiagram({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="130" y="10" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {/* Central node */}
+      <circle cx="200" cy="130" r="30" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeOpacity="0.15" />
+      <rect x="182" y="124" width="36" height="12" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {/* Surrounding nodes */}
+      {[0, 1, 2, 3, 4].map((i) => {
+        const angle = (i * 72 - 90) * (Math.PI / 180);
+        const cx = 200 + Math.cos(angle) * 80;
+        const cy = 130 + Math.sin(angle) * 80;
+        return (
+          <g key={i}>
+            <line x1={200 + Math.cos(angle) * 32} y1={130 + Math.sin(angle) * 32} x2={cx - Math.cos(angle) * 20} y2={cy - Math.sin(angle) * 20} stroke="currentColor" strokeOpacity="0.1" />
+            <circle cx={cx} cy={cy} r="20" fill="currentColor" fillOpacity="0.06" stroke="currentColor" strokeOpacity="0.1" />
+            <rect x={cx - 12} y={cy - 4} width="24" height="8" rx="1" fill="currentColor" fillOpacity="0.1" />
+          </g>
+        );
+      })}
+    </WireframeSvg>
+  );
+}
+
+// ─── Accordion / Lists ──────────────────────────────────
+
+function AccordionSimple({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="130" y="10" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {[0, 1, 2, 3, 4].map((i) => {
+        const y = 30 + i * 44;
+        const isOpen = i === 1;
+        return (
+          <g key={i}>
+            <rect x="30" y={y} width="340" height={isOpen ? 40 : 24} rx="3" fill="currentColor" fillOpacity={isOpen ? "0.06" : "0.03"} stroke="currentColor" strokeOpacity="0.1" />
+            <rect x="44" y={y + 6} width="140" height="7" rx="1" fill="currentColor" fillOpacity="0.12" />
+            <rect x="348" y={y + 6} width="10" height="10" rx="1" fill="currentColor" fillOpacity="0.08" />
+            {isOpen && <rect x="44" y={y + 22} width="300" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />}
+            {isOpen && <rect x="44" y={y + 30} width="260" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />}
+          </g>
+        );
+      })}
+    </WireframeSvg>
+  );
+}
+
+function AccordionCategorized({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      {/* Category tabs */}
+      {[0, 1, 2].map((i) => {
+        const x = 30 + i * 120;
+        return <rect key={i} x={x} y={14} width="110" height="22" rx="3" fill="currentColor" fillOpacity={i === 0 ? "0.12" : "0.04"} stroke="currentColor" strokeOpacity="0.08" />;
+      })}
+      {/* Accordion items */}
+      {[0, 1, 2, 3].map((i) => {
+        const y = 48 + i * 48;
+        const isOpen = i === 0;
+        return (
+          <g key={i}>
+            <rect x="30" y={y} width="340" height={isOpen ? 42 : 26} rx="3" fill="currentColor" fillOpacity={isOpen ? "0.06" : "0.03"} stroke="currentColor" strokeOpacity="0.1" />
+            <rect x="44" y={y + 6} width="160" height="7" rx="1" fill="currentColor" fillOpacity="0.12" />
+            {isOpen && <rect x="44" y={y + 22} width="300" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />}
+            {isOpen && <rect x="44" y={y + 32} width="270" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />}
+          </g>
+        );
+      })}
+    </WireframeSvg>
+  );
+}
+
+function ListCompact({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="130" y="12" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {[0, 1, 2, 3, 4, 5, 6].map((i) => {
+        const y = 34 + i * 30;
+        return (
+          <g key={i}>
+            <rect x="30" y={y} width="60" height="6" rx="1" fill="currentColor" fillOpacity="0.08" />
+            <rect x="100" y={y} width="200" height="7" rx="1" fill="currentColor" fillOpacity="0.1" />
+            <rect x="100" y={y + 12} width="260" height="5" rx="1" fill="currentColor" fillOpacity="0.05" />
+            {i < 6 && <line x1="30" y1={y + 26} x2="370" y2={y + 26} stroke="currentColor" strokeOpacity="0.05" />}
+          </g>
+        );
+      })}
+    </WireframeSvg>
+  );
+}
+
+function ListNumbered({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="130" y="12" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {[0, 1, 2, 3, 4, 5].map((i) => {
+        const y = 36 + i * 36;
+        return (
+          <g key={i}>
+            <circle cx="46" cy={y + 8} r="10" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeOpacity="0.1" />
+            <rect x="40" y={y + 4} width="12" height="8" rx="1" fill="currentColor" fillOpacity="0.12" />
+            <rect x="68" y={y + 2} width="160" height="7" rx="1" fill="currentColor" fillOpacity="0.1" />
+            <rect x="68" y={y + 16} width="290" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+          </g>
+        );
+      })}
+    </WireframeSvg>
+  );
+}
+
+function ListSimple({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="130" y="12" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => {
+        const y = 34 + i * 28;
+        return (
+          <g key={i}>
+            <circle cx="40" cy={y + 4} r="2.5" fill="currentColor" fillOpacity="0.15" />
+            <rect x="54" y={y} width="300" height="6" rx="1" fill="currentColor" fillOpacity="0.08" />
+          </g>
+        );
+      })}
+    </WireframeSvg>
+  );
+}
+
+// ─── Team / People ──────────────────────────────────────
+
+function TeamGrid({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="130" y="8" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {[0, 1, 2, 3].map((col) =>
+        [0, 1].map((row) => {
+          const x = 16 + col * 94;
+          const y = 26 + row * 118;
+          return (
+            <g key={`${col}-${row}`}>
+              <rect x={x} y={y} width="86" height="112" rx="4" fill="currentColor" fillOpacity="0.03" stroke="currentColor" strokeOpacity="0.08" />
+              <circle cx={x + 43} cy={y + 32} r="20" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeOpacity="0.08" />
+              <rect x={x + 14} y={y + 62} width="58" height="7" rx="1" fill="currentColor" fillOpacity="0.1" />
+              <rect x={x + 20} y={y + 74} width="46" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+              <rect x={x + 24} y={y + 86} width="38" height="5" rx="1" fill="currentColor" fillOpacity="0.05" />
+            </g>
+          );
+        })
+      )}
+    </WireframeSvg>
+  );
+}
+
+function TeamCarousel({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="130" y="10" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {[0, 1, 2].map((i) => {
+        const x = 40 + i * 118;
+        const opacity = i === 1 ? 1 : 0.6;
+        return (
+          <g key={i} opacity={opacity}>
+            <rect x={x} y={34} width="110" height="170" rx="4" fill="currentColor" fillOpacity="0.03" stroke="currentColor" strokeOpacity="0.1" />
+            <circle cx={x + 55} cy={74} r="24" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeOpacity="0.08" />
+            <rect x={x + 16} y={110} width="78" height="8" rx="1" fill="currentColor" fillOpacity="0.1" />
+            <rect x={x + 22} y={124} width="66" height="6" rx="1" fill="currentColor" fillOpacity="0.06" />
+            <rect x={x + 10} y={142} width="90" height="5" rx="1" fill="currentColor" fillOpacity="0.05" />
+            <rect x={x + 14} y={152} width="82" height="5" rx="1" fill="currentColor" fillOpacity="0.05" />
+          </g>
+        );
+      })}
+      {/* Arrows */}
+      <rect x="14" y="110" width="18" height="18" rx="9" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeOpacity="0.12" />
+      <rect x="368" y="110" width="18" height="18" rx="9" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeOpacity="0.12" />
+      {/* Dots */}
+      <circle cx="185" cy="222" r="3" fill="currentColor" fillOpacity="0.06" />
+      <circle cx="200" cy="222" r="3" fill="currentColor" fillOpacity="0.18" />
+      <circle cx="215" cy="222" r="3" fill="currentColor" fillOpacity="0.06" />
+    </WireframeSvg>
+  );
+}
+
 // ─── Registry ───────────────────────────────────────────
 
 const wireframeRegistry: Record<WireframeBlockId, React.FC<WireframeBlockProps>> = {
@@ -1026,16 +1249,16 @@ const wireframeRegistry: Record<WireframeBlockId, React.FC<WireframeBlockProps>>
   "form-selector-combo": FormSelectorCombo,
   "timeline-vertical": TimelineVertical,
   "timeline-horizontal": TimelineHorizontal,
-  "steps-numbered": Placeholder,
-  "steps-icon": Placeholder,
-  "process-diagram": Placeholder,
-  "accordion-simple": Placeholder,
-  "accordion-categorized": Placeholder,
-  "list-compact": Placeholder,
-  "list-numbered": Placeholder,
-  "list-simple": Placeholder,
-  "team-grid": Placeholder,
-  "team-carousel": Placeholder,
+  "steps-numbered": StepsNumbered,
+  "steps-icon": StepsIcon,
+  "process-diagram": ProcessDiagram,
+  "accordion-simple": AccordionSimple,
+  "accordion-categorized": AccordionCategorized,
+  "list-compact": ListCompact,
+  "list-numbered": ListNumbered,
+  "list-simple": ListSimple,
+  "team-grid": TeamGrid,
+  "team-carousel": TeamCarousel,
   "team-modal": Placeholder,
   "team-simple": Placeholder,
   "team-featured": Placeholder,
