@@ -321,6 +321,250 @@ function IconGrid3({ className }: WireframeBlockProps) {
   );
 }
 
+function IconGrid4({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="130" y="16" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {[0, 1, 2, 3].map((col) =>
+        [0, 1].map((row) => {
+          const x = 14 + col * 96;
+          const y = 40 + row * 110;
+          return (
+            <g key={`${col}-${row}`}>
+              <rect x={x} y={y} width="88" height="96" rx="4" fill="currentColor" fillOpacity="0.04" stroke="currentColor" strokeOpacity="0.08" />
+              <circle cx={x + 44} cy={y + 24} r="12" fill="currentColor" fillOpacity="0.1" />
+              <rect x={x + 18} y={y + 44} width="52" height="7" rx="1" fill="currentColor" fillOpacity="0.12" />
+              <rect x={x + 10} y={y + 58} width="68" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+              <rect x={x + 14} y={y + 68} width="60" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+            </g>
+          );
+        })
+      )}
+    </WireframeSvg>
+  );
+}
+
+function IconList({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="130" y="16" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {[0, 1, 2, 3, 4].map((i) => {
+        const y = 42 + i * 42;
+        return (
+          <g key={i}>
+            <circle cx="44" cy={y + 12} r="14" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeOpacity="0.1" />
+            <rect x="36" y={y + 6} width="16" height="12" rx="2" fill="currentColor" fillOpacity="0.1" />
+            <rect x="72" y={y + 2} width="120" height="8" rx="2" fill="currentColor" fillOpacity="0.12" />
+            <rect x="72" y={y + 16} width="280" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+            {i < 4 && <line x1="72" y1={y + 34} x2="370" y2={y + 34} stroke="currentColor" strokeOpacity="0.06" />}
+          </g>
+        );
+      })}
+    </WireframeSvg>
+  );
+}
+
+// ─── Stats ──────────────────────────────────────────────
+
+function StatsBar({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="16" y="60" width="368" height="140" rx="6" fill="currentColor" fillOpacity="0.05" stroke="currentColor" strokeOpacity="0.1" />
+      {[0, 1, 2, 3].map((i) => {
+        const x = 36 + i * 90;
+        return (
+          <g key={i}>
+            <rect x={x + 10} y={80} width="50" height="20" rx="2" fill="currentColor" fillOpacity="0.15" />
+            <rect x={x + 5} y={110} width="60" height="6" rx="1" fill="currentColor" fillOpacity="0.08" />
+            <rect x={x + 10} y={122} width="50" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+            {i < 3 && <line x1={x + 78} y1={80} x2={x + 78} y2={135} stroke="currentColor" strokeOpacity="0.08" />}
+          </g>
+        );
+      })}
+    </WireframeSvg>
+  );
+}
+
+function StatsCallout({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="40" y="20" width="320" height="220" rx="8" fill="currentColor" fillOpacity="0.04" stroke="currentColor" strokeOpacity="0.1" />
+      {/* Large stat */}
+      <rect x="140" y="45" width="120" height="30" rx="3" fill="currentColor" fillOpacity="0.18" />
+      <rect x="155" y="85" width="90" height="8" rx="2" fill="currentColor" fillOpacity="0.1" />
+      {/* Supporting stats row */}
+      {[0, 1, 2].map((i) => {
+        const x = 70 + i * 100;
+        return (
+          <g key={i}>
+            <rect x={x} y={120} width="60" height="18" rx="2" fill="currentColor" fillOpacity="0.12" />
+            <rect x={x + 5} y={146} width="50" height="6" rx="1" fill="currentColor" fillOpacity="0.07" />
+          </g>
+        );
+      })}
+      {/* Description */}
+      <rect x="80" y={180} width="240" height="6" rx="1" fill="currentColor" fillOpacity="0.06" />
+      <rect x="100" y={194} width="200" height="6" rx="1" fill="currentColor" fillOpacity="0.06" />
+    </WireframeSvg>
+  );
+}
+
+// ─── Card layouts ───────────────────────────────────────
+
+function CardGrid3({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="130" y="12" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {[0, 1, 2].map((i) => {
+        const x = 16 + i * 128;
+        return (
+          <g key={i}>
+            <rect x={x} y={34} width="120" height="210" rx="4" fill="currentColor" fillOpacity="0.03" stroke="currentColor" strokeOpacity="0.12" />
+            <rect x={x + 4} y={38} width="112" height="70" rx="3" fill="currentColor" fillOpacity="0.08" />
+            <rect x={x + 10} y={118} width="80" height="8" rx="2" fill="currentColor" fillOpacity="0.12" />
+            <rect x={x + 10} y={134} width="100" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+            <rect x={x + 10} y={144} width="90" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+            <rect x={x + 10} y={154} width="95" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+            <rect x={x + 10} y={176} width="60" height="18" rx="3" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeOpacity="0.12" />
+          </g>
+        );
+      })}
+    </WireframeSvg>
+  );
+}
+
+function CardGrid4({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="130" y="12" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {[0, 1, 2, 3].map((i) => {
+        const x = 12 + i * 96;
+        return (
+          <g key={i}>
+            <rect x={x} y={34} width="90" height="210" rx="4" fill="currentColor" fillOpacity="0.03" stroke="currentColor" strokeOpacity="0.12" />
+            <rect x={x + 3} y={38} width="84" height="55" rx="3" fill="currentColor" fillOpacity="0.08" />
+            <rect x={x + 8} y={102} width="60" height="7" rx="2" fill="currentColor" fillOpacity="0.12" />
+            <rect x={x + 8} y={116} width="74" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+            <rect x={x + 8} y={126} width="68" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+            <rect x={x + 8} y={150} width="50" height="16" rx="3" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeOpacity="0.12" />
+          </g>
+        );
+      })}
+    </WireframeSvg>
+  );
+}
+
+function CardCarousel({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="130" y="12" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {/* Visible cards */}
+      {[0, 1, 2].map((i) => {
+        const x = 30 + i * 118;
+        const opacity = i === 1 ? 1 : 0.6;
+        return (
+          <g key={i} opacity={opacity}>
+            <rect x={x} y={38} width="110" height="160" rx="4" fill="currentColor" fillOpacity="0.03" stroke="currentColor" strokeOpacity="0.12" />
+            <rect x={x + 4} y={42} width="102" height="60" rx="3" fill="currentColor" fillOpacity="0.08" />
+            <rect x={x + 8} y={112} width="70" height="7" rx="2" fill="currentColor" fillOpacity="0.12" />
+            <rect x={x + 8} y={126} width="90" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+            <rect x={x + 8} y={136} width="80" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+          </g>
+        );
+      })}
+      {/* Left/right arrows */}
+      <rect x="8" y="108" width="18" height="18" rx="9" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.15" />
+      <rect x="374" y="108" width="18" height="18" rx="9" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.15" />
+      {/* Dots */}
+      <circle cx="185" cy="218" r="3" fill="currentColor" fillOpacity="0.06" />
+      <circle cx="200" cy="218" r="3" fill="currentColor" fillOpacity="0.18" />
+      <circle cx="215" cy="218" r="3" fill="currentColor" fillOpacity="0.06" />
+    </WireframeSvg>
+  );
+}
+
+function CardFeaturedPlus({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      {/* Featured large card */}
+      <rect x="16" y="16" width="200" height="228" rx="4" fill="currentColor" fillOpacity="0.03" stroke="currentColor" strokeOpacity="0.12" />
+      <rect x="20" y="20" width="192" height="110" rx="3" fill="currentColor" fillOpacity="0.08" />
+      <rect x="28" y="142" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.14" />
+      <rect x="28" y="162" width="170" height="6" rx="1" fill="currentColor" fillOpacity="0.07" />
+      <rect x="28" y="174" width="155" height="6" rx="1" fill="currentColor" fillOpacity="0.07" />
+      <rect x="28" y="200" width="80" height="22" rx="4" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.15" />
+      {/* Supporting smaller cards */}
+      {[0, 1].map((i) => {
+        const y = 16 + i * 118;
+        return (
+          <g key={i}>
+            <rect x="226" y={y} width="158" height="110" rx="4" fill="currentColor" fillOpacity="0.03" stroke="currentColor" strokeOpacity="0.12" />
+            <rect x="230" y={y + 4} width="150" height="44" rx="3" fill="currentColor" fillOpacity="0.07" />
+            <rect x="236" y={y + 56} width="100" height="7" rx="1" fill="currentColor" fillOpacity="0.1" />
+            <rect x="236" y={y + 70} width="130" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+            <rect x="236" y={y + 80} width="120" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+          </g>
+        );
+      })}
+    </WireframeSvg>
+  );
+}
+
+function CardImageHover({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      <rect x="130" y="12" width="140" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      {[0, 1, 2].map((i) => {
+        const x = 16 + i * 128;
+        const isHovered = i === 1;
+        return (
+          <g key={i}>
+            <rect x={x} y={34} width="120" height="210" rx="4" fill="currentColor" fillOpacity={isHovered ? "0.1" : "0.06"} stroke="currentColor" strokeOpacity={isHovered ? "0.2" : "0.1"} />
+            {/* Image fills most of card */}
+            <rect x={x + 4} y={38} width="112" height="130" rx="3" fill="currentColor" fillOpacity={isHovered ? "0.12" : "0.08"} />
+            {/* Hover overlay on middle card */}
+            {isHovered && <rect x={x + 4} y={100} width="112" height="68" rx="0" fill="currentColor" fillOpacity="0.15" />}
+            {isHovered && <rect x={x + 20} y={116} width="80" height="8" rx="2" fill="currentColor" fillOpacity="0.2" />}
+            {isHovered && <rect x={x + 30} y={132} width="60" height="6" rx="1" fill="currentColor" fillOpacity="0.15" />}
+            <rect x={x + 10} y={180} width="80" height="7" rx="2" fill="currentColor" fillOpacity="0.12" />
+            <rect x={x + 10} y={194} width="100" height="5" rx="1" fill="currentColor" fillOpacity="0.06" />
+          </g>
+        );
+      })}
+    </WireframeSvg>
+  );
+}
+
+function TabInterface({ className }: WireframeBlockProps) {
+  return (
+    <WireframeSvg className={className}>
+      {/* Tab bar */}
+      <rect x="16" y="16" width="368" height="36" rx="4" fill="currentColor" fillOpacity="0.04" />
+      {[0, 1, 2, 3].map((i) => {
+        const x = 24 + i * 90;
+        const isActive = i === 0;
+        return (
+          <g key={i}>
+            <rect x={x} y={22} width="78" height="24" rx="3" fill="currentColor" fillOpacity={isActive ? "0.12" : "0.04"} />
+            <rect x={x + 16} y={31} width="46" height="6" rx="1" fill="currentColor" fillOpacity={isActive ? "0.2" : "0.08"} />
+          </g>
+        );
+      })}
+      {/* Active tab underline */}
+      <rect x="24" y="50" width="78" height="2" rx="1" fill="currentColor" fillOpacity="0.25" />
+      {/* Content area */}
+      <rect x="16" y="58" width="368" height="186" rx="4" fill="currentColor" fillOpacity="0.03" stroke="currentColor" strokeOpacity="0.08" />
+      <rect x="30" y="74" width="200" height="10" rx="2" fill="currentColor" fillOpacity="0.12" />
+      <rect x="30" y="96" width="340" height="6" rx="1" fill="currentColor" fillOpacity="0.06" />
+      <rect x="30" y="110" width="320" height="6" rx="1" fill="currentColor" fillOpacity="0.06" />
+      <rect x="30" y="124" width="330" height="6" rx="1" fill="currentColor" fillOpacity="0.06" />
+      {/* Inner content card */}
+      <rect x="30" y="148" width="150" height="80" rx="4" fill="currentColor" fillOpacity="0.05" stroke="currentColor" strokeOpacity="0.08" />
+      <rect x="196" y="148" width="150" height="80" rx="4" fill="currentColor" fillOpacity="0.05" stroke="currentColor" strokeOpacity="0.08" />
+    </WireframeSvg>
+  );
+}
+
 // ─── Registry ───────────────────────────────────────────
 
 const wireframeRegistry: Record<WireframeBlockId, React.FC<WireframeBlockProps>> = {
@@ -338,16 +582,16 @@ const wireframeRegistry: Record<WireframeBlockId, React.FC<WireframeBlockProps>>
   "text-blockquote": TextBlockquote,
   "icon-row": IconRow,
   "icon-grid-3": IconGrid3,
-  "icon-grid-4": Placeholder,
-  "icon-list": Placeholder,
-  "stats-bar": Placeholder,
-  "stats-callout": Placeholder,
-  "card-grid-3": Placeholder,
-  "card-grid-4": Placeholder,
-  "card-carousel": Placeholder,
-  "card-featured-plus": Placeholder,
-  "card-image-hover": Placeholder,
-  "tab-interface": Placeholder,
+  "icon-grid-4": IconGrid4,
+  "icon-list": IconList,
+  "stats-bar": StatsBar,
+  "stats-callout": StatsCallout,
+  "card-grid-3": CardGrid3,
+  "card-grid-4": CardGrid4,
+  "card-carousel": CardCarousel,
+  "card-featured-plus": CardFeaturedPlus,
+  "card-image-hover": CardImageHover,
+  "tab-interface": TabInterface,
   "tab-category": Placeholder,
   "testimonial-carousel": Placeholder,
   "testimonial-cards": Placeholder,
