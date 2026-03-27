@@ -148,7 +148,7 @@ export function ContentThemeCard({
                     variant="secondary"
                     className="text-xs font-normal"
                   >
-                    {opt}
+                    {opt.name}
                   </Badge>
                 ))}
               </div>
@@ -231,7 +231,7 @@ export function ContentThemeCardStatic({
                   variant="secondary"
                   className="text-xs font-normal"
                 >
-                  {opt}
+                  {opt.name}
                 </Badge>
               ))}
             </div>
