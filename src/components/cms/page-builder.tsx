@@ -628,7 +628,7 @@ export function PageBuilder() {
           </div>
         </div>
 
-        <ScrollArea className="flex-1">
+        <div className="flex-1 overflow-y-auto">
           <div className="p-3 space-y-2">
             <DndContext
               sensors={sensors}
@@ -663,7 +663,7 @@ export function PageBuilder() {
               </div>
             )}
           </div>
-        </ScrollArea>
+        </div>
 
         {/* Add section panel */}
         <div className="border-t">
@@ -716,7 +716,7 @@ export function PageBuilder() {
           </div>
         </div>
 
-        <ScrollArea className="flex-1">
+        <div className="flex-1 overflow-y-auto">
           {showPreview ? (
             <div className="max-w-4xl mx-auto p-6">
               <LivePreview sections={sections} />
@@ -750,7 +750,7 @@ export function PageBuilder() {
               </div>
             </div>
           )}
-        </ScrollArea>
+        </div>
       </div>
     </div>
   );
