@@ -31,6 +31,7 @@ import {
   Type,
   Image as ImageIcon,
   X,
+  Paintbrush,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -47,6 +48,8 @@ import { ContentTheme } from "@/data/types";
 import { WireframeBlockId } from "@/data/wireframe-types";
 import { WireframeBlock, wireframeBlockMeta } from "@/components/wireframe-blocks";
 import { allPages } from "@/data/pages";
+import { StyleGuide, defaultStyleGuide, StyleGuidePanel } from "./style-guide";
+import { StyledPreview } from "./styled-preview";
 
 // --- Content item types per block category ---
 
@@ -1122,6 +1125,8 @@ export function PageBuilder() {
   const [sections, setSections] = useState<BuilderSection[]>([]);
   const [selectedSection, setSelectedSection] = useState<string | null>(null);
   const [showPreview, setShowPreview] = useState(true);
+  const [styleGuide, setStyleGuide] = useState<StyleGuide>({ ...defaultStyleGuide });
+  const [showStyleGuide, setShowStyleGuide] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -1282,6 +1287,16 @@ export function PageBuilder() {
           </div>
           <div className="flex items-center gap-1">
             <Button
+              variant={showStyleGuide ? "default" : "ghost"}
+              size="xs"
+              onClick={() => setShowStyleGuide(!showStyleGuide)}
+              className="gap-1"
+            >
+              <Paintbrush className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Style Guide</span>
+            </Button>
+            <div className="w-px h-4 bg-border mx-1" />
+            <Button
               variant={showPreview ? "default" : "ghost"}
               size="xs"
               onClick={() => setShowPreview(true)}
@@ -1298,11 +1313,30 @@ export function PageBuilder() {
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto">
-          {showPreview ? (
-            <div className="max-w-4xl mx-auto p-6">
-              <LivePreview sections={sections} />
+        <div className="flex flex-1 overflow-hidden">
+          {/* Style Guide side panel */}
+          {showStyleGuide && (
+            <div className="w-64 flex-shrink-0 border-r bg-card overflow-y-auto p-3">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-xs font-semibold flex items-center gap-1.5">
+                  <Paintbrush className="h-3.5 w-3.5" /> Style Guide
+                </h3>
+                <button onClick={() => setShowStyleGuide(false)} className="text-muted-foreground hover:text-foreground">
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              </div>
+              <StyleGuidePanel styleGuide={styleGuide} onChange={setStyleGuide} />
             </div>
+          )}
+
+          {/* Preview content */}
+          <div className="flex-1 overflow-y-auto">
+          {showPreview ? (
+            <StyledPreview styleGuide={styleGuide}>
+              <div className="max-w-4xl mx-auto p-6">
+                <LivePreview sections={sections} />
+              </div>
+            </StyledPreview>
           ) : (
             <div className="p-6">
               <h3 className="text-sm font-semibold mb-4">Section Details</h3>
@@ -1332,6 +1366,7 @@ export function PageBuilder() {
               </div>
             </div>
           )}
+          </div>
         </div>
       </div>
     </div>
