@@ -29,6 +29,7 @@ import {
   LayoutGrid,
   Monitor,
   PanelLeft,
+  Type,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -48,12 +49,27 @@ import { WireframeBlockId } from "@/data/wireframe-types";
 import { WireframeBlock, wireframeBlockMeta } from "@/components/wireframe-blocks";
 import { allPages } from "@/data/pages";
 
+export interface SectionContent {
+  heading: string;
+  subheading: string;
+  body: string;
+  ctaText: string;
+}
+
+const emptySectionContent: SectionContent = {
+  heading: "",
+  subheading: "",
+  body: "",
+  ctaText: "",
+};
+
 export interface BuilderSection {
   instanceId: string;
   themeId: string;
   themeName: string;
   selectedBlockId: WireframeBlockId;
   availableBlocks: { name: string; wireframeId: WireframeBlockId }[];
+  content: SectionContent;
 }
 
 function createSectionFromTheme(theme: ContentTheme): BuilderSection {
@@ -63,6 +79,7 @@ function createSectionFromTheme(theme: ContentTheme): BuilderSection {
     themeName: theme.name,
     selectedBlockId: theme.componentOptions[0]?.wireframeId || "hero-centered",
     availableBlocks: theme.componentOptions,
+    content: { ...emptySectionContent },
   };
 }
 
@@ -70,16 +87,19 @@ function SortableSection({
   section,
   onRemove,
   onChangeBlock,
+  onUpdateContent,
   isSelected,
   onSelect,
 }: {
   section: BuilderSection;
   onRemove: (id: string) => void;
   onChangeBlock: (id: string, blockId: WireframeBlockId) => void;
+  onUpdateContent: (id: string, content: Partial<SectionContent>) => void;
   isSelected: boolean;
   onSelect: (id: string) => void;
 }) {
   const [showOptions, setShowOptions] = useState(false);
+  const [showContent, setShowContent] = useState(false);
   const {
     attributes,
     listeners,
@@ -131,8 +151,22 @@ function SortableSection({
                 size="icon-xs"
                 onClick={(e) => {
                   e.stopPropagation();
-                  setShowOptions(!showOptions);
+                  setShowContent(!showContent);
+                  if (!showContent) setShowOptions(false);
                 }}
+                title="Edit content"
+              >
+                <Type className={`h-3.5 w-3.5 ${section.content.heading ? "text-primary" : ""}`} />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon-xs"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowOptions(!showOptions);
+                  if (!showOptions) setShowContent(false);
+                }}
+                title="Change variant"
               >
                 {showOptions ? (
                   <ChevronDown className="h-3.5 w-3.5" />
@@ -154,6 +188,43 @@ function SortableSection({
             </div>
           </div>
         </CardHeader>
+        {showContent && (
+          <CardContent className="pt-0 pb-3 px-4 border-t" onClick={(e) => e.stopPropagation()}>
+            <p className="text-xs font-medium text-muted-foreground mb-2 mt-2">
+              Section content:
+            </p>
+            <div className="space-y-2">
+              <input
+                type="text"
+                placeholder="Heading"
+                value={section.content.heading}
+                onChange={(e) => onUpdateContent(section.instanceId, { heading: e.target.value })}
+                className="w-full rounded-md border border-border bg-background px-2.5 py-1.5 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary/30"
+              />
+              <input
+                type="text"
+                placeholder="Subheading"
+                value={section.content.subheading}
+                onChange={(e) => onUpdateContent(section.instanceId, { subheading: e.target.value })}
+                className="w-full rounded-md border border-border bg-background px-2.5 py-1.5 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary/30"
+              />
+              <textarea
+                placeholder="Body text"
+                value={section.content.body}
+                onChange={(e) => onUpdateContent(section.instanceId, { body: e.target.value })}
+                rows={3}
+                className="w-full rounded-md border border-border bg-background px-2.5 py-1.5 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 resize-none"
+              />
+              <input
+                type="text"
+                placeholder="Button / CTA text"
+                value={section.content.ctaText}
+                onChange={(e) => onUpdateContent(section.instanceId, { ctaText: e.target.value })}
+                className="w-full rounded-md border border-border bg-background px-2.5 py-1.5 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary/30"
+              />
+            </div>
+          </CardContent>
+        )}
         {showOptions && (
           <CardContent className="pt-0 pb-3 px-4 border-t">
             <p className="text-xs font-medium text-muted-foreground mb-2 mt-2">
@@ -190,6 +261,181 @@ function SortableSection({
   );
 }
 
+function hasContent(content: SectionContent): boolean {
+  return !!(content.heading || content.subheading || content.body || content.ctaText);
+}
+
+function SectionPreview({ section }: { section: BuilderSection }) {
+  const { content, selectedBlockId } = section;
+  const cat = wireframeBlockMeta[selectedBlockId]?.category || "";
+  const has = hasContent(content);
+
+  if (!has) {
+    return (
+      <WireframeBlock
+        blockId={selectedBlockId}
+        className="w-full h-auto text-muted-foreground/40"
+      />
+    );
+  }
+
+  // Determine layout based on the block category/type
+  const isHero = cat === "Hero";
+  const isCta = cat === "CTA";
+  const isSplit = selectedBlockId.includes("split") || selectedBlockId.includes("image-right") || selectedBlockId.includes("image-left");
+  const isCards = cat === "Cards";
+  const isText = cat === "Text" && !isSplit;
+  const isCentered = selectedBlockId.includes("centered") || selectedBlockId.includes("full-width");
+
+  if (isHero) {
+    return (
+      <div className={`relative ${isSplit ? "flex items-center gap-8" : ""}`}>
+        <div className={`${isSplit ? "flex-1 py-12 px-8" : "py-16 px-8"} ${isCentered && !isSplit ? "text-center" : ""}`}>
+          {content.heading && (
+            <h2 className={`text-2xl font-bold tracking-tight text-foreground mb-2 ${isCentered && !isSplit ? "mx-auto max-w-lg" : "max-w-md"}`}>
+              {content.heading}
+            </h2>
+          )}
+          {content.subheading && (
+            <p className={`text-base text-muted-foreground mb-4 ${isCentered && !isSplit ? "mx-auto max-w-md" : "max-w-sm"}`}>
+              {content.subheading}
+            </p>
+          )}
+          {content.body && (
+            <p className={`text-sm text-muted-foreground/80 mb-5 ${isCentered && !isSplit ? "mx-auto max-w-md" : "max-w-sm"}`}>
+              {content.body}
+            </p>
+          )}
+          {content.ctaText && (
+            <div className={isCentered && !isSplit ? "flex justify-center" : ""}>
+              <span className="inline-flex items-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground">
+                {content.ctaText}
+              </span>
+            </div>
+          )}
+        </div>
+        {isSplit && (
+          <div className="flex-1 bg-muted/30 rounded-lg m-4 aspect-[4/3] flex items-center justify-center">
+            <span className="text-xs text-muted-foreground/40">Image</span>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  if (isCta) {
+    return (
+      <div className={`py-12 px-8 bg-muted/20 rounded-lg ${isCentered ? "text-center" : isSplit ? "flex items-center gap-8" : ""}`}>
+        <div className={isSplit ? "flex-1" : ""}>
+          {content.heading && (
+            <h3 className={`text-xl font-bold text-foreground mb-2 ${isCentered ? "mx-auto max-w-lg" : "max-w-md"}`}>
+              {content.heading}
+            </h3>
+          )}
+          {content.subheading && (
+            <p className={`text-sm text-muted-foreground mb-4 ${isCentered ? "mx-auto max-w-md" : "max-w-sm"}`}>
+              {content.subheading}
+            </p>
+          )}
+          {content.ctaText && (
+            <div className={isCentered ? "flex justify-center" : ""}>
+              <span className="inline-flex items-center rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground">
+                {content.ctaText}
+              </span>
+            </div>
+          )}
+        </div>
+        {isSplit && selectedBlockId === "cta-with-form" && (
+          <div className="flex-1 border rounded-lg p-6 bg-card">
+            <div className="space-y-3">
+              <div className="h-8 rounded border bg-muted/30" />
+              <div className="h-8 rounded border bg-muted/30" />
+              <span className="block w-full rounded-lg bg-primary py-2 text-center text-sm font-medium text-primary-foreground">
+                {content.ctaText || "Submit"}
+              </span>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  if (isCards) {
+    const cols = selectedBlockId.includes("4-col") ? 4 : selectedBlockId.includes("2-col") ? 2 : 3;
+    return (
+      <div className="py-8 px-8">
+        {content.heading && (
+          <h3 className="text-lg font-bold text-foreground mb-1 text-center">{content.heading}</h3>
+        )}
+        {content.subheading && (
+          <p className="text-sm text-muted-foreground mb-6 text-center max-w-md mx-auto">{content.subheading}</p>
+        )}
+        <div className={`grid gap-4 ${cols === 4 ? "grid-cols-4" : cols === 2 ? "grid-cols-2" : "grid-cols-3"}`}>
+          {Array.from({ length: cols }).map((_, i) => (
+            <div key={i} className="rounded-lg border bg-card p-4">
+              <div className="h-20 rounded bg-muted/30 mb-3" />
+              <div className="h-3 rounded bg-muted/40 mb-2 w-3/4" />
+              <div className="h-2 rounded bg-muted/20 w-full" />
+            </div>
+          ))}
+        </div>
+        {content.body && (
+          <p className="text-xs text-muted-foreground mt-4 text-center">{content.body}</p>
+        )}
+      </div>
+    );
+  }
+
+  if (isSplit) {
+    const imgRight = selectedBlockId.includes("image-right") || selectedBlockId.includes("split");
+    return (
+      <div className={`flex items-center gap-8 py-8 px-8 ${imgRight ? "" : "flex-row-reverse"}`}>
+        <div className="flex-1">
+          {content.heading && <h3 className="text-lg font-bold text-foreground mb-2">{content.heading}</h3>}
+          {content.subheading && <p className="text-sm text-muted-foreground mb-3">{content.subheading}</p>}
+          {content.body && <p className="text-sm text-muted-foreground/80 mb-4">{content.body}</p>}
+          {content.ctaText && (
+            <span className="inline-flex items-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground">
+              {content.ctaText}
+            </span>
+          )}
+        </div>
+        <div className="flex-1 bg-muted/30 rounded-lg aspect-[4/3] flex items-center justify-center">
+          <span className="text-xs text-muted-foreground/40">Image</span>
+        </div>
+      </div>
+    );
+  }
+
+  // Default / generic layout (text sections, stats, team, forms, timelines, etc.)
+  return (
+    <div className={`py-8 px-8 ${isCentered || isText ? "text-center" : ""}`}>
+      {content.heading && (
+        <h3 className={`text-lg font-bold text-foreground mb-2 ${isCentered ? "mx-auto max-w-lg" : ""}`}>
+          {content.heading}
+        </h3>
+      )}
+      {content.subheading && (
+        <p className={`text-sm text-muted-foreground mb-3 ${isCentered ? "mx-auto max-w-md" : ""}`}>
+          {content.subheading}
+        </p>
+      )}
+      {content.body && (
+        <p className={`text-sm text-muted-foreground/80 mb-4 ${isCentered ? "mx-auto max-w-md" : "max-w-prose"}`}>
+          {content.body}
+        </p>
+      )}
+      {content.ctaText && (
+        <div className={isCentered ? "flex justify-center" : ""}>
+          <span className="inline-flex items-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground">
+            {content.ctaText}
+          </span>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function LivePreview({ sections }: { sections: BuilderSection[] }) {
   if (sections.length === 0) {
     return (
@@ -204,24 +450,18 @@ function LivePreview({ sections }: { sections: BuilderSection[] }) {
 
   return (
     <div className="space-y-0">
-      {sections.map((section) => {
-        const meta = wireframeBlockMeta[section.selectedBlockId];
-        return (
-          <div key={section.instanceId} className="group relative">
-            <div className="absolute top-2 left-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
-              <Badge variant="default" className="text-xs shadow-sm">
-                {section.themeName}
-              </Badge>
-            </div>
-            <div className="border-b border-dashed border-border/50">
-              <WireframeBlock
-                blockId={section.selectedBlockId}
-                className="w-full h-auto text-muted-foreground/40"
-              />
-            </div>
+      {sections.map((section) => (
+        <div key={section.instanceId} className="group relative">
+          <div className="absolute top-2 left-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+            <Badge variant="default" className="text-xs shadow-sm">
+              {section.themeName}
+            </Badge>
           </div>
-        );
-      })}
+          <div className="border-b border-dashed border-border/50">
+            <SectionPreview section={section} />
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
@@ -339,6 +579,19 @@ export function PageBuilder() {
     []
   );
 
+  const updateContent = useCallback(
+    (id: string, content: Partial<SectionContent>) => {
+      setSections((prev) =>
+        prev.map((s) =>
+          s.instanceId === id
+            ? { ...s, content: { ...s.content, ...content } }
+            : s
+        )
+      );
+    },
+    []
+  );
+
   const loadTemplate = useCallback((slug: string) => {
     const page = allPages.find((p) => p.slug === slug);
     if (!page) return;
@@ -392,6 +645,7 @@ export function PageBuilder() {
                     section={section}
                     onRemove={removeSection}
                     onChangeBlock={changeBlock}
+                    onUpdateContent={updateContent}
                     isSelected={selectedSection === section.instanceId}
                     onSelect={setSelectedSection}
                   />
