@@ -26,6 +26,7 @@ import { Badge } from "@/components/ui/badge";
 import { Project, SitemapPage, createSitemapPage } from "@/lib/project-types";
 import { StyleGuidePanel } from "@/components/cms/style-guide";
 import { VisualSitemap } from "@/components/cms/visual-sitemap";
+import { generateSuggestedSitemap } from "@/lib/sitemap-suggestions";
 
 const inputClass =
   "w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary/30";
@@ -257,6 +258,13 @@ export function ProjectDashboard({
                   pages={project.sitemap}
                   onChange={(pages) => onUpdate({ ...project, sitemap: pages })}
                   onPageClick={(id) => onNavigateToPage(id)}
+                  onSuggest={() => {
+                    const suggested = generateSuggestedSitemap(project);
+                    if (project.sitemap.length > 0) {
+                      if (!confirm("This will replace the current sitemap. Continue?")) return;
+                    }
+                    onUpdate({ ...project, sitemap: suggested });
+                  }}
                   editable
                 />
               </div>

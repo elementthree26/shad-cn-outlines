@@ -25,6 +25,7 @@ export interface Project {
   valuePropositions: string[];
   differentiators: string[];
   competitorUrls: string[];
+  currentSiteUrl: string;
 
   // --- 4. Content Inventory ---
   existingContent: string;
@@ -38,6 +39,12 @@ export interface Project {
 
   // --- 6. Sitemap & Pages ---
   sitemap: SitemapPage[];
+
+  // --- 7. Phases & Process ---
+  phases: ProjectPhase[];
+
+  // --- 8. Redirect Map (old → new) ---
+  redirects: RedirectEntry[];
 }
 
 export interface Integration {
@@ -75,6 +82,198 @@ export const integrationCategories: { value: IntegrationCategory; label: string 
   { value: "email", label: "Email Marketing" },
   { value: "other", label: "Other" },
 ];
+
+// ============================================================
+// PHASES (E3 7-Phase Process)
+// ============================================================
+
+export type PhaseStatus = "not-started" | "in-progress" | "review" | "approved";
+
+export interface ChecklistItem {
+  id: string;
+  label: string;
+  checked: boolean;
+  notes: string;
+}
+
+export interface ProjectPhase {
+  id: PhaseId;
+  status: PhaseStatus;
+  notes: string;
+  gateApproved: boolean;
+  gateApprovedDate: string | null;
+  checklist: ChecklistItem[];
+}
+
+export type PhaseId =
+  | "assessment"
+  | "information-architecture"
+  | "messaging-ui"
+  | "development"
+  | "qa-seo"
+  | "launch"
+  | "maintain";
+
+export const phaseDefinitions: {
+  id: PhaseId;
+  name: string;
+  shortName: string;
+  humanRole: string;
+  gate: string;
+  defaultChecklist: string[];
+  timing: string;
+}[] = [
+  {
+    id: "assessment",
+    name: "Assessment & Strategic Alignment",
+    shortName: "Assessment",
+    humanRole: "Humans Lead",
+    gate: "Signed project brief",
+    timing: "2–4 weeks",
+    defaultChecklist: [
+      "Stakeholder workshop completed",
+      "Site inventory / crawl completed",
+      "Content audit scored by traffic & quality",
+      "Conversion audit — friction points identified",
+      "SEO baseline — Core Web Vitals captured",
+      "Competitive analysis completed",
+      "Project brief drafted",
+      "Project brief signed by client",
+    ],
+  },
+  {
+    id: "information-architecture",
+    name: "Information Architecture",
+    shortName: "IA",
+    humanRole: "Humans Approve",
+    gate: "Approved sitemap and functional spec",
+    timing: "1–2 weeks",
+    defaultChecklist: [
+      "Current sitemap analyzed",
+      "New sitemap proposed",
+      "Topic clusters defined",
+      "URL hierarchy finalized",
+      "Redirect map completed (old → new)",
+      "Content — keep / kill / create decisions made",
+      "Sitemap approved by client",
+    ],
+  },
+  {
+    id: "messaging-ui",
+    name: "Messaging & UI Design",
+    shortName: "Messaging & UI",
+    humanRole: "Humans Lead",
+    gate: "Approved design system and copy in Storybook",
+    timing: "2–4 weeks",
+    defaultChecklist: [
+      "Creative direction established",
+      "Brand voice & messaging hierarchy defined",
+      "Design system extracted / created",
+      "Wireframes completed for all pages",
+      "Copy drafted for all sections",
+      "Component variations documented in Storybook",
+      "Client stakeholder approval",
+    ],
+  },
+  {
+    id: "development",
+    name: "Platform Development",
+    shortName: "Development",
+    humanRole: "Humans Supervise",
+    gate: "Full Storybook walkthrough approved",
+    timing: "1–2 weeks",
+    defaultChecklist: [
+      "React components built pixel-perfect",
+      "CMS wired and content populated",
+      "Routing and navigation working",
+      "Metadata / OG tags configured",
+      "Schema markup implemented",
+      "Analytics integration (GA4/GTM)",
+      "Forms connected to CRM",
+      "Storybook walkthrough with client",
+    ],
+  },
+  {
+    id: "qa-seo",
+    name: "QA & SEO",
+    shortName: "QA & SEO",
+    humanRole: "Humans Verify",
+    gate: "Written approval from authority",
+    timing: "1–2 weeks",
+    defaultChecklist: [
+      "Visual QA — all pages reviewed",
+      "Mobile responsive QA",
+      "Cross-browser testing",
+      "SEO compliance verified",
+      "Redirects verified (all old URLs → new)",
+      "LCP < 2.5s",
+      "INP < 200ms",
+      "CLS < 0.1",
+      "Lighthouse accessibility score 95+",
+      "Forms tested end-to-end",
+      "Written client sign-off",
+    ],
+  },
+  {
+    id: "launch",
+    name: "Launch",
+    shortName: "Launch",
+    humanRole: "Humans Approve",
+    gate: "Site live",
+    timing: "1 day",
+    defaultChecklist: [
+      "DNS cutover completed",
+      "SSL certificate verified",
+      "Smoke testing on production",
+      "Redirects verified on production",
+      "Analytics tracking confirmed",
+      "Search Console submitted",
+      "30-day code warranty communicated",
+    ],
+  },
+  {
+    id: "maintain",
+    name: "Maintain & Optimize",
+    shortName: "Optimize",
+    humanRole: "Continuous",
+    gate: "Ongoing",
+    timing: "Ongoing",
+    defaultChecklist: [
+      "CRO audit scheduled",
+      "Content update process documented",
+      "SEO monitoring active",
+      "Performance monitoring active",
+    ],
+  },
+];
+
+export function createDefaultPhases(): ProjectPhase[] {
+  return phaseDefinitions.map((def) => ({
+    id: def.id,
+    status: "not-started",
+    notes: "",
+    gateApproved: false,
+    gateApprovedDate: null,
+    checklist: def.defaultChecklist.map((label) => ({
+      id: crypto.randomUUID(),
+      label,
+      checked: false,
+      notes: "",
+    })),
+  }));
+}
+
+// ============================================================
+// REDIRECT MAP
+// ============================================================
+
+export interface RedirectEntry {
+  id: string;
+  oldUrl: string;
+  newUrl: string;
+  status: "pending" | "mapped" | "verified";
+  notes: string;
+}
 
 // ============================================================
 // SITEMAP
@@ -207,6 +406,7 @@ export function createProject(partial?: Partial<Project>): Project {
     valuePropositions: [],
     differentiators: [],
     competitorUrls: [],
+    currentSiteUrl: "",
     existingContent: "",
     contentToCreate: "",
     contentOwnership: "",
@@ -214,6 +414,8 @@ export function createProject(partial?: Partial<Project>): Project {
     integrations: [],
     hostingNotes: "",
     sitemap: [],
+    phases: createDefaultPhases(),
+    redirects: [],
     ...partial,
   };
 }

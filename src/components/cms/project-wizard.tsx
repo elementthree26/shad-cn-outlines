@@ -18,6 +18,7 @@ import {
 import { saveProject } from "@/lib/project-store";
 import { SitemapScraper } from "./sitemap-scraper";
 import { VisualSitemap } from "./visual-sitemap";
+import { generateSuggestedSitemap } from "@/lib/sitemap-suggestions";
 
 const STEP_LABELS = [
   "Project Setup",
@@ -710,6 +711,10 @@ export function ProjectWizard({
                   <VisualSitemap
                     pages={project.sitemap}
                     onChange={(pages) => setProject((prev) => ({ ...prev, sitemap: pages }))}
+                    onSuggest={() => {
+                      const suggested = generateSuggestedSitemap(project);
+                      setProject((prev) => ({ ...prev, sitemap: suggested }));
+                    }}
                     editable
                   />
                 </div>

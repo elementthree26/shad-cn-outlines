@@ -3,14 +3,12 @@
 import { useState } from "react";
 import {
   Plus,
-  ExternalLink,
-  FileText,
   Trash2,
-  GripVertical,
-  ChevronRight,
   Edit3,
   Check,
   X,
+  Sparkles,
+  RotateCcw,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -28,6 +26,8 @@ interface VisualSitemapProps {
   label?: string;
   /** Whether editing is enabled */
   editable?: boolean;
+  /** Callback to generate a suggested sitemap */
+  onSuggest?: () => void;
 }
 
 function getChildren(pages: SitemapPage[], parentId: string | null): SitemapPage[] {
@@ -242,6 +242,7 @@ export function VisualSitemap({
   onPageClick,
   label,
   editable = true,
+  onSuggest,
 }: VisualSitemapProps) {
   const topLevelPages = getChildren(pages, null);
 
@@ -280,11 +281,29 @@ export function VisualSitemap({
 
   return (
     <div className="w-full overflow-x-auto">
-      {label && (
-        <div className="text-center mb-4">
+      <div className="flex items-center justify-between mb-4">
+        {label ? (
           <h3 className="text-sm font-bold text-foreground">{label}</h3>
+        ) : <div />}
+        <div className="flex items-center gap-2 flex-shrink-0">
+          {onSuggest && (
+            <Button size="xs" variant="outline" className="gap-1" onClick={onSuggest}>
+              <Sparkles className="h-3 w-3" /> Suggest Sitemap
+            </Button>
+          )}
+          {editable && pages.length > 0 && (
+            <Button
+              size="xs"
+              variant="ghost"
+              className="gap-1 text-destructive hover:text-destructive"
+              onClick={() => { if (confirm("Clear all pages?")) onChange([]); }}
+            >
+              <RotateCcw className="h-3 w-3" /> Clear
+            </Button>
+          )}
+          <span className="text-xs text-muted-foreground">{pages.length} pages</span>
         </div>
-      )}
+      </div>
 
       <div className="inline-flex flex-col items-center min-w-full py-4">
         {/* Home page at top */}
