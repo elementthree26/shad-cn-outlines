@@ -301,6 +301,11 @@ export interface SitemapPage {
   /** What content/assets exist or are needed */
   contentNotes: string;
 
+  // --- SEO Metadata ---
+  seoTitle: string;
+  seoDescription: string;
+  ogImageUrl: string;
+
   /** The built page layout */
   sections: PageSection[];
 }
@@ -434,6 +439,9 @@ export function createSitemapPage(partial?: Partial<SitemapPage>): SitemapPage {
     pageGoal: "",
     referenceUrls: [],
     contentNotes: "",
+    seoTitle: "",
+    seoDescription: "",
+    ogImageUrl: "",
     sections: [],
     ...partial,
   };

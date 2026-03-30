@@ -3,12 +3,13 @@
 import { useEffect, useState, useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, FileText, Save } from "lucide-react";
+import { ArrowLeft, FileText, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Project, SitemapPage, PageSection } from "@/lib/project-types";
 import { getProject, saveProject } from "@/lib/project-store";
 import { ProjectPageBuilder } from "@/components/cms/project-page-builder";
+import { ExportPanel } from "@/components/cms/page-export";
 
 export default function ProjectPageBuilderRoute() {
   const router = useRouter();
@@ -18,6 +19,7 @@ export default function ProjectPageBuilderRoute() {
 
   const [project, setProject] = useState<Project | null>(null);
   const [currentPage, setCurrentPage] = useState<SitemapPage | null>(null);
+  const [showExport, setShowExport] = useState(false);
 
   useEffect(() => {
     const p = getProject(projectId);
@@ -36,8 +38,9 @@ export default function ProjectPageBuilderRoute() {
       );
       const updated = saveProject({ ...project, sitemap: updatedSitemap });
       setProject(updated);
+      setCurrentPage(updated.sitemap.find((pg) => pg.id === pageId) || null);
     },
-    [project, currentPage]
+    [project, currentPage, pageId]
   );
 
   if (!project || !currentPage) return null;
@@ -67,11 +70,22 @@ export default function ProjectPageBuilderRoute() {
               </p>
             </div>
           </div>
-          {currentPage.notes && (
-            <Badge variant="secondary" className="text-xs ml-auto hidden sm:flex">
-              Has notes
-            </Badge>
-          )}
+          <div className="ml-auto flex items-center gap-2">
+            {currentPage.notes && (
+              <Badge variant="secondary" className="text-xs hidden sm:flex">
+                Has notes
+              </Badge>
+            )}
+            <Button
+              size="sm"
+              variant="outline"
+              className="gap-1.5"
+              onClick={() => setShowExport(true)}
+              disabled={currentPage.sections.length === 0}
+            >
+              <Download className="h-3.5 w-3.5" /> Export
+            </Button>
+          </div>
         </div>
       </header>
       <ProjectPageBuilder
@@ -79,6 +93,13 @@ export default function ProjectPageBuilderRoute() {
         page={currentPage}
         onSave={handleSave}
       />
+      {showExport && (
+        <ExportPanel
+          project={project}
+          page={currentPage}
+          onClose={() => setShowExport(false)}
+        />
+      )}
     </div>
   );
 }
