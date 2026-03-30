@@ -33,6 +33,7 @@ import { generateSuggestedSitemap } from "@/lib/sitemap-suggestions";
 import { PhaseTracker } from "@/components/cms/phase-tracker";
 import { RedirectMapEditor } from "@/components/cms/redirect-map";
 import { ProjectBriefButton } from "@/components/cms/project-brief";
+import { FullProjectExportButton } from "@/components/cms/wireframe-export";
 import { ProjectExportButton } from "@/components/cms/project-export-import";
 import { ProjectSearch } from "@/components/cms/project-search";
 import { ActivityLog } from "@/components/cms/activity-log";
@@ -100,6 +101,10 @@ function PageCard({
   onClick: () => void;
 }) {
   const sectionCount = page.sections.length;
+  const hasBrief = !!(page.pageGoal || page.audiences.length > 0);
+  const hasSeo = !!(page.seoTitle);
+  const hasNotes = page.sections.some((s) => s.directionNotes);
+  const hasContent = page.sections.some((s) => s.content.heading || s.content.body || s.content.items.length > 0);
 
   return (
     <button
@@ -113,13 +118,24 @@ function PageCard({
         <div className="flex items-center gap-2">
           <span className="truncate text-sm font-medium">{page.name || "Untitled"}</span>
           <span className="text-xs text-muted-foreground">/{page.slug || "..."}</span>
+          {page.sprint > 1 && (
+            <Badge variant="outline" className="text-[8px] px-1 py-0 h-3.5">S{page.sprint}</Badge>
+          )}
         </div>
         {page.purpose && (
           <p className="mt-0.5 truncate text-xs text-muted-foreground">{page.purpose}</p>
         )}
       </div>
-      <Badge variant={sectionCount > 0 ? "secondary" : "outline"}>
-        {sectionCount > 0 ? `${sectionCount} section${sectionCount !== 1 ? "s" : ""}` : "Not started"}
+      {/* Completion dots */}
+      <div className="flex gap-0.5 flex-shrink-0">
+        <span className={`w-2 h-2 rounded-full ${hasBrief ? "bg-blue-400" : "bg-muted"}`} title="Brief" />
+        <span className={`w-2 h-2 rounded-full ${sectionCount > 0 ? "bg-purple-400" : "bg-muted"}`} title="Wireframe" />
+        <span className={`w-2 h-2 rounded-full ${hasContent ? "bg-amber-400" : "bg-muted"}`} title="Content" />
+        <span className={`w-2 h-2 rounded-full ${hasSeo ? "bg-green-400" : "bg-muted"}`} title="SEO" />
+        <span className={`w-2 h-2 rounded-full ${hasNotes ? "bg-pink-400" : "bg-muted"}`} title="Notes" />
+      </div>
+      <Badge variant={sectionCount > 0 ? "secondary" : "outline"} className="flex-shrink-0">
+        {sectionCount > 0 ? `${sectionCount}s` : "—"}
       </Badge>
       <ChevronRight className="size-4 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
     </button>
@@ -228,6 +244,7 @@ export function ProjectDashboard({
               <div className="ml-auto flex items-center gap-2">
                 <ProjectSearch project={project} onNavigateToPage={onNavigateToPage} />
                 <ProjectExportButton project={project} />
+                <FullProjectExportButton project={project} />
                 <ProjectBriefButton project={project} />
               </div>
             </div>

@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, FileText, Download } from "lucide-react";
+import { ArrowLeft, FileText, Download, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Project, SitemapPage, PageSection } from "@/lib/project-types";
@@ -47,6 +47,16 @@ export default function ProjectPageBuilderRoute() {
 
   if (!project || !currentPage) return null;
 
+  // Page navigation
+  const allPages = project.sitemap;
+  const currentIdx = allPages.findIndex((p) => p.id === pageId);
+  const prevPage = currentIdx > 0 ? allPages[currentIdx - 1] : null;
+  const nextPage = currentIdx < allPages.length - 1 ? allPages[currentIdx + 1] : null;
+
+  const navigateToPage = (id: string) => {
+    router.push(`/projects/${projectId}/pages/${id}`);
+  };
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <header className="border-b bg-card">
@@ -72,12 +82,41 @@ export default function ProjectPageBuilderRoute() {
               </p>
             </div>
           </div>
+          {/* Page navigation */}
+          <div className="flex items-center gap-1 ml-4">
+            <Button
+              variant="ghost"
+              size="icon-xs"
+              disabled={!prevPage}
+              onClick={() => prevPage && navigateToPage(prevPage.id)}
+              title={prevPage ? `Previous: ${prevPage.name}` : "No previous page"}
+            >
+              <ChevronLeft className="h-3.5 w-3.5" />
+            </Button>
+            <select
+              value={pageId}
+              onChange={(e) => navigateToPage(e.target.value)}
+              className="rounded border border-border bg-background px-2 py-0.5 text-xs outline-none max-w-[140px]"
+            >
+              {allPages.map((p) => (
+                <option key={p.id} value={p.id}>{p.name}</option>
+              ))}
+            </select>
+            <Button
+              variant="ghost"
+              size="icon-xs"
+              disabled={!nextPage}
+              onClick={() => nextPage && navigateToPage(nextPage.id)}
+              title={nextPage ? `Next: ${nextPage.name}` : "No next page"}
+            >
+              <ChevronRight className="h-3.5 w-3.5" />
+            </Button>
+            <span className="text-[10px] text-muted-foreground ml-1">
+              {currentIdx + 1}/{allPages.length}
+            </span>
+          </div>
+
           <div className="ml-auto flex items-center gap-2">
-            {currentPage.notes && (
-              <Badge variant="secondary" className="text-xs hidden sm:flex">
-                Has notes
-              </Badge>
-            )}
             <WireframeExportButton page={currentPage} project={project} />
             <WriterBriefButton page={currentPage} project={project} />
             <Button
