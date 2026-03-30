@@ -16,6 +16,7 @@ import {
   Integration,
 } from "@/lib/project-types";
 import { saveProject } from "@/lib/project-store";
+import { SitemapScraper } from "./sitemap-scraper";
 
 const STEP_LABELS = [
   "Project Setup",
@@ -628,6 +629,27 @@ export function ProjectWizard({
       case 4:
         return (
           <div className="space-y-5">
+            {/* Sitemap Scraper */}
+            <div>
+              <label className="mb-1.5 block text-sm font-medium">Import from existing site</label>
+              <p className="text-xs text-muted-foreground mb-2">
+                Paste the current website URL to auto-discover pages from navigation
+              </p>
+              <SitemapScraper
+                onImport={(pages) => {
+                  setProject((prev) => ({
+                    ...prev,
+                    sitemap: [...prev.sitemap, ...pages],
+                  }));
+                }}
+              />
+            </div>
+
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-border" /></div>
+              <div className="relative flex justify-center"><span className="bg-background px-2 text-xs text-muted-foreground">or add manually</span></div>
+            </div>
+
             <div>
               <label className="mb-1.5 block text-sm font-medium">Add Page</label>
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_1fr_auto_auto]">
