@@ -11,6 +11,8 @@ import {
   Settings2,
   Layers,
   ChevronRight,
+  LayoutGrid,
+  List,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,6 +25,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Project, SitemapPage, createSitemapPage } from "@/lib/project-types";
 import { StyleGuidePanel } from "@/components/cms/style-guide";
+import { VisualSitemap } from "@/components/cms/visual-sitemap";
 
 const inputClass =
   "w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary/30";
@@ -124,6 +127,7 @@ export function ProjectDashboard({
   const [editingName, setEditingName] = useState(false);
   const [nameValue, setNameValue] = useState(project.clientName);
   const [showStyleEditor, setShowStyleEditor] = useState(false);
+  const [sitemapView, setSitemapView] = useState<"visual" | "list">("visual");
 
   const sg = project.styleGuide;
   const tree = buildTree(project.sitemap);
@@ -216,39 +220,72 @@ export function ProjectDashboard({
         {/* --- Sitemap / Pages --- */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Layers className="size-4" />
-              Sitemap / Pages
-            </CardTitle>
-            <CardDescription>
-              {totalPages} page{totalPages !== 1 ? "s" : ""} in project
-            </CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <Layers className="size-4" />
+                  Sitemap / Pages
+                </CardTitle>
+                <CardDescription>
+                  {totalPages} page{totalPages !== 1 ? "s" : ""} in project
+                </CardDescription>
+              </div>
+              <div className="flex items-center gap-1">
+                <Button
+                  variant={sitemapView === "visual" ? "default" : "ghost"}
+                  size="icon-xs"
+                  onClick={() => setSitemapView("visual")}
+                  title="Visual sitemap"
+                >
+                  <LayoutGrid className="h-3.5 w-3.5" />
+                </Button>
+                <Button
+                  variant={sitemapView === "list" ? "default" : "ghost"}
+                  size="icon-xs"
+                  onClick={() => setSitemapView("list")}
+                  title="List view"
+                >
+                  <List className="h-3.5 w-3.5" />
+                </Button>
+              </div>
+            </div>
           </CardHeader>
           <CardContent className="flex flex-col gap-2">
-            {tree.length === 0 && (
-              <p className="py-4 text-center text-sm text-muted-foreground">
-                No pages yet. Add your first page below.
-              </p>
-            )}
-
-            {tree.map((root) => (
-              <div key={root.id} className="flex flex-col gap-1.5">
-                <PageCard page={root} depth={0} onClick={() => onNavigateToPage(root.id)} />
-                {root.children.map((child) => (
-                  <PageCard
-                    key={child.id}
-                    page={child}
-                    depth={1}
-                    onClick={() => onNavigateToPage(child.id)}
-                  />
-                ))}
+            {sitemapView === "visual" ? (
+              <div className="overflow-x-auto -mx-4 px-4">
+                <VisualSitemap
+                  pages={project.sitemap}
+                  onChange={(pages) => onUpdate({ ...project, sitemap: pages })}
+                  onPageClick={(id) => onNavigateToPage(id)}
+                  editable
+                />
               </div>
-            ))}
-
-            <Button variant="outline" size="sm" className="mt-2 self-start" onClick={handleAddPage}>
-              <Plus className="size-3.5" data-icon="inline-start" />
-              Add Page
-            </Button>
+            ) : (
+              <>
+                {tree.length === 0 && (
+                  <p className="py-4 text-center text-sm text-muted-foreground">
+                    No pages yet. Add your first page below.
+                  </p>
+                )}
+                {tree.map((root) => (
+                  <div key={root.id} className="flex flex-col gap-1.5">
+                    <PageCard page={root} depth={0} onClick={() => onNavigateToPage(root.id)} />
+                    {root.children.map((child) => (
+                      <PageCard
+                        key={child.id}
+                        page={child}
+                        depth={1}
+                        onClick={() => onNavigateToPage(child.id)}
+                      />
+                    ))}
+                  </div>
+                ))}
+                <Button variant="outline" size="sm" className="mt-2 self-start" onClick={handleAddPage}>
+                  <Plus className="size-3.5" data-icon="inline-start" />
+                  Add Page
+                </Button>
+              </>
+            )}
           </CardContent>
         </Card>
 

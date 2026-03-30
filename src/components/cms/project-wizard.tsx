@@ -17,6 +17,7 @@ import {
 } from "@/lib/project-types";
 import { saveProject } from "@/lib/project-store";
 import { SitemapScraper } from "./sitemap-scraper";
+import { VisualSitemap } from "./visual-sitemap";
 
 const STEP_LABELS = [
   "Project Setup",
@@ -703,22 +704,37 @@ export function ProjectWizard({
             </div>
 
             {project.sitemap.length > 0 ? (
-              <div className="rounded-md border border-border p-3">
-                <h4 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  Sitemap
-                </h4>
-                <SitemapTree
-                  pages={project.sitemap}
-                  parentId={null}
-                  depth={0}
-                  onRemove={removePage}
-                  onMoveUp={(id) => movePage(id, -1)}
-                  onMoveDown={(id) => movePage(id, 1)}
-                />
-              </div>
+              <>
+                {/* Visual sitemap */}
+                <div className="rounded-md border border-border p-4 bg-muted/20 overflow-x-auto">
+                  <VisualSitemap
+                    pages={project.sitemap}
+                    onChange={(pages) => setProject((prev) => ({ ...prev, sitemap: pages }))}
+                    editable
+                  />
+                </div>
+
+                {/* List fallback */}
+                <details className="group">
+                  <summary className="text-xs text-muted-foreground cursor-pointer hover:text-foreground flex items-center gap-1">
+                    <span className="group-open:hidden">Show list view</span>
+                    <span className="hidden group-open:inline">Hide list view</span>
+                  </summary>
+                  <div className="rounded-md border border-border p-3 mt-2">
+                    <SitemapTree
+                      pages={project.sitemap}
+                      parentId={null}
+                      depth={0}
+                      onRemove={removePage}
+                      onMoveUp={(id) => movePage(id, -1)}
+                      onMoveDown={(id) => movePage(id, 1)}
+                    />
+                  </div>
+                </details>
+              </>
             ) : (
               <div className="rounded-md border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
-                No pages yet. Add your first page above.
+                No pages yet. Scan a site above or add pages manually.
               </div>
             )}
           </div>
