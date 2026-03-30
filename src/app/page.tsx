@@ -1,6 +1,6 @@
 import { allPages } from "@/data/pages";
 import { PageCard } from "@/components/page-card";
-import { FileText, PenTool } from "lucide-react";
+import { FileText, PenTool, FolderOpen } from "lucide-react";
 import Link from "next/link";
 
 export default function Dashboard() {
@@ -21,11 +21,17 @@ export default function Dashboard() {
                 for typical website pages
               </p>
             </div>
-            <div className="ml-auto">
-              <Link href="/builder">
+            <div className="ml-auto flex items-center gap-2">
+              <Link href="/projects">
                 <button className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors">
+                  <FolderOpen className="h-4 w-4" />
+                  Projects
+                </button>
+              </Link>
+              <Link href="/builder">
+                <button className="inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted transition-colors">
                   <PenTool className="h-4 w-4" />
-                  Open Page Builder
+                  Quick Builder
                 </button>
               </Link>
             </div>

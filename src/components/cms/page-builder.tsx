@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import {
   DndContext,
   closestCenter,
@@ -1122,12 +1122,29 @@ function ThemeLibrary({
   );
 }
 
-export function PageBuilder() {
-  const [sections, setSections] = useState<BuilderSection[]>([]);
+interface PageBuilderProps {
+  initialSections?: BuilderSection[];
+  initialStyleGuide?: StyleGuide;
+  onSectionsChange?: (sections: BuilderSection[]) => void;
+}
+
+export function PageBuilder(props: PageBuilderProps = {}) {
+  const { initialSections, initialStyleGuide, onSectionsChange } = props;
+  const [sections, setSections] = useState<BuilderSection[]>(initialSections || []);
   const [selectedSection, setSelectedSection] = useState<string | null>(null);
   const [showPreview, setShowPreview] = useState(true);
-  const [styleGuide, setStyleGuide] = useState<StyleGuide>({ ...defaultStyleGuide });
+  const [styleGuide, setStyleGuide] = useState<StyleGuide>(initialStyleGuide || { ...defaultStyleGuide });
   const [showStyleGuide, setShowStyleGuide] = useState(false);
+
+  // Notify parent of section changes for auto-save
+  const sectionsRef = useRef(sections);
+  sectionsRef.current = sections;
+  useEffect(() => {
+    if (onSectionsChange && sections !== (initialSections || [])) {
+      const timeout = setTimeout(() => onSectionsChange(sectionsRef.current), 500);
+      return () => clearTimeout(timeout);
+    }
+  }, [sections, onSectionsChange, initialSections]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
