@@ -120,10 +120,31 @@ function SitemapCard({
               {sectionCount}s
             </Badge>
           )}
-          {page.sprint && page.sprint > 1 && (
-            <Badge variant="outline" className="text-[8px] px-1 py-0 h-3.5">
-              S{page.sprint}
-            </Badge>
+          {/* Completion indicators */}
+          {page.pageGoal && (
+            <span className="inline-block w-1.5 h-1.5 rounded-full bg-blue-400" title="Has page goal" />
+          )}
+          {page.seoTitle && (
+            <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-400" title="Has SEO" />
+          )}
+          {editable && onUpdate ? (
+            <select
+              value={page.sprint || 1}
+              onChange={(e) => { e.stopPropagation(); onUpdate(page.id, { sprint: Number(e.target.value) }); }}
+              onClick={(e) => e.stopPropagation()}
+              className="text-[8px] bg-transparent border rounded px-0.5 py-0 h-3.5 outline-none cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity"
+            >
+              <option value={1}>S1</option>
+              <option value={2}>S2</option>
+              <option value={3}>S3</option>
+              <option value={4}>S4</option>
+            </select>
+          ) : (
+            page.sprint && page.sprint > 1 && (
+              <Badge variant="outline" className="text-[8px] px-1 py-0 h-3.5">
+                S{page.sprint}
+              </Badge>
+            )
           )}
         </div>
 

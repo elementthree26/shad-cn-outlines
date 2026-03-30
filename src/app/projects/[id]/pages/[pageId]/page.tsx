@@ -11,6 +11,7 @@ import { getProject, saveProject } from "@/lib/project-store";
 import { ProjectPageBuilder } from "@/components/cms/project-page-builder";
 import { ExportPanel } from "@/components/cms/page-export";
 import { WriterBriefButton } from "@/components/cms/writer-brief";
+import { WireframeExportButton } from "@/components/cms/wireframe-export";
 
 export default function ProjectPageBuilderRoute() {
   const router = useRouter();
@@ -77,6 +78,7 @@ export default function ProjectPageBuilderRoute() {
                 Has notes
               </Badge>
             )}
+            <WireframeExportButton page={currentPage} project={project} />
             <WriterBriefButton page={currentPage} project={project} />
             <Button
               size="sm"

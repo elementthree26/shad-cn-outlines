@@ -36,6 +36,7 @@ import { ProjectBriefButton } from "@/components/cms/project-brief";
 import { ProjectExportButton } from "@/components/cms/project-export-import";
 import { ProjectSearch } from "@/components/cms/project-search";
 import { ActivityLog } from "@/components/cms/activity-log";
+import { getProjectCompletion } from "@/lib/page-completion";
 
 const inputClass =
   "w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary/30";
@@ -312,28 +313,59 @@ export function ProjectDashboard({
           </CardContent>
         </Card>
 
-        {/* --- Content Status --- */}
+        {/* --- Page Completion --- */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <FileText className="size-4" />
-              Content Status
+              Page Completion
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center gap-4">
-              <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
-                <div
-                  className="h-full rounded-full bg-primary transition-all"
-                  style={{
-                    width: totalPages > 0 ? `${(pagesWithSections / totalPages) * 100}%` : "0%",
-                  }}
-                />
-              </div>
-              <span className="shrink-0 text-sm font-medium text-muted-foreground">
-                {pagesWithSections}/{totalPages} pages built
-              </span>
-            </div>
+            {(() => {
+              const { totalScore, pageScores } = getProjectCompletion(project.sitemap);
+              return (
+                <div className="space-y-3">
+                  <div className="flex items-center gap-4">
+                    <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
+                      <div
+                        className="h-full rounded-full bg-primary transition-all"
+                        style={{ width: `${totalScore}%` }}
+                      />
+                    </div>
+                    <span className="shrink-0 text-sm font-medium text-muted-foreground">
+                      {totalScore}%
+                    </span>
+                  </div>
+                  <div className="flex gap-3 text-[10px] text-muted-foreground">
+                    <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-blue-400" /> Brief</span>
+                    <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-purple-400" /> Wireframe</span>
+                    <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-amber-400" /> Content</span>
+                    <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-green-400" /> SEO</span>
+                    <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-pink-400" /> Notes</span>
+                  </div>
+                  <div className="space-y-1.5 max-h-48 overflow-y-auto">
+                    {pageScores.map((ps) => (
+                      <button
+                        key={ps.pageId}
+                        className="w-full flex items-center gap-2 text-left rounded px-2 py-1 hover:bg-muted/50 transition-colors"
+                        onClick={() => onNavigateToPage(ps.pageId)}
+                      >
+                        <span className="text-xs font-medium flex-1 truncate">{ps.pageName}</span>
+                        <div className="flex gap-0.5">
+                          <span className={`w-2 h-2 rounded-full ${ps.completion.brief ? "bg-blue-400" : "bg-muted"}`} />
+                          <span className={`w-2 h-2 rounded-full ${ps.completion.wireframe ? "bg-purple-400" : "bg-muted"}`} />
+                          <span className={`w-2 h-2 rounded-full ${ps.completion.content ? "bg-amber-400" : "bg-muted"}`} />
+                          <span className={`w-2 h-2 rounded-full ${ps.completion.seo ? "bg-green-400" : "bg-muted"}`} />
+                          <span className={`w-2 h-2 rounded-full ${ps.completion.notes ? "bg-pink-400" : "bg-muted"}`} />
+                        </div>
+                        <span className="text-[10px] text-muted-foreground w-8 text-right">{ps.score}%</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
           </CardContent>
         </Card>
       </div>
