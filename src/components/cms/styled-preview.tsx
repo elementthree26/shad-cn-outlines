@@ -1,10 +1,25 @@
 "use client";
 
+import { useMemo } from "react";
 import { StyleGuide, styleGuideToCSS } from "./style-guide";
+
+/** Extract Google Fonts family names from a font-family string */
+function extractGoogleFonts(fontString: string): string[] {
+  const families: string[] = [];
+  // Match quoted font names that aren't generic families
+  const matches = fontString.matchAll(/'([^']+)'/g);
+  const generics = new Set(["serif", "sans-serif", "monospace", "cursive", "fantasy", "system-ui"]);
+  for (const m of matches) {
+    if (!generics.has(m[1].toLowerCase())) {
+      families.push(m[1]);
+    }
+  }
+  return families;
+}
 
 /**
  * Wraps the preview area and injects CSS custom properties from the style guide.
- * All children can use `var(--sg-*)` OR the scoped className overrides below.
+ * Dynamically loads Google Fonts when custom fonts are specified.
  */
 export function StyledPreview({
   styleGuide,
@@ -15,8 +30,21 @@ export function StyledPreview({
 }) {
   const cssVars = styleGuideToCSS(styleGuide);
 
+  const googleFontsUrl = useMemo(() => {
+    const fonts = new Set<string>();
+    extractGoogleFonts(styleGuide.headingFont).forEach((f) => fonts.add(f));
+    extractGoogleFonts(styleGuide.bodyFont).forEach((f) => fonts.add(f));
+    if (fonts.size === 0) return null;
+    const families = [...fonts].map((f) => `family=${f.replace(/ /g, "+")}:wght@400;500;600;700;800;900`).join("&");
+    return `https://fonts.googleapis.com/css2?${families}&display=swap`;
+  }, [styleGuide.headingFont, styleGuide.bodyFont]);
+
   return (
     <div style={cssVars} className="styled-preview">
+      {googleFontsUrl && (
+        // eslint-disable-next-line @next/next/no-css-tags
+        <link rel="stylesheet" href={googleFontsUrl} />
+      )}
       <style>{`
         .styled-preview {
           background: var(--sg-bg);

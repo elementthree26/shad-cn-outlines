@@ -65,6 +65,150 @@ export const defaultStyleGuide: StyleGuide = {
   cardBorder: true,
 };
 
+export const styleGuidePresets: { name: string; guide: StyleGuide }[] = [
+  { name: "Default", guide: { ...defaultStyleGuide } },
+  {
+    name: "Element Three",
+    guide: {
+      primaryColor: "#2F4545",
+      primaryForeground: "#FFFDF6",
+      secondaryColor: "#D1F44C",
+      secondaryForeground: "#111212",
+      accentColor: "#D1F44C",
+      accentForeground: "#111212",
+      backgroundColor: "#FFFDF6",
+      foregroundColor: "#111212",
+      mutedColor: "#EAECEC",
+      mutedForeground: "#4e4e4e",
+      cardColor: "#ffffff",
+      cardForeground: "#1f1815",
+      borderColor: "#cfcfcf",
+      headingFont: "'Montserrat', sans-serif",
+      bodyFont: "'Open Sans', sans-serif",
+      headingWeight: "700",
+      baseSize: "16",
+      borderRadius: "0",
+      buttonRadius: "0",
+      sectionPadding: "40",
+      buttonStyle: "filled",
+      cardShadow: "none",
+      cardBorder: true,
+    },
+  },
+  {
+    name: "E3 Dark",
+    guide: {
+      primaryColor: "#D1F44C",
+      primaryForeground: "#111212",
+      secondaryColor: "#2F4545",
+      secondaryForeground: "#FFFDF6",
+      accentColor: "#9ECCCC",
+      accentForeground: "#111212",
+      backgroundColor: "#111212",
+      foregroundColor: "#FFFDF6",
+      mutedColor: "#1c1c1c",
+      mutedForeground: "#959b97",
+      cardColor: "#1c1c1c",
+      cardForeground: "#FFFDF6",
+      borderColor: "#2F4545",
+      headingFont: "'Montserrat', sans-serif",
+      bodyFont: "'Open Sans', sans-serif",
+      headingWeight: "700",
+      baseSize: "16",
+      borderRadius: "0",
+      buttonRadius: "0",
+      sectionPadding: "40",
+      buttonStyle: "filled",
+      cardShadow: "none",
+      cardBorder: true,
+    },
+  },
+  {
+    name: "Modern SaaS",
+    guide: {
+      primaryColor: "#6366f1",
+      primaryForeground: "#ffffff",
+      secondaryColor: "#f0f0ff",
+      secondaryForeground: "#312e81",
+      accentColor: "#06b6d4",
+      accentForeground: "#ffffff",
+      backgroundColor: "#ffffff",
+      foregroundColor: "#1e1b4b",
+      mutedColor: "#f5f3ff",
+      mutedForeground: "#6b7280",
+      cardColor: "#ffffff",
+      cardForeground: "#1e1b4b",
+      borderColor: "#e5e7eb",
+      headingFont: "'Inter', system-ui, sans-serif",
+      bodyFont: "'Inter', system-ui, sans-serif",
+      headingWeight: "700",
+      baseSize: "16",
+      borderRadius: "12",
+      buttonRadius: "8",
+      sectionPadding: "36",
+      buttonStyle: "filled",
+      cardShadow: "md",
+      cardBorder: false,
+    },
+  },
+  {
+    name: "Corporate Clean",
+    guide: {
+      primaryColor: "#0f172a",
+      primaryForeground: "#ffffff",
+      secondaryColor: "#f1f5f9",
+      secondaryForeground: "#0f172a",
+      accentColor: "#2563eb",
+      accentForeground: "#ffffff",
+      backgroundColor: "#ffffff",
+      foregroundColor: "#0f172a",
+      mutedColor: "#f8fafc",
+      mutedForeground: "#64748b",
+      cardColor: "#ffffff",
+      cardForeground: "#0f172a",
+      borderColor: "#e2e8f0",
+      headingFont: "'Georgia', serif",
+      bodyFont: "system-ui, sans-serif",
+      headingWeight: "600",
+      baseSize: "16",
+      borderRadius: "4",
+      buttonRadius: "4",
+      sectionPadding: "32",
+      buttonStyle: "filled",
+      cardShadow: "sm",
+      cardBorder: true,
+    },
+  },
+  {
+    name: "Warm Minimal",
+    guide: {
+      primaryColor: "#a1075c",
+      primaryForeground: "#ffffff",
+      secondaryColor: "#fdf2f8",
+      secondaryForeground: "#831843",
+      accentColor: "#f59e0b",
+      accentForeground: "#ffffff",
+      backgroundColor: "#faf9f6",
+      foregroundColor: "#1c1917",
+      mutedColor: "#f5f0eb",
+      mutedForeground: "#78716c",
+      cardColor: "#ffffff",
+      cardForeground: "#1c1917",
+      borderColor: "#e7e0d8",
+      headingFont: "'DM Serif Display', serif",
+      bodyFont: "'DM Sans', sans-serif",
+      headingWeight: "400",
+      baseSize: "17",
+      borderRadius: "16",
+      buttonRadius: "24",
+      sectionPadding: "40",
+      buttonStyle: "pill",
+      cardShadow: "none",
+      cardBorder: true,
+    },
+  },
+];
+
 /** Convert a StyleGuide to a CSS variables object for inline style */
 export function styleGuideToCSS(sg: StyleGuide): React.CSSProperties {
   return {
@@ -275,6 +419,35 @@ export function StyleGuidePanel({
 
   return (
     <div className="space-y-3">
+      {/* Presets */}
+      <div>
+        <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5">Preset Themes</p>
+        <div className="grid grid-cols-2 gap-1.5">
+          {styleGuidePresets.map((preset) => {
+            const isActive = styleGuide.primaryColor === preset.guide.primaryColor
+              && styleGuide.backgroundColor === preset.guide.backgroundColor
+              && styleGuide.headingFont === preset.guide.headingFont;
+            return (
+              <button
+                key={preset.name}
+                onClick={() => onChange({ ...preset.guide })}
+                className={`rounded-md border p-2 text-left transition-all ${
+                  isActive ? "border-primary ring-1 ring-primary/30 bg-primary/5" : "border-border hover:border-primary/40"
+                }`}
+              >
+                <div className="flex gap-0.5 rounded overflow-hidden h-3 mb-1.5">
+                  <div className="flex-1" style={{ backgroundColor: preset.guide.primaryColor }} />
+                  <div className="flex-1" style={{ backgroundColor: preset.guide.accentColor }} />
+                  <div className="flex-1" style={{ backgroundColor: preset.guide.backgroundColor }} />
+                  <div className="flex-1" style={{ backgroundColor: preset.guide.mutedColor }} />
+                </div>
+                <p className="text-[10px] font-medium truncate">{preset.name}</p>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Upload / Paste */}
       <div className="flex gap-1.5">
         <Button
@@ -283,7 +456,7 @@ export function StyleGuidePanel({
           className="flex-1 gap-1"
           onClick={() => fileInputRef.current?.click()}
         >
-          <Upload className="h-3 w-3" /> Upload JSON
+          <Upload className="h-3 w-3" /> Upload
         </Button>
         <Button
           variant="outline"
