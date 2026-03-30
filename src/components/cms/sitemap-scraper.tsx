@@ -6,71 +6,16 @@ import { Button } from "@/components/ui/button";
 import { SitemapPage, createSitemapPage } from "@/lib/project-types";
 
 /**
- * Scrapes a website URL to extract its sitemap / navigation links.
- * Uses a simple fetch + parse approach - gets the HTML and extracts
- * internal links from nav elements and common patterns.
+ * Calls the server-side API route to scrape navigation links.
  */
 async function scrapeNavLinks(url: string): Promise<{ name: string; path: string }[]> {
-  try {
-    const cleanUrl = url.replace(/\/$/, "");
-    const origin = new URL(cleanUrl).origin;
-
-    const res = await fetch(`/api/scrape-sitemap?url=${encodeURIComponent(cleanUrl)}`);
-    if (res.ok) {
-      return await res.json();
-    }
-
-    // Fallback: try fetching directly (will work if CORS allows)
-    const html = await fetch(cleanUrl).then((r) => r.text());
-    return parseLinksFromHtml(html, origin);
-  } catch {
-    return [];
+  const cleanUrl = url.replace(/\/$/, "");
+  const res = await fetch(`/api/scrape-sitemap?url=${encodeURIComponent(cleanUrl)}`);
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || "Failed to scan site");
   }
-}
-
-function parseLinksFromHtml(html: string, origin: string): { name: string; path: string }[] {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(html, "text/html");
-
-  const links: { name: string; path: string }[] = [];
-  const seen = new Set<string>();
-
-  // Look for nav links first
-  const navLinks = doc.querySelectorAll("nav a, header a, .menu a, .nav a, [role='navigation'] a");
-  const allLinks = navLinks.length > 0 ? navLinks : doc.querySelectorAll("a");
-
-  allLinks.forEach((a) => {
-    const href = a.getAttribute("href");
-    if (!href) return;
-
-    let path = "";
-    try {
-      if (href.startsWith("/")) {
-        path = href;
-      } else if (href.startsWith(origin)) {
-        path = new URL(href).pathname;
-      } else {
-        return; // external link
-      }
-    } catch {
-      return;
-    }
-
-    // Clean path
-    path = path.replace(/\/$/, "") || "/";
-
-    // Skip anchors, assets, etc.
-    if (path.includes("#") || path.includes("?") || path.match(/\.(jpg|png|gif|css|js|pdf|svg)/i)) return;
-    if (seen.has(path)) return;
-    seen.add(path);
-
-    const text = (a.textContent || "").trim().replace(/\s+/g, " ");
-    if (!text || text.length > 60) return;
-
-    links.push({ name: text, path });
-  });
-
-  return links;
+  return await res.json();
 }
 
 function linksToSitemapPages(links: { name: string; path: string }[]): SitemapPage[] {
@@ -113,8 +58,8 @@ export function SitemapScraper({
       } else {
         setPreviewLinks(links);
       }
-    } catch {
-      setError("Could not fetch the site. You can add pages manually.");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not fetch the site. You can add pages manually.");
     } finally {
       setLoading(false);
     }
