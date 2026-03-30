@@ -13,6 +13,8 @@ import {
   ChevronRight,
   LayoutGrid,
   List,
+  Workflow,
+  ArrowRightLeft,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,6 +29,8 @@ import { Project, SitemapPage, createSitemapPage } from "@/lib/project-types";
 import { StyleGuidePanel } from "@/components/cms/style-guide";
 import { VisualSitemap } from "@/components/cms/visual-sitemap";
 import { generateSuggestedSitemap } from "@/lib/sitemap-suggestions";
+import { PhaseTracker } from "@/components/cms/phase-tracker";
+import { RedirectMapEditor } from "@/components/cms/redirect-map";
 
 const inputClass =
   "w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary/30";
@@ -160,6 +164,7 @@ export function ProjectDashboard({
   // --- Render ---
 
   return (
+    <div className="space-y-6">
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.5fr_1fr]">
       {/* ================================================================ */}
       {/* LEFT COLUMN                                                      */}
@@ -561,6 +566,39 @@ export function ProjectDashboard({
           </CardContent>
         </Card>
       </div>
+    </div>
+
+    {/* Phase Tracker */}
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Workflow className="size-4" />
+          Project Phases
+        </CardTitle>
+        <CardDescription>
+          E3 7-phase web process — track progress, checklists, and gate approvals
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <PhaseTracker project={project} onUpdate={onUpdate} />
+      </CardContent>
+    </Card>
+
+    {/* Redirect Map */}
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <ArrowRightLeft className="size-4" />
+          Redirect Map
+        </CardTitle>
+        <CardDescription>
+          Old URL → New URL mapping for site migration
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <RedirectMapEditor project={project} onUpdate={onUpdate} />
+      </CardContent>
+    </Card>
     </div>
   );
 }
