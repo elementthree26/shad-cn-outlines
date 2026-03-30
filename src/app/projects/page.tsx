@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Plus, FileText, FolderOpen, Trash2, ArrowLeft } from "lucide-react";
+import { Plus, FileText, FolderOpen, Trash2, ArrowLeft, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Project } from "@/lib/project-types";
-import { getAllProjects, deleteProject } from "@/lib/project-store";
+import { Project, createProject } from "@/lib/project-types";
+import { getAllProjects, deleteProject, saveProject } from "@/lib/project-store";
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -19,6 +19,54 @@ export default function ProjectsPage() {
   const handleDelete = (id: string) => {
     if (!confirm("Delete this project? This cannot be undone.")) return;
     deleteProject(id);
+    setProjects(getAllProjects());
+  };
+
+  const handleDuplicate = (source: Project) => {
+    const dup = createProject({
+      ...source,
+      id: undefined as never, // createProject generates a new id
+      clientName: `${source.clientName} (Copy)`,
+      phases: undefined as never, // createProject generates fresh phases
+    });
+    saveProject(dup);
+    setProjects(getAllProjects());
+  };
+
+  const handleSaveAsTemplate = (source: Project) => {
+    const tmpl = createProject({
+      ...source,
+      id: undefined as never,
+      clientName: `${source.industry || "Custom"} Template`,
+      discoveryNotes: "",
+      valuePropositions: [],
+      differentiators: [],
+      competitorUrls: [],
+      currentSiteUrl: "",
+      existingContent: "",
+      contentToCreate: "",
+      contentOwnership: "",
+      redirects: [],
+      // Keep: sitemap structure, style guide, integrations, pages (but clear content)
+      sitemap: source.sitemap.map((p) => ({
+        ...p,
+        id: crypto.randomUUID(),
+        sections: p.sections.map((s) => ({
+          ...s,
+          instanceId: `${s.themeId}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+          content: { heading: "", subheading: "", body: "", ctaText: "", backgroundImageUrl: "", items: [] },
+          directionNotes: s.directionNotes, // Keep direction notes as they're structural
+        })),
+        pageGoal: p.pageGoal, // Keep page goals as they're structural
+        audiences: [],
+        referenceUrls: [],
+        contentNotes: "",
+        seoTitle: "",
+        seoDescription: "",
+        ogImageUrl: "",
+      })),
+    });
+    saveProject(tmpl);
     setProjects(getAllProjects());
   };
 
@@ -130,15 +178,38 @@ export default function ProjectsPage() {
                       </p>
                     </CardContent>
                   </Link>
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleDelete(project.id);
-                    }}
-                    className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity rounded p-1 hover:bg-destructive/10 text-muted-foreground hover:text-destructive"
-                  >
-                    <Trash2 className="h-3.5 w-3.5" />
-                  </button>
+                  <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleDuplicate(project);
+                      }}
+                      className="rounded p-1 hover:bg-muted text-muted-foreground hover:text-foreground"
+                      title="Duplicate project"
+                    >
+                      <Copy className="h-3.5 w-3.5" />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleSaveAsTemplate(project);
+                      }}
+                      className="rounded p-1 hover:bg-muted text-muted-foreground hover:text-foreground"
+                      title="Save as template"
+                    >
+                      <FileText className="h-3.5 w-3.5" />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleDelete(project.id);
+                      }}
+                      className="rounded p-1 hover:bg-destructive/10 text-muted-foreground hover:text-destructive"
+                      title="Delete"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
                 </Card>
               );
             })}
