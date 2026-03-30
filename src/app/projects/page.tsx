@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Project, createProject } from "@/lib/project-types";
 import { getAllProjects, deleteProject, saveProject } from "@/lib/project-store";
+import { ProjectImportButton } from "@/components/cms/project-export-import";
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -95,12 +96,15 @@ export default function ProjectsPage() {
                 </div>
               </div>
             </div>
-            <Link href="/projects/new">
-              <Button size="sm" className="gap-1.5">
-                <Plus className="h-4 w-4" />
-                New Project
-              </Button>
-            </Link>
+            <div className="flex items-center gap-2">
+              <ProjectImportButton onImport={() => setProjects(getAllProjects())} />
+              <Link href="/projects/new">
+                <Button size="sm" className="gap-1.5">
+                  <Plus className="h-4 w-4" />
+                  New Project
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </header>

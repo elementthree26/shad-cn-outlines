@@ -10,6 +10,7 @@ import { Project, SitemapPage, PageSection } from "@/lib/project-types";
 import { getProject, saveProject } from "@/lib/project-store";
 import { ProjectPageBuilder } from "@/components/cms/project-page-builder";
 import { ExportPanel } from "@/components/cms/page-export";
+import { WriterBriefButton } from "@/components/cms/writer-brief";
 
 export default function ProjectPageBuilderRoute() {
   const router = useRouter();
@@ -76,6 +77,7 @@ export default function ProjectPageBuilderRoute() {
                 Has notes
               </Badge>
             )}
+            <WriterBriefButton page={currentPage} project={project} />
             <Button
               size="sm"
               variant="outline"
