@@ -15,6 +15,7 @@ import {
   List,
   Workflow,
   ArrowRightLeft,
+  Clock,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,6 +34,8 @@ import { PhaseTracker } from "@/components/cms/phase-tracker";
 import { RedirectMapEditor } from "@/components/cms/redirect-map";
 import { ProjectBriefButton } from "@/components/cms/project-brief";
 import { ProjectExportButton } from "@/components/cms/project-export-import";
+import { ProjectSearch } from "@/components/cms/project-search";
+import { ActivityLog } from "@/components/cms/activity-log";
 
 const inputClass =
   "w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary/30";
@@ -221,7 +224,8 @@ export function ProjectDashboard({
               {project.industry && (
                 <Badge variant="secondary">{project.industry}</Badge>
               )}
-              <div className="ml-auto">
+              <div className="ml-auto flex items-center gap-2">
+                <ProjectSearch project={project} onNavigateToPage={onNavigateToPage} />
                 <ProjectExportButton project={project} />
                 <ProjectBriefButton project={project} />
               </div>
@@ -569,6 +573,19 @@ export function ProjectDashboard({
                 {project.contentOwnership || <span className="text-muted-foreground">None noted</span>}
               </p>
             </div>
+          </CardContent>
+        </Card>
+
+        {/* --- Activity Log --- */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Clock className="size-4" />
+              Activity
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ActivityLog projectId={project.id} />
           </CardContent>
         </Card>
       </div>
