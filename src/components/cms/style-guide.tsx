@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import { Upload, Paintbrush, RotateCcw, ChevronDown, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { StyleGuideImageUpload } from "./image-upload";
+import { extractPaletteFromFile, paletteToStyleGuide } from "./image-palette-extractor";
 
 export interface StyleGuide {
   // Colors
@@ -379,8 +381,26 @@ export function StyleGuidePanel({
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [extracting, setExtracting] = useState(false);
 
   const update = (patch: Partial<StyleGuide>) => onChange({ ...styleGuide, ...patch });
+
+  const handleImageUpload = useCallback(async (file: File) => {
+    setUploadError(null);
+    setExtracting(true);
+    setImagePreview(URL.createObjectURL(file));
+    try {
+      const palette = await extractPaletteFromFile(file);
+      const extracted = paletteToStyleGuide(palette);
+      onChange({ ...styleGuide, ...extracted });
+      setUploadError(null);
+    } catch {
+      setUploadError("Failed to extract colors from image.");
+    } finally {
+      setExtracting(false);
+    }
+  }, [onChange, styleGuide]);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -448,7 +468,16 @@ export function StyleGuidePanel({
         </div>
       </div>
 
-      {/* Upload / Paste */}
+      {/* Image upload for style guide extraction */}
+      <div>
+        <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5">
+          Extract from Image
+        </p>
+        <StyleGuideImageUpload onFile={handleImageUpload} previewUrl={imagePreview} />
+        {extracting && <p className="text-xs text-primary mt-1">Extracting colors...</p>}
+      </div>
+
+      {/* JSON Upload / Paste */}
       <div className="flex gap-1.5">
         <Button
           variant="outline"
@@ -456,7 +485,7 @@ export function StyleGuidePanel({
           className="flex-1 gap-1"
           onClick={() => fileInputRef.current?.click()}
         >
-          <Upload className="h-3 w-3" /> Upload
+          <Upload className="h-3 w-3" /> JSON
         </Button>
         <Button
           variant="outline"

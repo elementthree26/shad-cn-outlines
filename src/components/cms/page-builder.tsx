@@ -50,6 +50,7 @@ import { WireframeBlock, wireframeBlockMeta } from "@/components/wireframe-block
 import { allPages } from "@/data/pages";
 import { StyleGuide, defaultStyleGuide, StyleGuidePanel } from "./style-guide";
 import { StyledPreview } from "./styled-preview";
+import { ImageUpload } from "./image-upload";
 
 // --- Content item types per block category ---
 
@@ -250,10 +251,12 @@ function ContentEditor({
             className={`${inputCls} resize-none`}
           />
           <TextInput value={content.ctaText} onChange={(v) => updateField("ctaText", v)} placeholder="Button / CTA text" />
-          <div className="flex items-center gap-1.5">
-            <ImageIcon className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
-            <TextInput value={content.backgroundImageUrl} onChange={(v) => updateField("backgroundImageUrl", v)} placeholder="Background image URL" />
-          </div>
+          <ImageUpload
+            value={content.backgroundImageUrl}
+            onChange={(v) => updateField("backgroundImageUrl", v)}
+            placeholder="Background / section image"
+            compact
+          />
         </div>
       </div>
 
@@ -316,14 +319,12 @@ function ContentEditor({
                   />
                 )}
                 {labels.imageLabel && (
-                  <div className="flex items-center gap-1.5">
-                    <ImageIcon className="h-3 w-3 text-muted-foreground flex-shrink-0" />
-                    <TextInput
-                      value={item.imageUrl}
-                      onChange={(v) => updateItem(item.id, { imageUrl: v })}
-                      placeholder={labels.imageLabel}
-                    />
-                  </div>
+                  <ImageUpload
+                    value={item.imageUrl}
+                    onChange={(v) => updateItem(item.id, { imageUrl: v })}
+                    placeholder={labels.imageLabel}
+                    compact
+                  />
                 )}
               </div>
             ))}
