@@ -31,6 +31,7 @@ import { VisualSitemap } from "@/components/cms/visual-sitemap";
 import { generateSuggestedSitemap } from "@/lib/sitemap-suggestions";
 import { PhaseTracker } from "@/components/cms/phase-tracker";
 import { RedirectMapEditor } from "@/components/cms/redirect-map";
+import { ProjectBriefButton } from "@/components/cms/project-brief";
 
 const inputClass =
   "w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary/30";
@@ -219,6 +220,9 @@ export function ProjectDashboard({
               {project.industry && (
                 <Badge variant="secondary">{project.industry}</Badge>
               )}
+              <div className="ml-auto">
+                <ProjectBriefButton project={project} />
+              </div>
             </div>
           </CardHeader>
         </Card>
