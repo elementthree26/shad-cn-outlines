@@ -32,6 +32,7 @@ import {
   Image as ImageIcon,
   X,
   Paintbrush,
+  StickyNote,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -184,6 +185,8 @@ export interface BuilderSection {
   selectedBlockId: WireframeBlockId;
   availableBlocks: { name: string; wireframeId: WireframeBlockId }[];
   content: SectionContent;
+  /** Content direction notes shown alongside the wireframe */
+  directionNotes: string;
 }
 
 function createSectionFromTheme(theme: ContentTheme): BuilderSection {
@@ -194,6 +197,7 @@ function createSectionFromTheme(theme: ContentTheme): BuilderSection {
     selectedBlockId: theme.componentOptions[0]?.wireframeId || "hero-centered",
     availableBlocks: theme.componentOptions,
     content: { ...emptySectionContent, items: [] },
+    directionNotes: "",
   };
 }
 
@@ -340,6 +344,7 @@ function SortableSection({
   onRemove,
   onChangeBlock,
   onUpdateContent,
+  onUpdateNotes,
   isSelected,
   onSelect,
 }: {
@@ -347,11 +352,13 @@ function SortableSection({
   onRemove: (id: string) => void;
   onChangeBlock: (id: string, blockId: WireframeBlockId) => void;
   onUpdateContent: (id: string, patch: Partial<SectionContent>) => void;
+  onUpdateNotes: (id: string, notes: string) => void;
   isSelected: boolean;
   onSelect: (id: string) => void;
 }) {
   const [showOptions, setShowOptions] = useState(false);
   const [showContent, setShowContent] = useState(false);
+  const [showNotes, setShowNotes] = useState(false);
   const {
     attributes,
     listeners,
@@ -404,7 +411,7 @@ function SortableSection({
                 onClick={(e) => {
                   e.stopPropagation();
                   setShowContent(!showContent);
-                  if (!showContent) setShowOptions(false);
+                  if (!showContent) { setShowOptions(false); setShowNotes(false); }
                 }}
                 title="Edit content"
               >
@@ -415,8 +422,20 @@ function SortableSection({
                 size="icon-xs"
                 onClick={(e) => {
                   e.stopPropagation();
+                  setShowNotes(!showNotes);
+                  if (!showNotes) { setShowContent(false); setShowOptions(false); }
+                }}
+                title="Direction notes"
+              >
+                <StickyNote className={`h-3.5 w-3.5 ${section.directionNotes ? "text-amber-500" : ""}`} />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon-xs"
+                onClick={(e) => {
+                  e.stopPropagation();
                   setShowOptions(!showOptions);
-                  if (!showOptions) setShowContent(false);
+                  if (!showOptions) { setShowContent(false); setShowNotes(false); }
                 }}
                 title="Change variant"
               >
@@ -445,6 +464,20 @@ function SortableSection({
             <div className="mt-2">
               <ContentEditor section={section} onUpdate={onUpdateContent} />
             </div>
+          </CardContent>
+        )}
+        {showNotes && (
+          <CardContent className="pt-0 pb-3 px-4 border-t" onClick={(e) => e.stopPropagation()}>
+            <p className="text-xs font-medium text-muted-foreground mb-1.5 mt-2 flex items-center gap-1">
+              <StickyNote className="h-3 w-3" /> Content Direction Notes
+            </p>
+            <textarea
+              placeholder="Notes for this section: content direction, what copy to write, where CTAs link, client feedback, etc."
+              value={section.directionNotes}
+              onChange={(e) => onUpdateNotes(section.instanceId, e.target.value)}
+              rows={4}
+              className={`${inputCls} resize-none text-xs`}
+            />
           </CardContent>
         )}
         {showOptions && (
@@ -1022,7 +1055,7 @@ function SectionPreview({ section }: { section: BuilderSection }) {
   );
 }
 
-function LivePreview({ sections }: { sections: BuilderSection[] }) {
+function LivePreview({ sections, showAnnotations = false }: { sections: BuilderSection[]; showAnnotations?: boolean }) {
   if (sections.length === 0) {
     return (
       <div className="flex items-center justify-center h-full text-muted-foreground">
@@ -1043,8 +1076,21 @@ function LivePreview({ sections }: { sections: BuilderSection[] }) {
               {section.themeName}
             </Badge>
           </div>
-          <div className="border-b border-dashed border-border/50">
-            <SectionPreview section={section} />
+          <div className={`border-b border-dashed border-border/50 ${showAnnotations && section.directionNotes ? "flex" : ""}`}>
+            <div className={showAnnotations && section.directionNotes ? "flex-1 min-w-0" : ""}>
+              <SectionPreview section={section} />
+            </div>
+            {showAnnotations && section.directionNotes && (
+              <div className="w-72 flex-shrink-0 border-l border-dashed border-border/50 p-4 bg-amber-50/50">
+                <div className="flex items-center gap-1.5 mb-2">
+                  <StickyNote className="h-3.5 w-3.5 text-amber-600" />
+                  <span className="text-xs font-semibold text-amber-800">{section.themeName}</span>
+                </div>
+                <p className="text-xs text-amber-900/70 whitespace-pre-wrap leading-relaxed">
+                  {section.directionNotes}
+                </p>
+              </div>
+            )}
           </div>
         </div>
       ))}
@@ -1135,6 +1181,7 @@ export function PageBuilder(props: PageBuilderProps = {}) {
   const [showPreview, setShowPreview] = useState(true);
   const [styleGuide, setStyleGuide] = useState<StyleGuide>(initialStyleGuide || { ...defaultStyleGuide });
   const [showStyleGuide, setShowStyleGuide] = useState(false);
+  const [showAnnotations, setShowAnnotations] = useState(false);
 
   // Notify parent of section changes for auto-save
   const sectionsRef = useRef(sections);
@@ -1197,6 +1244,17 @@ export function PageBuilder(props: PageBuilderProps = {}) {
     []
   );
 
+  const updateNotes = useCallback(
+    (id: string, notes: string) => {
+      setSections((prev) =>
+        prev.map((s) =>
+          s.instanceId === id ? { ...s, directionNotes: notes } : s
+        )
+      );
+    },
+    []
+  );
+
   const loadTemplate = useCallback((slug: string) => {
     const page = allPages.find((p) => p.slug === slug);
     if (!page) return;
@@ -1251,6 +1309,7 @@ export function PageBuilder(props: PageBuilderProps = {}) {
                     onRemove={removeSection}
                     onChangeBlock={changeBlock}
                     onUpdateContent={updateContent}
+                    onUpdateNotes={updateNotes}
                     isSelected={selectedSection === section.instanceId}
                     onSelect={setSelectedSection}
                   />
@@ -1305,13 +1364,22 @@ export function PageBuilder(props: PageBuilderProps = {}) {
           </div>
           <div className="flex items-center gap-1">
             <Button
+              variant={showAnnotations ? "default" : "ghost"}
+              size="xs"
+              onClick={() => setShowAnnotations(!showAnnotations)}
+              className="gap-1"
+            >
+              <StickyNote className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Notes</span>
+            </Button>
+            <Button
               variant={showStyleGuide ? "default" : "ghost"}
               size="xs"
               onClick={() => setShowStyleGuide(!showStyleGuide)}
               className="gap-1"
             >
               <Paintbrush className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">Style Guide</span>
+              <span className="hidden sm:inline">Style</span>
             </Button>
             <div className="w-px h-4 bg-border mx-1" />
             <Button
@@ -1352,7 +1420,7 @@ export function PageBuilder(props: PageBuilderProps = {}) {
           {showPreview ? (
             <StyledPreview styleGuide={styleGuide}>
               <div className="max-w-4xl mx-auto p-6">
-                <LivePreview sections={sections} />
+                <LivePreview sections={sections} showAnnotations={showAnnotations} />
               </div>
             </StyledPreview>
           ) : (

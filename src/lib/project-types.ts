@@ -87,8 +87,21 @@ export interface SitemapPage {
   purpose: string;
   parentId: string | null;
   order: number;
+  /** Sprint / phase assignment */
+  sprint: number;
   /** Page-specific notes from discovery */
   notes: string;
+
+  // --- Page Strategy Brief (like the Miro card at the top) ---
+  /** Who is this page for? */
+  audiences: string[];
+  /** What should visitors do / what's the page goal? */
+  pageGoal: string;
+  /** Reference URLs (current site, competitors, inspiration) */
+  referenceUrls: string[];
+  /** What content/assets exist or are needed */
+  contentNotes: string;
+
   /** The built page layout */
   sections: PageSection[];
 }
@@ -100,6 +113,8 @@ export interface PageSection {
   selectedBlockId: WireframeBlockId;
   availableBlocks: { name: string; wireframeId: WireframeBlockId }[];
   content: SectionContent;
+  /** Content direction notes shown alongside the wireframe (like Miro annotations) */
+  directionNotes: string;
 }
 
 export interface ContentItem {
@@ -211,8 +226,38 @@ export function createSitemapPage(partial?: Partial<SitemapPage>): SitemapPage {
     purpose: "",
     parentId: null,
     order: 0,
+    sprint: 1,
     notes: "",
+    audiences: [],
+    pageGoal: "",
+    referenceUrls: [],
+    contentNotes: "",
     sections: [],
     ...partial,
   };
+}
+
+// ============================================================
+// SPRINT HELPERS
+// ============================================================
+
+export const defaultSprints = [
+  { number: 1, name: "Sprint 1: Core Pages" },
+  { number: 2, name: "Sprint 2: Secondary Pages" },
+  { number: 3, name: "Sprint 3: Specialty Pages" },
+];
+
+export function getSprintsFromSitemap(pages: SitemapPage[]): number[] {
+  const sprints = [...new Set(pages.map((p) => p.sprint || 1))];
+  return sprints.sort((a, b) => a - b);
+}
+
+export function getPagesBySprint(pages: SitemapPage[]): Map<number, SitemapPage[]> {
+  const map = new Map<number, SitemapPage[]>();
+  for (const page of pages) {
+    const s = page.sprint || 1;
+    if (!map.has(s)) map.set(s, []);
+    map.get(s)!.push(page);
+  }
+  return map;
 }
