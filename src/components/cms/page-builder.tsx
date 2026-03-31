@@ -33,6 +33,8 @@ import {
   X,
   Paintbrush,
   StickyNote,
+  Bookmark,
+  Copy,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -52,6 +54,7 @@ import { allPages } from "@/data/pages";
 import { StyleGuide, defaultStyleGuide, StyleGuidePanel } from "./style-guide";
 import { StyledPreview } from "./styled-preview";
 import { ImageUpload } from "./image-upload";
+import { SaveAsTemplateDialog, TemplateLibrary } from "./page-template-library";
 
 // --- Content item types per block category ---
 
@@ -345,6 +348,7 @@ function SortableSection({
   onChangeBlock,
   onUpdateContent,
   onUpdateNotes,
+  onDuplicate,
   isSelected,
   onSelect,
 }: {
@@ -353,6 +357,7 @@ function SortableSection({
   onChangeBlock: (id: string, blockId: WireframeBlockId) => void;
   onUpdateContent: (id: string, patch: Partial<SectionContent>) => void;
   onUpdateNotes: (id: string, notes: string) => void;
+  onDuplicate: (id: string) => void;
   isSelected: boolean;
   onSelect: (id: string) => void;
 }) {
@@ -450,9 +455,21 @@ function SortableSection({
                 size="icon-xs"
                 onClick={(e) => {
                   e.stopPropagation();
+                  onDuplicate(section.instanceId);
+                }}
+                title="Duplicate section"
+              >
+                <Copy className="h-3.5 w-3.5" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon-xs"
+                onClick={(e) => {
+                  e.stopPropagation();
                   onRemove(section.instanceId);
                 }}
                 className="text-destructive hover:text-destructive"
+                title="Remove section"
               >
                 <Trash2 className="h-3.5 w-3.5" />
               </Button>
@@ -1182,6 +1199,8 @@ export function PageBuilder(props: PageBuilderProps = {}) {
   const [styleGuide, setStyleGuide] = useState<StyleGuide>(initialStyleGuide || { ...defaultStyleGuide });
   const [showStyleGuide, setShowStyleGuide] = useState(false);
   const [showAnnotations, setShowAnnotations] = useState(false);
+  const [showSaveTemplate, setShowSaveTemplate] = useState(false);
+  const [showTemplateLibrary, setShowTemplateLibrary] = useState(false);
 
   // Notify parent of section changes for auto-save
   const sectionsRef = useRef(sections);
@@ -1261,6 +1280,35 @@ export function PageBuilder(props: PageBuilderProps = {}) {
     setSections(page.contentThemes.map(createSectionFromTheme));
   }, []);
 
+  const duplicateSection = useCallback((id: string) => {
+    setSections((prev) => {
+      const idx = prev.findIndex((s) => s.instanceId === id);
+      if (idx < 0) return prev;
+      const source = prev[idx];
+      const dup: BuilderSection = {
+        ...source,
+        instanceId: `${source.themeId}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+        content: { ...source.content, items: source.content.items.map((it) => ({ ...it, id: crypto.randomUUID() })) },
+      };
+      const next = [...prev];
+      next.splice(idx + 1, 0, dup);
+      return next;
+    });
+  }, []);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "s") {
+        e.preventDefault();
+        // Trigger save via onSectionsChange
+        if (onSectionsChange) onSectionsChange(sections);
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [sections, onSectionsChange]);
+
   return (
     <div className="flex h-[calc(100vh-64px)] overflow-hidden">
       {/* Left panel - Section list */}
@@ -1310,6 +1358,7 @@ export function PageBuilder(props: PageBuilderProps = {}) {
                     onChangeBlock={changeBlock}
                     onUpdateContent={updateContent}
                     onUpdateNotes={updateNotes}
+                    onDuplicate={duplicateSection}
                     isSelected={selectedSection === section.instanceId}
                     onSelect={setSelectedSection}
                   />
@@ -1329,18 +1378,18 @@ export function PageBuilder(props: PageBuilderProps = {}) {
           </div>
         </div>
 
-        {/* Add section panel */}
-        <div className="border-t">
+        {/* Footer actions */}
+        <div className="border-t flex">
           <Sheet>
             <SheetTrigger
               render={
                 <Button
                   variant="ghost"
-                  className="w-full rounded-none h-12 gap-2"
+                  className="flex-1 rounded-none h-10 gap-1.5 text-xs"
                 />
               }
             >
-              <Plus className="h-4 w-4" />
+              <Plus className="h-3.5 w-3.5" />
               Add Section
             </SheetTrigger>
             <SheetContent side="left" className="w-[360px] sm:max-w-[360px]">
@@ -1352,7 +1401,46 @@ export function PageBuilder(props: PageBuilderProps = {}) {
               </ScrollArea>
             </SheetContent>
           </Sheet>
+          <div className="w-px bg-border" />
+          <Button
+            variant="ghost"
+            className="flex-1 rounded-none h-10 gap-1.5 text-xs"
+            onClick={() => setShowTemplateLibrary(true)}
+          >
+            <Bookmark className="h-3.5 w-3.5" />
+            Templates
+          </Button>
+          {sections.length > 0 && (
+            <>
+              <div className="w-px bg-border" />
+              <Button
+                variant="ghost"
+                className="rounded-none h-10 gap-1.5 text-xs px-3"
+                onClick={() => setShowSaveTemplate(true)}
+              >
+                <Bookmark className="h-3.5 w-3.5 text-primary" />
+                Save
+              </Button>
+            </>
+          )}
         </div>
+
+        {/* Template dialogs */}
+        {showSaveTemplate && (
+          <SaveAsTemplateDialog
+            sections={sections}
+            onClose={() => setShowSaveTemplate(false)}
+          />
+        )}
+        {showTemplateLibrary && (
+          <TemplateLibrary
+            onApply={(templateSections) => {
+              setSections(templateSections as BuilderSection[]);
+              setShowTemplateLibrary(false);
+            }}
+            onClose={() => setShowTemplateLibrary(false)}
+          />
+        )}
       </div>
 
       {/* Right panel - Preview */}
