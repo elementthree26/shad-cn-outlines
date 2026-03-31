@@ -55,6 +55,7 @@ import { StyleGuide, defaultStyleGuide, StyleGuidePanel } from "./style-guide";
 import { StyledPreview } from "./styled-preview";
 import { ImageUpload } from "./image-upload";
 import { SaveAsTemplateDialog, TemplateLibrary } from "./page-template-library";
+import { ShadcnBlockBrowser } from "./shadcn-block-browser";
 
 // --- Content item types per block category ---
 
@@ -1483,13 +1484,13 @@ export function PageBuilder(props: PageBuilderProps = {}) {
               <Plus className="h-3.5 w-3.5" />
               Add Section
             </SheetTrigger>
-            <SheetContent side="left" className="w-[360px] sm:max-w-[360px]">
+            <SheetContent side="left" className="w-[420px] sm:max-w-[420px]">
               <SheetHeader>
                 <SheetTitle>Module Library</SheetTitle>
               </SheetHeader>
-              <ScrollArea className="flex-1 -mx-4 px-4">
-                <ModuleLibrary onAdd={addBlock} />
-              </ScrollArea>
+              <div className="flex-1 overflow-y-auto -mx-4 px-4">
+                <ShadcnBlockBrowser onAddBlock={addBlock} />
+              </div>
             </SheetContent>
           </Sheet>
           <div className="w-px bg-border" />
