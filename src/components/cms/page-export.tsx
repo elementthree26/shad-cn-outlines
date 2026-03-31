@@ -14,18 +14,639 @@ import {
 import { wireframeBlockMeta } from "@/components/wireframe-blocks";
 
 // ============================================================
-// CODE EXPORT — generates React/Next.js with real shadcn/ui components
+// CODE EXPORT — shadcnblocks-pattern component generation
 // ============================================================
 
-function escHtml(str: string): string {
-  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, '\\"');
-}
-
 function esc(str: string): string {
-  return str.replace(/`/g, "\\`").replace(/\$/g, "\\$");
+  return str.replace(/`/g, "\\`").replace(/\$/g, "\\$").replace(/"/g, '\\"');
 }
 
-/** Track which shadcn imports are needed */
+function toPascalCase(str: string): string {
+  return str.replace(/[^a-zA-Z0-9 ]/g, "").split(/\s+/).map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join("");
+}
+
+/**
+ * Generate a standalone shadcnblocks-pattern component for a section.
+ * Each section becomes its own file with typed props and defaults.
+ */
+function generateBlockComponent(section: PageSection, index: number): { filename: string; code: string } {
+  const { content: c, selectedBlockId, themeName, directionNotes } = section;
+  const meta = wireframeBlockMeta[selectedBlockId];
+  const cat = meta?.category || "Section";
+  const name = toPascalCase(themeName || `Section${index + 1}`);
+
+  switch (cat) {
+    case "Hero": return generateHeroBlock(c, name, selectedBlockId, directionNotes);
+    case "Cards": return generateCardsBlock(c, name, selectedBlockId, directionNotes);
+    case "Lists": return selectedBlockId.includes("accordion") || selectedBlockId === "faq-accordion"
+      ? generateFaqBlock(c, name, directionNotes)
+      : generateStepsBlock(c, name, directionNotes);
+    case "Tabs": return generateTabsBlock(c, name, directionNotes);
+    case "CTA": return generateCtaBlock(c, name, selectedBlockId, directionNotes);
+    case "Testimonials": return generateTestimonialBlock(c, name, directionNotes);
+    case "Stats": return generateStatsBlock(c, name, directionNotes);
+    case "Team": return generateTeamBlock(c, name, directionNotes);
+    case "Forms": return generateFormBlock(c, name, directionNotes);
+    case "Logos": return generateLogosBlock(c, name, directionNotes);
+    case "Text": return generateTextBlock(c, name, selectedBlockId, directionNotes);
+    default: return generateGenericBlock(c, name, directionNotes);
+  }
+}
+
+// --- Block generators (shadcnblocks pattern) ---
+
+function notes(d: string | undefined): string {
+  return d ? d.split("\n").map((l) => `// ${l.trim()}`).join("\n") + "\n\n" : "";
+}
+
+function generateHeroBlock(c: SectionContent, name: string, blockId: string, dn?: string): { filename: string; code: string } {
+  const isSplit = blockId.includes("split") || blockId.includes("image-right");
+  return { filename: `${name}.tsx`, code: `${notes(dn)}import { ArrowRight } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+
+interface ${name}Props {
+  badge?: string;
+  heading?: string;
+  description?: string;
+  primaryCta?: { text: string; url: string };
+  secondaryCta?: { text: string; url: string };
+  image?: { src: string; alt: string };
+}
+
+const ${name} = ({
+  badge = "",
+  heading = "${esc(c.heading || "Your Headline Here")}",
+  description = "${esc(c.subheading || c.body || "Supporting text goes here")}",
+  primaryCta = { text: "${esc(c.ctaText || "Get Started")}", url: "#" },
+  secondaryCta = { text: "Learn More", url: "#" },
+  image = { src: "${esc(c.backgroundImageUrl || "/placeholder.jpg")}", alt: "${esc(c.heading || "Hero image")}" },
+}: ${name}Props) => {
+  return (
+    <section className="py-32">
+      <div className="container">
+        <div className="${isSplit ? "grid items-center gap-8 lg:grid-cols-2" : "flex flex-col items-center text-center"}">
+          <div className="${isSplit ? "flex flex-col items-center text-center lg:items-start lg:text-left" : "max-w-2xl"}">
+            {badge && (
+              <Badge variant="outline" className="mb-4">
+                {badge}
+                <ArrowRight className="ml-2 size-4" />
+              </Badge>
+            )}
+            <h1 className="my-6 text-pretty text-4xl font-bold lg:text-6xl">
+              {heading}
+            </h1>
+            <p className="text-muted-foreground mb-8 max-w-xl lg:text-xl">
+              {description}
+            </p>
+            <div className="flex w-full flex-col justify-center gap-2 sm:flex-row ${isSplit ? "lg:justify-start" : ""}">
+              <Button size="lg" asChild>
+                <a href={primaryCta.url}>{primaryCta.text}</a>
+              </Button>
+              <Button size="lg" variant="outline" asChild>
+                <a href={secondaryCta.url}>{secondaryCta.text}</a>
+              </Button>
+            </div>
+          </div>
+          ${isSplit ? `<img
+            src={image.src}
+            alt={image.alt}
+            className="max-h-96 w-full rounded-md object-cover"
+          />` : ""}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export { ${name} };
+` };
+}
+
+function generateCardsBlock(c: SectionContent, name: string, blockId: string, dn?: string): { filename: string; code: string } {
+  const cols = blockId.includes("4") ? 4 : blockId.includes("2") ? 2 : 3;
+  const itemType = `{ icon: React.ReactNode; title: string; description: string }`;
+  const defaults = c.items.length > 0
+    ? c.items.map((it) => `    { icon: <Zap className="size-6" />, title: "${esc(it.title)}", description: "${esc(it.description)}" }`).join(",\n")
+    : `    { icon: <Zap className="size-6" />, title: "Feature One", description: "Description here" },\n    { icon: <Zap className="size-6" />, title: "Feature Two", description: "Description here" },\n    { icon: <Zap className="size-6" />, title: "Feature Three", description: "Description here" }`;
+
+  return { filename: `${name}.tsx`, code: `${notes(dn)}import { Zap } from "lucide-react";
+
+interface ${name}Props {
+  heading?: string;
+  description?: string;
+  features?: ${itemType}[];
+}
+
+const ${name} = ({
+  heading = "${esc(c.heading || "Features")}",
+  description = "${esc(c.subheading || "")}",
+  features = [
+${defaults}
+  ],
+}: ${name}Props) => {
+  return (
+    <section className="py-32">
+      <div className="container">
+        <div className="mb-12 text-center">
+          <h2 className="mb-4 text-3xl font-semibold lg:text-4xl">{heading}</h2>
+          {description && <p className="text-muted-foreground max-w-2xl mx-auto lg:text-lg">{description}</p>}
+        </div>
+        <div className="grid gap-6 md:grid-cols-${cols}">
+          {features.map((feature, i) => (
+            <div key={i} className="flex flex-col items-center rounded-lg border p-8 text-center">
+              <div className="mb-4 flex size-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+                {feature.icon}
+              </div>
+              <h3 className="mb-2 text-lg font-semibold">{feature.title}</h3>
+              <p className="text-muted-foreground text-sm">{feature.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export { ${name} };
+` };
+}
+
+function generateFaqBlock(c: SectionContent, name: string, dn?: string): { filename: string; code: string } {
+  const defaults = c.items.length > 0
+    ? c.items.map((it, i) => `    { id: "faq-${i + 1}", question: "${esc(it.title)}", answer: "${esc(it.description)}" }`).join(",\n")
+    : `    { id: "faq-1", question: "What is this?", answer: "A common question answered here." }`;
+
+  return { filename: `${name}.tsx`, code: `${notes(dn)}import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+
+interface FaqItem {
+  id: string;
+  question: string;
+  answer: string;
+}
+
+interface ${name}Props {
+  heading?: string;
+  description?: string;
+  items?: FaqItem[];
+}
+
+const ${name} = ({
+  heading = "${esc(c.heading || "Frequently Asked Questions")}",
+  description = "${esc(c.subheading || "")}",
+  items = [
+${defaults}
+  ],
+}: ${name}Props) => {
+  return (
+    <section className="py-32">
+      <div className="container max-w-3xl">
+        <h2 className="mb-4 text-3xl font-semibold md:text-4xl">{heading}</h2>
+        {description && <p className="text-muted-foreground mb-8 lg:text-lg">{description}</p>}
+        <Accordion type="single" collapsible>
+          {items.map((item, index) => (
+            <AccordionItem key={index} value={item.id}>
+              <AccordionTrigger className="font-semibold hover:no-underline">
+                {item.question}
+              </AccordionTrigger>
+              <AccordionContent className="text-muted-foreground">
+                {item.answer}
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </div>
+    </section>
+  );
+};
+
+export { ${name} };
+` };
+}
+
+function generateStepsBlock(c: SectionContent, name: string, dn?: string): { filename: string; code: string } {
+  const defaults = c.items.length > 0
+    ? c.items.map((it, i) => `    { step: "${esc(it.extra || String(i + 1))}", title: "${esc(it.title)}", description: "${esc(it.description)}" }`).join(",\n")
+    : `    { step: "1", title: "Step One", description: "Description" }`;
+
+  return { filename: `${name}.tsx`, code: `${notes(dn)}interface ${name}Props {
+  heading?: string;
+  items?: { step: string; title: string; description: string }[];
+}
+
+const ${name} = ({
+  heading = "${esc(c.heading || "How It Works")}",
+  items = [
+${defaults}
+  ],
+}: ${name}Props) => {
+  return (
+    <section className="py-32">
+      <div className="container max-w-4xl">
+        <h2 className="mb-12 text-center text-3xl font-semibold md:text-4xl">{heading}</h2>
+        <div className="space-y-8">
+          {items.map((item, i) => (
+            <div key={i} className="flex items-start gap-6">
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold">
+                {item.step}
+              </div>
+              <div>
+                <h3 className="mb-1 text-lg font-semibold">{item.title}</h3>
+                <p className="text-muted-foreground">{item.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export { ${name} };
+` };
+}
+
+function generateTabsBlock(c: SectionContent, name: string, dn?: string): { filename: string; code: string } {
+  const defaults = c.items.length > 0
+    ? c.items.map((it) => `    { label: "${esc(it.title)}", content: "${esc(it.description)}" }`).join(",\n")
+    : `    { label: "Tab 1", content: "Content for tab 1" }`;
+
+  return { filename: `${name}.tsx`, code: `${notes(dn)}import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+interface ${name}Props {
+  heading?: string;
+  tabs?: { label: string; content: string }[];
+}
+
+const ${name} = ({
+  heading = "${esc(c.heading || "Explore")}",
+  tabs = [
+${defaults}
+  ],
+}: ${name}Props) => {
+  return (
+    <section className="py-32">
+      <div className="container max-w-4xl">
+        <h2 className="mb-8 text-3xl font-semibold md:text-4xl">{heading}</h2>
+        <Tabs defaultValue="tab-0">
+          <TabsList>
+            {tabs.map((tab, i) => (
+              <TabsTrigger key={i} value={\`tab-\${i}\`}>{tab.label}</TabsTrigger>
+            ))}
+          </TabsList>
+          {tabs.map((tab, i) => (
+            <TabsContent key={i} value={\`tab-\${i}\`} className="mt-6">
+              <p className="text-muted-foreground">{tab.content}</p>
+            </TabsContent>
+          ))}
+        </Tabs>
+      </div>
+    </section>
+  );
+};
+
+export { ${name} };
+` };
+}
+
+function generateCtaBlock(c: SectionContent, name: string, blockId: string, dn?: string): { filename: string; code: string } {
+  return { filename: `${name}.tsx`, code: `${notes(dn)}import { Button } from "@/components/ui/button";
+
+interface ${name}Props {
+  heading?: string;
+  description?: string;
+  primaryCta?: { text: string; url: string };
+  secondaryCta?: { text: string; url: string };
+}
+
+const ${name} = ({
+  heading = "${esc(c.heading || "Ready to Get Started?")}",
+  description = "${esc(c.subheading || c.body || "Take the next step today.")}",
+  primaryCta = { text: "${esc(c.ctaText || "Get Started")}", url: "#" },
+  secondaryCta = { text: "Learn More", url: "#" },
+}: ${name}Props) => {
+  return (
+    <section className="py-32">
+      <div className="container">
+        <div className="flex flex-col items-center rounded-lg bg-accent p-8 text-center md:rounded-xl md:p-16">
+          <h2 className="mb-4 text-3xl font-semibold md:text-5xl">{heading}</h2>
+          <p className="text-muted-foreground mb-8 max-w-xl lg:text-lg">{description}</p>
+          <div className="flex flex-col justify-center gap-2 sm:flex-row">
+            <Button size="lg" asChild>
+              <a href={primaryCta.url}>{primaryCta.text}</a>
+            </Button>
+            <Button size="lg" variant="outline" asChild>
+              <a href={secondaryCta.url}>{secondaryCta.text}</a>
+            </Button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export { ${name} };
+` };
+}
+
+function generateTestimonialBlock(c: SectionContent, name: string, dn?: string): { filename: string; code: string } {
+  const defaults = c.items.length > 0
+    ? c.items.map((it) => `    { quote: "${esc(it.extra || it.description)}", name: "${esc(it.title)}", role: "${esc(it.description)}", avatar: "${esc(it.imageUrl || "")}" }`).join(",\n")
+    : `    { quote: "This product is amazing.", name: "Jane Doe", role: "CEO", avatar: "" }`;
+
+  return { filename: `${name}.tsx`, code: `${notes(dn)}import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Card, CardContent } from "@/components/ui/card";
+
+interface ${name}Props {
+  heading?: string;
+  testimonials?: { quote: string; name: string; role: string; avatar: string }[];
+}
+
+const ${name} = ({
+  heading = "${esc(c.heading || "What Our Clients Say")}",
+  testimonials = [
+${defaults}
+  ],
+}: ${name}Props) => {
+  return (
+    <section className="py-32">
+      <div className="container">
+        {heading && <h2 className="mb-12 text-center text-3xl font-semibold md:text-4xl">{heading}</h2>}
+        <div className="grid gap-6 md:grid-cols-${Math.min(c.items.length || 3, 3)}">
+          {testimonials.map((t, i) => (
+            <Card key={i}>
+              <CardContent className="p-6">
+                <p className="text-muted-foreground mb-6 italic">&ldquo;{t.quote}&rdquo;</p>
+                <div className="flex items-center gap-3">
+                  <Avatar>
+                    <AvatarImage src={t.avatar} alt={t.name} />
+                    <AvatarFallback>{t.name.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="text-sm font-medium">{t.name}</p>
+                    <p className="text-muted-foreground text-xs">{t.role}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export { ${name} };
+` };
+}
+
+function generateStatsBlock(c: SectionContent, name: string, dn?: string): { filename: string; code: string } {
+  const defaults = c.items.length > 0
+    ? c.items.map((it) => `    { value: "${esc(it.extra)}", label: "${esc(it.title)}" }`).join(",\n")
+    : `    { value: "100+", label: "Customers" }`;
+
+  return { filename: `${name}.tsx`, code: `${notes(dn)}interface ${name}Props {
+  heading?: string;
+  stats?: { value: string; label: string }[];
+}
+
+const ${name} = ({
+  heading = "${esc(c.heading || "")}",
+  stats = [
+${defaults}
+  ],
+}: ${name}Props) => {
+  return (
+    <section className="py-32">
+      <div className="container">
+        {heading && <h2 className="mb-12 text-center text-3xl font-semibold md:text-4xl">{heading}</h2>}
+        <div className="grid grid-cols-2 gap-8 md:grid-cols-${Math.min(c.items.length || 4, 4)} text-center">
+          {stats.map((stat, i) => (
+            <div key={i}>
+              <p className="text-4xl font-bold lg:text-5xl">{stat.value}</p>
+              <p className="text-muted-foreground mt-2">{stat.label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export { ${name} };
+` };
+}
+
+function generateTeamBlock(c: SectionContent, name: string, dn?: string): { filename: string; code: string } {
+  const defaults = c.items.length > 0
+    ? c.items.map((it) => `    { name: "${esc(it.title)}", role: "${esc(it.description)}", avatar: "${esc(it.imageUrl || "")}" }`).join(",\n")
+    : `    { name: "Team Member", role: "Role", avatar: "" }`;
+
+  return { filename: `${name}.tsx`, code: `${notes(dn)}import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+interface ${name}Props {
+  heading?: string;
+  description?: string;
+  members?: { name: string; role: string; avatar: string }[];
+}
+
+const ${name} = ({
+  heading = "${esc(c.heading || "Our Team")}",
+  description = "${esc(c.subheading || "")}",
+  members = [
+${defaults}
+  ],
+}: ${name}Props) => {
+  return (
+    <section className="py-32">
+      <div className="container">
+        <div className="mb-12 text-center">
+          <h2 className="mb-4 text-3xl font-semibold md:text-4xl">{heading}</h2>
+          {description && <p className="text-muted-foreground mx-auto max-w-2xl lg:text-lg">{description}</p>}
+        </div>
+        <div className="grid gap-8 md:grid-cols-3">
+          {members.map((member, i) => (
+            <div key={i} className="flex flex-col items-center text-center">
+              <Avatar className="mb-4 size-24">
+                <AvatarImage src={member.avatar} alt={member.name} />
+                <AvatarFallback className="text-2xl">{member.name.charAt(0)}</AvatarFallback>
+              </Avatar>
+              <p className="font-semibold">{member.name}</p>
+              <p className="text-muted-foreground text-sm">{member.role}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export { ${name} };
+` };
+}
+
+function generateFormBlock(c: SectionContent, name: string, dn?: string): { filename: string; code: string } {
+  return { filename: `${name}.tsx`, code: `${notes(dn)}import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+
+interface ${name}Props {
+  heading?: string;
+  description?: string;
+  submitText?: string;
+}
+
+const ${name} = ({
+  heading = "${esc(c.heading || "Contact Us")}",
+  description = "${esc(c.subheading || "")}",
+  submitText = "${esc(c.ctaText || "Submit")}",
+}: ${name}Props) => {
+  return (
+    <section className="py-32">
+      <div className="container max-w-lg">
+        <div className="mb-8 text-center">
+          <h2 className="mb-2 text-3xl font-semibold md:text-4xl">{heading}</h2>
+          {description && <p className="text-muted-foreground">{description}</p>}
+        </div>
+        <Card>
+          <CardContent className="p-6">
+            <form className="space-y-4">
+${c.items.length > 0 ? c.items.map((it) => {
+    const isTextarea = it.extra === "textarea";
+    return `              <div>
+                <label className="mb-1.5 block text-sm font-medium">${esc(it.title || "Field")}</label>
+                ${isTextarea
+      ? `<textarea className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm" rows={4} placeholder="${esc(it.description || "")}" />`
+      : `<input className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm" placeholder="${esc(it.description || "")}" />`}
+              </div>`;
+  }).join("\n") : `              <input className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm" placeholder="Full name" />
+              <input className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm" placeholder="Email" />
+              <textarea className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm" rows={4} placeholder="Message" />`}
+              <Button className="w-full">{submitText}</Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    </section>
+  );
+};
+
+export { ${name} };
+` };
+}
+
+function generateLogosBlock(c: SectionContent, name: string, dn?: string): { filename: string; code: string } {
+  return { filename: `${name}.tsx`, code: `${notes(dn)}interface ${name}Props {
+  heading?: string;
+  logos?: { src: string; alt: string }[];
+}
+
+const ${name} = ({
+  heading = "${esc(c.heading || "Trusted by leading companies")}",
+  logos = [
+${c.items.length > 0 ? c.items.map((it) => `    { src: "${esc(it.imageUrl)}", alt: "${esc(it.title)}" }`).join(",\n") : `    { src: "/logo1.svg", alt: "Company 1" }`}
+  ],
+}: ${name}Props) => {
+  return (
+    <section className="py-16">
+      <div className="container">
+        <p className="text-muted-foreground mb-8 text-center text-sm font-medium">{heading}</p>
+        <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
+          {logos.map((logo, i) => (
+            <img key={i} src={logo.src} alt={logo.alt} className="h-7 max-w-[120px] object-contain opacity-50 grayscale transition-all hover:opacity-100 hover:grayscale-0" />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export { ${name} };
+` };
+}
+
+function generateTextBlock(c: SectionContent, name: string, blockId: string, dn?: string): { filename: string; code: string } {
+  const isSplit = blockId.includes("split") || blockId.includes("image");
+  const imgLeft = blockId.includes("image-left");
+
+  return { filename: `${name}.tsx`, code: `${notes(dn)}import { Button } from "@/components/ui/button";
+
+interface ${name}Props {
+  heading?: string;
+  description?: string;
+  body?: string;
+  cta?: { text: string; url: string };
+  image?: { src: string; alt: string };
+}
+
+const ${name} = ({
+  heading = "${esc(c.heading || "Section Title")}",
+  description = "${esc(c.subheading || "")}",
+  body = "${esc(c.body || "")}",
+  cta = ${c.ctaText ? `{ text: "${esc(c.ctaText)}", url: "#" }` : "undefined"},
+  image = { src: "${esc(c.backgroundImageUrl || "/placeholder.jpg")}", alt: "" },
+}: ${name}Props) => {
+  return (
+    <section className="py-32">
+      <div className="container">
+        ${isSplit ? `<div className="grid items-center gap-8 lg:grid-cols-2${imgLeft ? "" : ""}">
+          ${imgLeft ? '<img src={image.src} alt={image.alt} className="rounded-lg w-full object-cover aspect-[4/3]" />' : ""}
+          <div>
+            <h2 className="mb-4 text-3xl font-semibold lg:text-4xl">{heading}</h2>
+            {description && <p className="text-muted-foreground mb-4 lg:text-lg">{description}</p>}
+            {body && <p className="text-muted-foreground mb-6">{body}</p>}
+            {cta && <Button asChild><a href={cta.url}>{cta.text}</a></Button>}
+          </div>
+          ${!imgLeft ? '<img src={image.src} alt={image.alt} className="rounded-lg w-full object-cover aspect-[4/3]" />' : ""}
+        </div>` : `<div className="max-w-3xl ${blockId.includes("full") ? "mx-auto text-center" : ""}">
+          <h2 className="mb-4 text-3xl font-semibold lg:text-4xl">{heading}</h2>
+          {description && <p className="text-muted-foreground mb-4 lg:text-lg">{description}</p>}
+          {body && <p className="text-muted-foreground mb-6">{body}</p>}
+          {cta && <Button asChild><a href={cta.url}>{cta.text}</a></Button>}
+        </div>`}
+      </div>
+    </section>
+  );
+};
+
+export { ${name} };
+` };
+}
+
+function generateGenericBlock(c: SectionContent, name: string, dn?: string): { filename: string; code: string } {
+  return { filename: `${name}.tsx`, code: `${notes(dn)}import { Button } from "@/components/ui/button";
+
+interface ${name}Props {
+  heading?: string;
+  description?: string;
+  cta?: { text: string; url: string };
+}
+
+const ${name} = ({
+  heading = "${esc(c.heading || "Section")}",
+  description = "${esc(c.subheading || c.body || "")}",
+  cta = ${c.ctaText ? `{ text: "${esc(c.ctaText)}", url: "#" }` : "undefined"},
+}: ${name}Props) => {
+  return (
+    <section className="py-32">
+      <div className="container">
+        <h2 className="mb-4 text-3xl font-semibold lg:text-4xl">{heading}</h2>
+        {description && <p className="text-muted-foreground mb-8 max-w-2xl lg:text-lg">{description}</p>}
+        {cta && <Button asChild><a href={cta.url}>{cta.text}</a></Button>}
+      </div>
+    </section>
+  );
+};
+
+export { ${name} };
+` };
+}
+
+// ============================================================
+// (Old ImportTracker and sectionToShadcn removed — replaced by
+//  generateBlockComponent pattern above)
+// ============================================================
+
+// Keep this class in case it's referenced elsewhere
 class ImportTracker {
   private imports = new Map<string, Set<string>>();
   private lucideIcons = new Set<string>();
@@ -432,25 +1053,24 @@ function sectionToShadcn(
   return lines.join("\n");
 }
 
-function toPascalCase(str: string): string {
-  return str
-    .replace(/[^a-zA-Z0-9 ]/g, "")
-    .split(/\s+/)
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
-    .join("");
-}
-
+/**
+ * Generate all code for a page:
+ * - Individual block component files (shadcnblocks pattern)
+ * - A page file that imports and renders them
+ */
 export function generatePageCode(page: SitemapPage, project: Project): string {
-  const imports = new ImportTracker();
-  const sectionCode: string[] = [];
+  const blocks = page.sections.map((section, i) => generateBlockComponent(section, i));
+  const pageName = toPascalCase(page.name);
 
-  for (const section of page.sections) {
-    sectionCode.push(sectionToShadcn(section, imports));
-    sectionCode.push("");
-  }
-
+  // Build the page file that imports all blocks
   const lines: string[] = [];
-  lines.push(imports.toString());
+
+  // Imports for block components
+  blocks.forEach((b) => {
+    const name = b.filename.replace(".tsx", "");
+    lines.push(`import { ${name} } from "@/components/blocks/${b.filename.replace(".tsx", "")}";`);
+  });
+
   lines.push(``);
   lines.push(`export const metadata = {`);
   lines.push(`  title: "${esc(page.seoTitle || page.name)} | ${esc(project.clientName)}",`);
@@ -462,13 +1082,27 @@ export function generatePageCode(page: SitemapPage, project: Project): string {
   }
   lines.push(`};`);
   lines.push(``);
-  lines.push(`export default function ${toPascalCase(page.name)}Page() {`);
+  lines.push(`export default function ${pageName}Page() {`);
   lines.push(`  return (`);
   lines.push(`    <main>`);
-  lines.push(sectionCode.join("\n"));
+  blocks.forEach((b) => {
+    const name = b.filename.replace(".tsx", "");
+    lines.push(`      <${name} />`);
+  });
   lines.push(`    </main>`);
   lines.push(`  );`);
   lines.push(`}`);
+
+  // Also append all block component code below, separated
+  lines.push(``);
+  lines.push(`// ============================================================`);
+  lines.push(`// BLOCK COMPONENTS (save each to @/components/blocks/)`);
+  lines.push(`// ============================================================`);
+  blocks.forEach((b) => {
+    lines.push(``);
+    lines.push(`// --- ${b.filename} ---`);
+    lines.push(b.code);
+  });
 
   return lines.join("\n");
 }
