@@ -1,6 +1,7 @@
 import { WireframeBlockId } from "@/data/wireframe-types";
 import { StyleGuide, defaultStyleGuide } from "@/components/cms/style-guide";
 import { SiteAudit, createEmptyAudit } from "@/lib/audit-types";
+import { DeckSlide } from "@/lib/deck-types";
 
 // ============================================================
 // PROJECT
@@ -49,6 +50,9 @@ export interface Project {
 
   // --- 9. Site Audit Data ---
   audit: SiteAudit;
+
+  // --- 10. Custom Deck Slides ---
+  deckSlides: DeckSlide[];
 }
 
 export interface Integration {
@@ -426,6 +430,7 @@ export function createProject(partial?: Partial<Project>): Project {
     phases: createDefaultPhases(),
     redirects: [],
     audit: createEmptyAudit(),
+    deckSlides: [],
     ...partial,
   };
 }

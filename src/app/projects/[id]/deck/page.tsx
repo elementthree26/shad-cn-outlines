@@ -20,5 +20,5 @@ export default function DeckPage() {
 
   if (!project) return null;
 
-  return <AssessmentDeck project={project} />;
+  return <AssessmentDeck project={project} editUrl={`/projects/${projectId}/deck/edit`} />;
 }

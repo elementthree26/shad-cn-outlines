@@ -1,10 +1,21 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { ChevronDown, ChevronUp, X, Maximize2, Minimize2 } from "lucide-react";
+import { ChevronDown, ChevronUp, X, Maximize2, Minimize2, Pencil } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Project, phaseDefinitions, getPagesBySprint } from "@/lib/project-types";
 import { PageSpeedSnapshot, MetricValue } from "@/lib/audit-types";
+import {
+  DeckSlide,
+  CompetitiveAnalysisData,
+  SiteBaselinesData,
+  IntegrationsTableData,
+  ScreenshotAuditData,
+  ContentRecommendationsData,
+  CustomBulletsData,
+  CustomTwoColumnData,
+} from "@/lib/deck-types";
 
 // ============================================================
 // E3-style presentation deck — dark theme, scroll-snap slides
@@ -140,6 +151,233 @@ function LimeBullets({ items }: { items: string[] }) {
 // ============================================================
 // DECK GENERATOR — builds slides from project data
 // ============================================================
+
+// ============================================================
+// CUSTOM SLIDE RENDERERS
+// ============================================================
+
+function renderCustomSlide(slide: DeckSlide, project: Project, slides: Slide[]): React.ReactNode {
+  const d = slide.data;
+  const idx = slides.findIndex((s) => s.id === `custom-${slide.id}`);
+  const total = slides.length;
+
+  switch (d.type) {
+    case "competitive-analysis":
+      return (
+        <SlideFrame bg="light" label={slide.title} slideNum={idx + 1} total={total}>
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="font-extrabold text-[clamp(28px,4vw,48px)] leading-tight tracking-[-1.5px] text-[#1f1915]">{slide.title}</h2>
+            </div>
+            <p className="text-xs font-bold tracking-wider text-[#1f1915]/30">ELEMENT THREE</p>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm border-collapse">
+              <thead>
+                <tr>
+                  {d.columns.map((col, i) => (
+                    <th key={i} className={`text-left p-3 text-xs font-bold uppercase tracking-wider ${col.isClient ? "bg-[#333] text-white" : i % 2 === 0 ? "bg-[#d1f44c]/30 text-[#1f1915]" : "bg-gray-100 text-[#1f1915]"}`}>
+                      {col.name}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  {d.columns.map((col, i) => (
+                    <td key={i} className="p-3 align-top border-t border-gray-200">
+                      <ul className="space-y-1.5">
+                        {col.items.filter(Boolean).map((item, j) => (
+                          <li key={j} className="flex items-start gap-2 text-xs">
+                            <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#333] flex-shrink-0" />
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </td>
+                  ))}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </SlideFrame>
+      );
+
+    case "site-baselines":
+      return (
+        <SlideFrame bg="light" label={slide.title} slideNum={idx + 1} total={total}>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="font-extrabold text-[clamp(28px,4vw,48px)] leading-tight tracking-[-1.5px] text-[#1f1915]">{slide.title}</h2>
+            <p className="text-xs font-bold tracking-wider text-[#1f1915]/30">ELEMENT THREE</p>
+          </div>
+          <div className="grid grid-cols-[1fr_2fr] gap-8">
+            {d.narrative && (
+              <p className="text-sm text-[#1f1915]/70 leading-relaxed">{d.narrative}</p>
+            )}
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm border-collapse">
+                <thead>
+                  <tr>
+                    <th className="text-left p-3 bg-[#d1f44c]/40 text-xs font-bold uppercase">Metric</th>
+                    {d.companies.map((c, i) => (
+                      <th key={i} className={`text-center p-3 text-xs font-bold uppercase ${c.isClient ? "bg-[#d1f44c]/40" : "bg-gray-100"}`}>{c.name}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {d.metrics.map((m, i) => (
+                    <tr key={i} className="border-t border-gray-200">
+                      <td className="p-3 text-xs font-medium">{m.label}</td>
+                      {m.values.map((v, j) => (
+                        <td key={j} className={`p-3 text-center font-bold ${v.highlight ? "text-lg" : ""}`}>{v.value}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {d.footnotes && <p className="text-[10px] text-[#1f1915]/40 mt-3 italic">{d.footnotes}</p>}
+            </div>
+          </div>
+        </SlideFrame>
+      );
+
+    case "integrations-table":
+      // Group rows by category for the colored left column
+      const grouped = new Map<string, typeof d.rows>();
+      for (const row of d.rows) {
+        if (!grouped.has(row.category)) grouped.set(row.category, []);
+        grouped.get(row.category)!.push(row);
+      }
+      const catColors = ["bg-[#d4c96a]/30", "bg-[#8e8eb8]/30", "bg-[#c9889a]/30", "bg-[#88b8a0]/30"];
+
+      return (
+        <SlideFrame bg="light" label={slide.title} slideNum={idx + 1} total={total}>
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="font-extrabold text-[clamp(28px,4vw,48px)] leading-tight tracking-[-1.5px] text-[#1f1915]">{slide.title}</h2>
+              <p className="text-sm text-[#1f1915]/50">{project.clientName}</p>
+            </div>
+            <p className="text-xs font-bold tracking-wider text-[#1f1915]/30">ELEMENT THREE</p>
+          </div>
+          <table className="w-full text-sm border-collapse">
+            <thead>
+              <tr className="bg-[#333] text-white">
+                <th className="text-left p-3 text-xs font-bold uppercase">Category</th>
+                <th className="text-left p-3 text-xs font-bold uppercase">Function</th>
+                <th className="text-left p-3 text-xs font-bold uppercase">Current Platform</th>
+                <th className="text-left p-3 text-xs font-bold uppercase">Recommendation</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[...grouped.entries()].map(([cat, rows], ci) => (
+                rows.map((row, ri) => (
+                  <tr key={`${ci}-${ri}`} className={`border-t border-gray-200 ${catColors[ci % catColors.length]}`}>
+                    {ri === 0 && <td rowSpan={rows.length} className="p-3 text-xs font-bold align-top">{cat}</td>}
+                    <td className="p-3 text-xs">{row.function}</td>
+                    <td className="p-3 text-xs">{row.currentPlatform}</td>
+                    <td className="p-3 text-xs font-medium">{row.recommendation}</td>
+                  </tr>
+                ))
+              ))}
+            </tbody>
+          </table>
+        </SlideFrame>
+      );
+
+    case "screenshot-audit":
+      return (
+        <SlideFrame bg="light" label={slide.title} slideNum={idx + 1} total={total}>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="font-extrabold text-[clamp(28px,4vw,48px)] leading-tight tracking-[-1.5px] text-[#1f1915]">{slide.title}</h2>
+            <p className="text-xs font-bold tracking-wider text-[#1f1915]/30 rotate-90 origin-right">ELEMENT THREE</p>
+          </div>
+          <div className="grid grid-cols-2 gap-6">
+            {d.screenshots.map((ss, i) => (
+              <div key={i} className="relative">
+                {ss.imageUrl && <img src={ss.imageUrl} alt={ss.caption} className="w-full rounded-lg border shadow-sm" />}
+                {ss.caption && <p className="text-xs font-medium mt-2">{ss.caption}</p>}
+                {ss.callouts.map((c, j) => (
+                  <div key={j} className="mt-1 inline-block mr-2 rounded bg-gray-100 border px-2 py-1 text-[10px] text-[#1f1915]/70 shadow-sm">
+                    {c.text}
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </SlideFrame>
+      );
+
+    case "content-recommendations":
+      return (
+        <SlideFrame bg="light" label={slide.title} slideNum={idx + 1} total={total}>
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="font-extrabold text-[clamp(28px,4vw,48px)] leading-tight tracking-[-1.5px] text-[#1f1915]">{slide.title}</h2>
+            <p className="text-xs font-bold tracking-wider text-[#1f1915]/30">ELEMENT THREE</p>
+          </div>
+          <div className="grid grid-cols-2 gap-6">
+            <div className="rounded-lg bg-[#2e4545] text-white p-6">
+              <h3 className="font-bold mb-4">{d.leftCard.title}</h3>
+              {d.leftCard.sections.map((sec, i) => (
+                <div key={i} className="mb-4">
+                  {sec.heading && <p className="font-semibold text-sm mb-2">{sec.heading}</p>}
+                  <ul className="space-y-1.5">
+                    {sec.items.filter(Boolean).map((item, j) => (
+                      <li key={j} className="flex items-start gap-2 text-xs opacity-90">
+                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-white/60 flex-shrink-0" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+            <div className="rounded-lg bg-gray-100 text-[#1f1915] p-6">
+              <h3 className="font-bold mb-4">{d.rightCard.title}</h3>
+              <ul className="space-y-1.5">
+                {d.rightCard.items.filter(Boolean).map((item, j) => (
+                  <li key={j} className="flex items-start gap-2 text-xs">
+                    <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#1f1915]/40 flex-shrink-0" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </SlideFrame>
+      );
+
+    case "custom-bullets":
+      return (
+        <SlideFrame bg="dark" label={slide.title} slideNum={idx + 1} total={total}>
+          <LimeBar />
+          <h2 className="font-extrabold text-[clamp(32px,5vw,56px)] leading-tight tracking-[-1.5px] mb-4">{slide.title}</h2>
+          {d.subtitle && <p className="text-lg opacity-60 mb-8">{d.subtitle}</p>}
+          <LimeBullets items={d.items.filter(Boolean)} />
+        </SlideFrame>
+      );
+
+    case "custom-two-column":
+      return (
+        <SlideFrame bg="dark" label={slide.title} slideNum={idx + 1} total={total}>
+          <LimeBar />
+          <h2 className="font-extrabold text-[clamp(32px,5vw,56px)] leading-tight tracking-[-1.5px] mb-8">{slide.title}</h2>
+          <div className="grid grid-cols-2 gap-12">
+            <div>
+              <h3 className="text-sm font-bold uppercase tracking-wider opacity-50 mb-4">{d.leftTitle}</h3>
+              <LimeBullets items={d.leftItems.filter(Boolean)} />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold uppercase tracking-wider opacity-50 mb-4">{d.rightTitle}</h3>
+              <LimeBullets items={d.rightItems.filter(Boolean)} />
+            </div>
+          </div>
+        </SlideFrame>
+      );
+
+    default:
+      return <SlideFrame bg="dark"><p>Unknown slide type</p></SlideFrame>;
+  }
+}
 
 function generateSlides(project: Project): Slide[] {
   const slides: Slide[] = [];
@@ -487,7 +725,95 @@ function generateSlides(project: Project): Slide[] {
     ),
   });
 
-  // 10. CLOSING
+  // CUSTOM DECK SLIDES
+  for (const deckSlide of (project.deckSlides || [])) {
+    slides.push({
+      id: `custom-${deckSlide.id}`,
+      type: "data",
+      render: () => renderCustomSlide(deckSlide, project, slides),
+    });
+  }
+
+  // STYLE GUIDE SLIDE (auto-generated from project style guide)
+  const sg = project.styleGuide;
+  if (sg && sg.primaryColor !== "#171717") {
+    slides.push({
+      id: "style-guide",
+      type: "data",
+      render: () => (
+        <SlideFrame bg="light" label="Style Guide" slideNum={slides.indexOf(slides.find((s) => s.id === "style-guide")!) + 1} total={total()}>
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <div className="mb-4"><div className="h-[3px] w-16 bg-[#2e4545]" /></div>
+              <h2 className="font-extrabold text-[clamp(32px,5vw,56px)] leading-tight tracking-[-1.5px] text-[#1f1915]">
+                Website Style Guide
+              </h2>
+              <p className="text-sm text-[#1f1915]/50">{project.clientName}</p>
+            </div>
+            <p className="text-xs font-bold tracking-wider text-[#1f1915]/30">ELEMENT THREE</p>
+          </div>
+          <div className="grid grid-cols-2 gap-12">
+            <div>
+              <h3 className="text-sm font-bold text-[#1f1915] mb-4">Colors</h3>
+              <div className="flex flex-wrap gap-3">
+                {[
+                  { color: sg.primaryColor, name: "Primary" },
+                  { color: sg.accentColor, name: "Accent" },
+                  { color: sg.secondaryColor, name: "Secondary" },
+                  { color: sg.backgroundColor, name: "Background" },
+                  { color: sg.mutedColor, name: "Muted" },
+                  { color: sg.borderColor, name: "Border" },
+                ].map((c) => (
+                  <div key={c.name} className="text-center">
+                    <div className="w-14 h-14 rounded-full border-2 border-[#1f1915]/10 mb-1.5" style={{ backgroundColor: c.color }} />
+                    <p className="text-[9px] font-mono text-[#1f1915]/40">{c.color}</p>
+                    <p className="text-[10px] font-medium text-[#1f1915]/70">{c.name}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-6">
+                <h3 className="text-sm font-bold text-[#1f1915] mb-2">Typography</h3>
+                <p className="text-xs text-[#1f1915]/60">Headings: <span className="font-semibold">{sg.headingFont}</span></p>
+                <p className="text-xs text-[#1f1915]/60">Body: <span className="font-semibold">{sg.bodyFont}</span></p>
+              </div>
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-[#1f1915] mb-4">Button Styles</h3>
+              <div className="space-y-4">
+                <div>
+                  <p className="text-xs text-[#1f1915]/50 mb-2">Primary</p>
+                  <div className="flex gap-2">
+                    <span className="inline-block rounded px-4 py-2 text-xs font-medium" style={{ backgroundColor: sg.primaryColor, color: sg.primaryForeground, borderRadius: sg.buttonStyle === "pill" ? "9999px" : `${sg.buttonRadius}px` }}>
+                      Contact Us
+                    </span>
+                    <span className="inline-block rounded px-4 py-2 text-xs font-medium opacity-60" style={{ backgroundColor: sg.primaryColor, color: sg.primaryForeground, borderRadius: sg.buttonStyle === "pill" ? "9999px" : `${sg.buttonRadius}px` }}>
+                      Hover
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-xs text-[#1f1915]/50 mb-2">Outline</p>
+                  <div className="flex gap-2">
+                    <span className="inline-block rounded border-2 px-4 py-2 text-xs font-medium" style={{ borderColor: sg.primaryColor, color: sg.primaryColor, borderRadius: sg.buttonStyle === "pill" ? "9999px" : `${sg.buttonRadius}px` }}>
+                      Learn More
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-6">
+                <h3 className="text-sm font-bold text-[#1f1915] mb-2">Shape</h3>
+                <p className="text-xs text-[#1f1915]/60">Border radius: {sg.borderRadius}px</p>
+                <p className="text-xs text-[#1f1915]/60">Button style: {sg.buttonStyle}</p>
+                <p className="text-xs text-[#1f1915]/60">Card shadow: {sg.cardShadow}</p>
+              </div>
+            </div>
+          </div>
+        </SlideFrame>
+      ),
+    });
+  }
+
+  // CLOSING
   slides.push({
     id: "closing",
     type: "closing",
@@ -514,7 +840,7 @@ function generateSlides(project: Project): Slide[] {
 // DECK VIEWER
 // ============================================================
 
-export function AssessmentDeck({ project }: { project: Project }) {
+export function AssessmentDeck({ project, editUrl }: { project: Project; editUrl?: string }) {
   const slides = generateSlides(project);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [fullscreen, setFullscreen] = useState(false);
@@ -585,6 +911,16 @@ export function AssessmentDeck({ project }: { project: Project }) {
         <Button size="icon-xs" variant="ghost" onClick={toggleFullscreen} className="text-white/60 hover:text-white">
           {fullscreen ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
         </Button>
+        {editUrl && (
+          <>
+            <div className="w-px h-4 bg-white/10" />
+            <Link href={editUrl}>
+              <Button size="icon-xs" variant="ghost" className="text-white/60 hover:text-white">
+                <Pencil className="h-3.5 w-3.5" />
+              </Button>
+            </Link>
+          </>
+        )}
       </div>
 
       {/* Slides */}
