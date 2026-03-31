@@ -44,61 +44,27 @@ function slugify(text: string): string {
 }
 
 // ---------------------------------------------------------------------------
-// Reusable: editable string list
+// Reusable: textarea-based string list (one item per line)
 // ---------------------------------------------------------------------------
 function StringListEditor({
   items,
   onChange,
   placeholder,
+  rows = 3,
 }: {
   items: string[];
   onChange: (items: string[]) => void;
   placeholder: string;
+  rows?: number;
 }) {
-  const [draft, setDraft] = useState("");
-
-  const add = () => {
-    const trimmed = draft.trim();
-    if (!trimmed) return;
-    onChange([...items, trimmed]);
-    setDraft("");
-  };
-
   return (
-    <div className="space-y-2">
-      <div className="flex gap-2">
-        <input
-          className={inputClass}
-          placeholder={placeholder}
-          value={draft}
-          onChange={(e) => setDraft(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              add();
-            }
-          }}
-        />
-        <Button variant="outline" size="sm" onClick={add}>
-          Add
-        </Button>
-      </div>
-      {items.length > 0 && (
-        <div className="flex flex-wrap gap-1.5">
-          {items.map((item, i) => (
-            <Badge key={i} variant="secondary" className="gap-1 pr-1">
-              {item}
-              <button
-                className="ml-1 text-muted-foreground hover:text-destructive"
-                onClick={() => onChange(items.filter((_, idx) => idx !== i))}
-              >
-                &times;
-              </button>
-            </Badge>
-          ))}
-        </div>
-      )}
-    </div>
+    <textarea
+      className={textareaClass}
+      rows={rows}
+      placeholder={placeholder}
+      value={items.join("\n")}
+      onChange={(e) => onChange(e.target.value.split("\n").filter((line) => line.trim() !== ""))}
+    />
   );
 }
 
@@ -379,7 +345,7 @@ export function ProjectWizard({
               <StringListEditor
                 items={project.targetAudiences}
                 onChange={(items) => patch({ targetAudiences: items })}
-                placeholder="e.g. CTOs at mid-market SaaS companies"
+                placeholder="One per line, e.g.&#10;CTOs at mid-market SaaS&#10;VP Marketing at enterprise"
               />
             </div>
 
@@ -390,7 +356,7 @@ export function ProjectWizard({
               <StringListEditor
                 items={project.clientGoals}
                 onChange={(items) => patch({ clientGoals: items })}
-                placeholder="e.g. Increase demo requests by 30%"
+                placeholder="One per line, e.g.&#10;Increase demo requests by 30%&#10;Improve organic traffic"
               />
             </div>
           </div>
@@ -422,7 +388,7 @@ export function ProjectWizard({
               <StringListEditor
                 items={project.valuePropositions}
                 onChange={(items) => patch({ valuePropositions: items })}
-                placeholder="e.g. Only platform with real-time compliance monitoring"
+                placeholder="One per line, e.g.&#10;Only platform with real-time compliance&#10;50+ years of industry experience"
               />
             </div>
 
@@ -433,7 +399,7 @@ export function ProjectWizard({
               <StringListEditor
                 items={project.differentiators}
                 onChange={(items) => patch({ differentiators: items })}
-                placeholder="e.g. 24/7 white-glove support"
+                placeholder="One per line, e.g.&#10;24/7 white-glove support&#10;Family-owned, relationship-driven"
               />
             </div>
 
@@ -444,7 +410,7 @@ export function ProjectWizard({
               <StringListEditor
                 items={project.competitorUrls}
                 onChange={(items) => patch({ competitorUrls: items })}
-                placeholder="https://competitor.com"
+                placeholder="One URL per line, e.g.&#10;https://competitor1.com&#10;https://competitor2.com"
               />
             </div>
           </div>
