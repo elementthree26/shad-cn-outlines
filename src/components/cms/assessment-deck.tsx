@@ -16,6 +16,7 @@ import {
   CustomBulletsData,
   CustomTwoColumnData,
 } from "@/lib/deck-types";
+import { generateDeckSlidesFromDiscovery } from "@/lib/discovery-parser";
 
 // ============================================================
 // E3-style presentation deck — dark theme, scroll-snap slides
@@ -482,23 +483,16 @@ function generateSlides(project: Project): Slide[] {
     });
   }
 
-  // 4. DISCOVERY NOTES
+  // 4. DISCOVERY NOTES → parsed into structured slides
   if (project.discoveryNotes) {
-    slides.push({
-      id: "discovery",
-      type: "list",
-      render: () => (
-        <SlideFrame bg="dark" label="Discovery Findings" slideNum={slides.indexOf(slides.find((s) => s.id === "discovery")!) + 1} total={total()}>
-          <LimeBar />
-          <h2 className="font-extrabold text-[clamp(32px,5vw,56px)] leading-tight tracking-[-1.5px] mb-8">
-            Discovery Findings
-          </h2>
-          <p className="text-sm opacity-70 whitespace-pre-wrap leading-relaxed max-w-3xl">
-            {project.discoveryNotes}
-          </p>
-        </SlideFrame>
-      ),
-    });
+    const parsedSlides = generateDeckSlidesFromDiscovery(project.discoveryNotes);
+    for (const parsedSlide of parsedSlides) {
+      slides.push({
+        id: `discovery-${parsedSlide.id}`,
+        type: "data",
+        render: () => renderCustomSlide(parsedSlide, project, slides),
+      });
+    }
   }
 
   // 5. CONTENT INVENTORY
