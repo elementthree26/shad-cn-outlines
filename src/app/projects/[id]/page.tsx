@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
+import Link from "next/link";
+import { ArrowLeft, Layers } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Project } from "@/lib/project-types";
 import { getProject, saveProject } from "@/lib/project-store";
 import { logActivity } from "@/lib/activity-log";
@@ -25,7 +28,6 @@ export default function ProjectPage() {
   if (!project) return null;
 
   const handleUpdate = (updated: Project) => {
-    // Detect what changed for activity logging
     if (project) {
       if (updated.sitemap.length !== project.sitemap.length) {
         const diff = updated.sitemap.length - project.sitemap.length;
@@ -50,12 +52,44 @@ export default function ProjectPage() {
   };
 
   return (
-    <ProjectDashboard
-      project={project}
-      onUpdate={handleUpdate}
-      onNavigateToPage={(pageId) => {
-        router.push(`/projects/${projectId}/pages/${pageId}`);
-      }}
-    />
+    <div className="min-h-screen bg-background">
+      <header className="border-b bg-card">
+        <div className="mx-auto max-w-7xl px-6 py-3 flex items-center gap-4">
+          <Link href="/projects">
+            <Button variant="ghost" size="sm" className="gap-1.5">
+              <ArrowLeft className="h-4 w-4" />
+              Projects
+            </Button>
+          </Link>
+          <div className="h-5 w-px bg-border" />
+          <div className="flex items-center gap-2">
+            {project.logoUrl ? (
+              <img src={project.logoUrl} alt="" className="h-7 w-7 rounded object-contain" />
+            ) : (
+              <div className="rounded-lg bg-primary p-1.5">
+                <Layers className="h-4 w-4 text-primary-foreground" />
+              </div>
+            )}
+            <div>
+              <h1 className="text-sm font-bold leading-tight">
+                {project.clientName || "Untitled Project"}
+              </h1>
+              <p className="text-[10px] text-muted-foreground">
+                {project.industry || "No industry"} • {project.sitemap.length} pages
+              </p>
+            </div>
+          </div>
+        </div>
+      </header>
+      <main className="mx-auto max-w-7xl px-6 py-6">
+        <ProjectDashboard
+          project={project}
+          onUpdate={handleUpdate}
+          onNavigateToPage={(pageId) => {
+            router.push(`/projects/${projectId}/pages/${pageId}`);
+          }}
+        />
+      </main>
+    </div>
   );
 }
