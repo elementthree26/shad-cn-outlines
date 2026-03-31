@@ -204,6 +204,25 @@ function createSectionFromTheme(theme: ContentTheme): BuilderSection {
   };
 }
 
+function createSectionFromBlock(blockId: WireframeBlockId): BuilderSection {
+  const meta = wireframeBlockMeta[blockId];
+  const category = meta?.category || "Section";
+  // Find all blocks in the same category as variant options
+  const categoryBlocks = (Object.entries(wireframeBlockMeta) as [WireframeBlockId, { label: string; category: string }][])
+    .filter(([, m]) => m.category === category)
+    .map(([id, m]) => ({ name: m.label, wireframeId: id }));
+
+  return {
+    instanceId: `${blockId}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+    themeId: blockId,
+    themeName: meta?.label || blockId,
+    selectedBlockId: blockId,
+    availableBlocks: categoryBlocks,
+    content: { ...emptySectionContent, items: [] },
+    directionNotes: "",
+  };
+}
+
 // --- Content editor panel ---
 
 function ContentEditor({
@@ -1115,72 +1134,131 @@ function LivePreview({ sections, showAnnotations = false }: { sections: BuilderS
   );
 }
 
-function ThemeLibrary({
+/** Category icons for the module browser */
+const categoryIcons: Record<string, string> = {
+  Hero: "🏔",
+  Text: "📝",
+  Cards: "🃏",
+  Lists: "📋",
+  Timeline: "⏱",
+  Tabs: "📑",
+  Carousel: "🎠",
+  CTA: "🎯",
+  Testimonials: "💬",
+  Logos: "🏢",
+  Maps: "📍",
+  Forms: "📬",
+  Stats: "📊",
+  Team: "👥",
+  Media: "🎬",
+  Misc: "✨",
+};
+
+/** Friendly category names */
+const categoryNames: Record<string, string> = {
+  Hero: "Heroes",
+  Text: "Text & Content",
+  Cards: "Card Grids",
+  Lists: "Lists & Accordions",
+  Timeline: "Timelines",
+  Tabs: "Tabbed Content",
+  Carousel: "Carousels",
+  CTA: "Calls to Action",
+  Testimonials: "Testimonials",
+  Logos: "Logo Bars",
+  Maps: "Maps & Locations",
+  Forms: "Forms",
+  Stats: "Stats & Numbers",
+  Team: "Team Members",
+  Media: "Media & Video",
+  Misc: "Misc & Special",
+};
+
+function ModuleLibrary({
   onAdd,
 }: {
-  onAdd: (theme: ContentTheme) => void;
+  onAdd: (blockId: WireframeBlockId) => void;
 }) {
-  const [selectedPage, setSelectedPage] = useState(allPages[0]?.slug || "");
-  const page = allPages.find((p) => p.slug === selectedPage);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  const categories = wireframeBlockMeta
-    ? [...new Set(Object.values(wireframeBlockMeta).map((m) => m.category))]
-    : [];
+  // Build category → blocks map
+  const categoryMap = new Map<string, { id: WireframeBlockId; label: string }[]>();
+  for (const [id, meta] of Object.entries(wireframeBlockMeta) as [WireframeBlockId, { label: string; category: string }][]) {
+    if (!categoryMap.has(meta.category)) categoryMap.set(meta.category, []);
+    categoryMap.get(meta.category)!.push({ id, label: meta.label });
+  }
+  const categories = [...categoryMap.keys()];
 
-  return (
-    <div className="space-y-4">
-      <div>
-        <p className="text-xs font-medium text-muted-foreground mb-2">
-          Add from page template:
-        </p>
-        <div className="flex flex-wrap gap-1.5 mb-3">
-          {allPages.map((p) => (
+  if (selectedCategory) {
+    const blocks = categoryMap.get(selectedCategory) || [];
+    return (
+      <div className="space-y-3">
+        <button
+          onClick={() => setSelectedCategory(null)}
+          className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors"
+        >
+          ← All Modules
+        </button>
+        <div className="flex items-center gap-2 mb-1">
+          <span className="text-lg">{categoryIcons[selectedCategory] || "📦"}</span>
+          <div>
+            <h3 className="text-sm font-bold">{categoryNames[selectedCategory] || selectedCategory}</h3>
+            <p className="text-xs text-muted-foreground">{blocks.length} layout{blocks.length !== 1 ? "s" : ""}</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2">
+          {blocks.map((block) => (
             <button
-              key={p.slug}
-              onClick={() => setSelectedPage(p.slug)}
-              className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
-                selectedPage === p.slug
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted text-muted-foreground hover:text-foreground"
-              }`}
+              key={block.id}
+              onClick={() => onAdd(block.id)}
+              className="rounded-lg border border-border p-2 text-left transition-all hover:border-primary/50 hover:bg-primary/5"
             >
-              {p.name}
+              <div className="rounded bg-muted/30 p-1.5 mb-1.5">
+                <WireframeBlock
+                  blockId={block.id}
+                  className="w-full h-auto text-muted-foreground/50"
+                />
+              </div>
+              <p className="text-[11px] font-medium leading-tight">{block.label}</p>
             </button>
           ))}
         </div>
       </div>
+    );
+  }
 
-      {page && (
-        <div className="space-y-1.5">
-          {page.contentThemes.map((theme) => (
-            <button
-              key={theme.id}
-              onClick={() => onAdd(theme)}
-              className="w-full flex items-center gap-2.5 rounded-lg border border-border p-2.5 text-left transition-all hover:border-primary/50 hover:bg-primary/5"
-            >
-              <Plus className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">{theme.name}</p>
-                <p className="text-xs text-muted-foreground">
-                  {theme.componentOptions.length} variants
-                </p>
-              </div>
-              <Badge
-                variant="outline"
-                className={`text-xs ${
-                  theme.frequencyTier === "high"
-                    ? "border-green-300 text-green-700"
-                    : theme.frequencyTier === "medium"
-                    ? "border-yellow-300 text-yellow-700"
-                    : "border-gray-300 text-gray-500"
-                }`}
-              >
-                {theme.frequencyTier}
-              </Badge>
-            </button>
-          ))}
-        </div>
-      )}
+  return (
+    <div className="space-y-1">
+      <p className="text-xs font-medium text-muted-foreground mb-2">
+        Choose a module type:
+      </p>
+      {categories.map((cat) => {
+        const blocks = categoryMap.get(cat) || [];
+        return (
+          <button
+            key={cat}
+            onClick={() => setSelectedCategory(cat)}
+            className="w-full flex items-center gap-3 rounded-lg border border-border p-3 text-left transition-all hover:border-primary/50 hover:bg-primary/5"
+          >
+            <span className="text-xl w-8 text-center">{categoryIcons[cat] || "📦"}</span>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium">{categoryNames[cat] || cat}</p>
+              <p className="text-xs text-muted-foreground">
+                {blocks.length} layout{blocks.length !== 1 ? "s" : ""}
+              </p>
+            </div>
+            {/* Mini preview of first 3 blocks */}
+            <div className="flex gap-0.5 flex-shrink-0">
+              {blocks.slice(0, 3).map((b) => (
+                <div key={b.id} className="w-8 h-5 rounded bg-muted/40 p-0.5">
+                  <WireframeBlock blockId={b.id} className="w-full h-full text-muted-foreground/30" />
+                </div>
+              ))}
+            </div>
+          </button>
+        );
+      })}
     </div>
   );
 }
@@ -1232,6 +1310,10 @@ export function PageBuilder(props: PageBuilderProps = {}) {
 
   const addSection = useCallback((theme: ContentTheme) => {
     setSections((prev) => [...prev, createSectionFromTheme(theme)]);
+  }, []);
+
+  const addBlock = useCallback((blockId: WireframeBlockId) => {
+    setSections((prev) => [...prev, createSectionFromBlock(blockId)]);
   }, []);
 
   const removeSection = useCallback((id: string) => {
@@ -1324,16 +1406,25 @@ export function PageBuilder(props: PageBuilderProps = {}) {
             </Badge>
           </div>
 
-          {/* Quick template load */}
+          {/* Quick-add module buttons */}
           <div className="flex flex-wrap gap-1">
-            {allPages.map((p) => (
+            {[
+              { id: "hero-centered" as WireframeBlockId, label: "Hero" },
+              { id: "text-split-image-right" as WireframeBlockId, label: "50/50" },
+              { id: "cards-3-col" as WireframeBlockId, label: "Cards" },
+              { id: "cta-full-width" as WireframeBlockId, label: "CTA" },
+              { id: "accordion-list" as WireframeBlockId, label: "Accordion" },
+              { id: "form-simple" as WireframeBlockId, label: "Form" },
+              { id: "testimonials-cards" as WireframeBlockId, label: "Testimonials" },
+              { id: "stats-bar" as WireframeBlockId, label: "Stats" },
+            ].map((shortcut) => (
               <button
-                key={p.slug}
-                onClick={() => loadTemplate(p.slug)}
+                key={shortcut.id}
+                onClick={() => addBlock(shortcut.id)}
                 className="rounded px-2 py-0.5 text-xs bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors"
-                title={`Load ${p.name} template`}
+                title={`Add ${shortcut.label}`}
               >
-                {p.name}
+                + {shortcut.label}
               </button>
             ))}
           </div>
@@ -1394,10 +1485,10 @@ export function PageBuilder(props: PageBuilderProps = {}) {
             </SheetTrigger>
             <SheetContent side="left" className="w-[360px] sm:max-w-[360px]">
               <SheetHeader>
-                <SheetTitle>Content Library</SheetTitle>
+                <SheetTitle>Module Library</SheetTitle>
               </SheetHeader>
               <ScrollArea className="flex-1 -mx-4 px-4">
-                <ThemeLibrary onAdd={addSection} />
+                <ModuleLibrary onAdd={addBlock} />
               </ScrollArea>
             </SheetContent>
           </Sheet>
