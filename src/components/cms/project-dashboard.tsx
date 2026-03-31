@@ -16,7 +16,9 @@ import {
   Workflow,
   ArrowRightLeft,
   Clock,
+  Presentation,
 } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -243,6 +245,11 @@ export function ProjectDashboard({
               )}
               <div className="ml-auto flex items-center gap-2">
                 <ProjectSearch project={project} onNavigateToPage={onNavigateToPage} />
+                <Link href={`/projects/${project.id}/deck`}>
+                  <Button size="sm" variant="outline" className="gap-1.5">
+                    <Presentation className="h-3.5 w-3.5" /> Present
+                  </Button>
+                </Link>
                 <ProjectExportButton project={project} />
                 <FullProjectExportButton project={project} />
                 <ProjectBriefButton project={project} />
