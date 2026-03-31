@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { ChevronDown, ChevronUp, X, Maximize2, Minimize2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Project, phaseDefinitions, getPagesBySprint } from "@/lib/project-types";
+import { PageSpeedSnapshot, MetricValue } from "@/lib/audit-types";
 
 // ============================================================
 // E3-style presentation deck — dark theme, scroll-snap slides
@@ -293,6 +294,76 @@ function generateSlides(project: Project): Slide[] {
               </div>
             )}
           </div>
+        </SlideFrame>
+      ),
+    });
+  }
+
+  // 5b. PERFORMANCE AUDIT (PageSpeed)
+  const ps = project.audit?.pagespeed;
+  if (ps?.mobile || ps?.desktop) {
+    const data = ps.mobile || ps.desktop!;
+    const formatMs = (v: number) => v >= 1000 ? `${(v / 1000).toFixed(1)}s` : `${Math.round(v)}ms`;
+    const cwvColor = (r: string) => r === "good" ? "text-[#d1f44c]" : r === "needs-improvement" ? "text-amber-400" : "text-red-400";
+
+    slides.push({
+      id: "performance",
+      type: "data",
+      render: () => (
+        <SlideFrame bg="dark" label="Performance Audit" slideNum={slides.indexOf(slides.find((s) => s.id === "performance")!) + 1} total={total()}>
+          <LimeBar />
+          <h2 className="font-extrabold text-[clamp(32px,5vw,56px)] leading-tight tracking-[-1.5px] mb-8">
+            Site Performance
+          </h2>
+          {/* Scores */}
+          <div className="flex justify-around mb-12">
+            {([
+              ["Performance", data.scores.performance],
+              ["Accessibility", data.scores.accessibility],
+              ["Best Practices", data.scores.bestPractices],
+              ["SEO", data.scores.seo],
+            ] as [string, number][]).map(([label, score]) => (
+              <div key={label} className="text-center">
+                <p className={`font-black text-[clamp(48px,8vw,80px)] leading-none tracking-[-3px] ${score >= 90 ? "text-[#d1f44c]" : score >= 50 ? "text-amber-400" : "text-red-400"}`}>
+                  {score}
+                </p>
+                <p className="text-xs opacity-50 mt-2">{label}</p>
+              </div>
+            ))}
+          </div>
+          {/* Core Web Vitals */}
+          <div className="grid grid-cols-3 gap-6">
+            {([
+              ["LCP", data.coreWebVitals.lcp, "< 2.5s"],
+              ["INP", data.coreWebVitals.inp, "< 200ms"],
+              ["CLS", data.coreWebVitals.cls, "< 0.1"],
+            ] as [string, MetricValue, string][]).map(([label, metric, target]) => (
+              <div key={label} className="rounded-lg bg-white/5 p-5 border-t-[3px] border-[#d1f44c]">
+                <p className="text-xs font-bold uppercase tracking-wider opacity-50 mb-2">{label}</p>
+                <p className={`text-3xl font-black ${cwvColor(metric.rating)}`}>
+                  {metric.unit === "ms" ? formatMs(metric.value) : metric.value.toFixed(3)}
+                </p>
+                <p className="text-xs opacity-40 mt-1">Target: {target}</p>
+              </div>
+            ))}
+          </div>
+          {/* Opportunities */}
+          {data.opportunities.length > 0 && (
+            <div className="mt-8">
+              <h3 className="text-sm font-bold uppercase tracking-wider opacity-50 mb-3">Top Opportunities</h3>
+              <div className="grid grid-cols-2 gap-3">
+                {data.opportunities.slice(0, 6).map((opp, i) => (
+                  <div key={i} className="flex items-start gap-2 rounded bg-white/5 p-3">
+                    <span className="text-[#d1f44c] text-xs mt-0.5">⚡</span>
+                    <div>
+                      <p className="text-xs font-medium">{opp.title}</p>
+                      {opp.savings && <p className="text-[10px] opacity-40">Save {opp.savings}</p>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </SlideFrame>
       ),
     });

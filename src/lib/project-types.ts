@@ -1,5 +1,6 @@
 import { WireframeBlockId } from "@/data/wireframe-types";
 import { StyleGuide, defaultStyleGuide } from "@/components/cms/style-guide";
+import { SiteAudit, createEmptyAudit } from "@/lib/audit-types";
 
 // ============================================================
 // PROJECT
@@ -45,6 +46,9 @@ export interface Project {
 
   // --- 8. Redirect Map (old → new) ---
   redirects: RedirectEntry[];
+
+  // --- 9. Site Audit Data ---
+  audit: SiteAudit;
 }
 
 export interface Integration {
@@ -421,6 +425,7 @@ export function createProject(partial?: Partial<Project>): Project {
     sitemap: [],
     phases: createDefaultPhases(),
     redirects: [],
+    audit: createEmptyAudit(),
     ...partial,
   };
 }
