@@ -359,6 +359,19 @@ export function ProjectWizard({
                 placeholder="One per line, e.g.&#10;Increase demo requests by 30%&#10;Improve organic traffic"
               />
             </div>
+
+            <div>
+              <label className="mb-1.5 block text-sm font-medium">
+                Current Website URL
+              </label>
+              <input
+                className={inputClass}
+                type="url"
+                placeholder="https://currentsite.com"
+                value={project.currentSiteUrl}
+                onChange={(e) => patch({ currentSiteUrl: e.target.value })}
+              />
+            </div>
           </div>
         );
 
