@@ -18,6 +18,7 @@ import {
   Clock,
   Presentation,
   Zap,
+  BarChart3,
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -36,6 +37,7 @@ import { generateSuggestedSitemap } from "@/lib/sitemap-suggestions";
 import { PhaseTracker } from "@/components/cms/phase-tracker";
 import { RedirectMapEditor } from "@/components/cms/redirect-map";
 import { SiteAuditPanel } from "@/components/cms/site-audit";
+import { AnalyticsUploadsPanel } from "@/components/cms/analytics-uploads";
 import { ProjectBriefButton } from "@/components/cms/project-brief";
 import { FullProjectExportButton } from "@/components/cms/wireframe-export";
 import { ProjectExportButton } from "@/components/cms/project-export-import";
@@ -679,6 +681,22 @@ export function ProjectDashboard({
       </CardHeader>
       <CardContent>
         <SiteAuditPanel project={project} onUpdate={onUpdate} />
+      </CardContent>
+    </Card>
+
+    {/* Analytics Data */}
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <BarChart3 className="size-4" />
+          Analytics & Data
+        </CardTitle>
+        <CardDescription>
+          Upload GA4 CSVs, Search Console exports, SEMrush data, or dashboard screenshots
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <AnalyticsUploadsPanel project={project} onUpdate={onUpdate} />
       </CardContent>
     </Card>
 

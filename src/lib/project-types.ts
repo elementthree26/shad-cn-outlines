@@ -2,6 +2,7 @@ import { WireframeBlockId } from "@/data/wireframe-types";
 import { StyleGuide, defaultStyleGuide } from "@/components/cms/style-guide";
 import { SiteAudit, createEmptyAudit } from "@/lib/audit-types";
 import { DeckSlide } from "@/lib/deck-types";
+import { AnalyticsUpload } from "@/lib/csv-parser";
 
 // ============================================================
 // PROJECT
@@ -53,6 +54,9 @@ export interface Project {
 
   // --- 10. Custom Deck Slides ---
   deckSlides: DeckSlide[];
+
+  // --- 11. Analytics Uploads (CSVs + screenshots) ---
+  analyticsUploads: AnalyticsUpload[];
 }
 
 export interface Integration {
@@ -431,6 +435,7 @@ export function createProject(partial?: Partial<Project>): Project {
     redirects: [],
     audit: createEmptyAudit(),
     deckSlides: [],
+    analyticsUploads: [],
     ...partial,
   };
 }

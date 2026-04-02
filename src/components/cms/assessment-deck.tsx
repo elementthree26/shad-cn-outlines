@@ -16,6 +16,7 @@ import {
   CustomTwoColumnData,
 } from "@/lib/deck-types";
 import { generateDeckSlidesFromDiscovery } from "@/lib/discovery-parser";
+import { AnalyticsUpload, summarizeCSV } from "@/lib/csv-parser";
 
 // ============================================================
 // E3-style assessment deck — white bg, teal dividers
@@ -332,6 +333,63 @@ function generateSlides(project: Project): Slide[] {
             </tbody>
           </table>
         </div>
+      </ContentSlide>
+    ));
+  }
+
+  // ─── Analytics uploads as slides ───
+  const analyticsUploads: AnalyticsUpload[] = (project as any).analyticsUploads || [];
+  const deckUploads = analyticsUploads.filter((u) => u.includeInDeck);
+  for (const upload of deckUploads) {
+    push(`analytics-${upload.id}`, () => (
+      <ContentSlide>
+        <H2>{upload.caption || upload.name}</H2>
+        {upload.csv && (() => {
+          const { keyMetrics, topRows } = summarizeCSV(upload.csv!);
+          return (
+            <div className="grid grid-cols-[1fr_2fr] gap-8">
+              {/* Key metrics */}
+              <div className="space-y-3">
+                {keyMetrics.map((m, i) => (
+                  <div key={i} className="rounded border px-3 py-2.5">
+                    <p className="text-2xl font-bold">{m.value}</p>
+                    <p className="text-[10px] text-[#1f1915]/50">{m.label}</p>
+                  </div>
+                ))}
+                <p className="text-[10px] text-[#1f1915]/30 italic">
+                  Source: {upload.csv!.source === "ga4" ? "Google Analytics 4" : upload.csv!.source === "search-console" ? "Search Console" : upload.csv!.source === "semrush" ? "SEMrush" : "Uploaded data"}
+                </p>
+              </div>
+              {/* Data table */}
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs border-collapse">
+                  <thead><tr className="bg-[#d1f44c]/30">
+                    {upload.csv!.headers.slice(0, 5).map((h, i) => (
+                      <th key={i} className="text-left p-2 font-bold uppercase text-[10px]">{h}</th>
+                    ))}
+                  </tr></thead>
+                  <tbody>
+                    {upload.csv!.rows.slice(0, 15).map((row, ri) => (
+                      <tr key={ri} className="border-t">
+                        {row.slice(0, 5).map((cell, ci) => (
+                          <td key={ci} className={`p-2 ${ci === 0 ? "font-medium" : ""}`}>{cell}</td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {upload.csv!.rows.length > 15 && (
+                  <p className="text-[10px] text-[#1f1915]/30 mt-2">Showing 15 of {upload.csv!.rows.length} rows</p>
+                )}
+              </div>
+            </div>
+          );
+        })()}
+        {upload.imageUrl && (
+          <div className="mt-4">
+            <img src={upload.imageUrl} alt={upload.caption} className="w-full rounded-lg border shadow-sm max-h-[60vh] object-contain" />
+          </div>
+        )}
       </ContentSlide>
     ));
   }
