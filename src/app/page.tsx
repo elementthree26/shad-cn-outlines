@@ -1,6 +1,7 @@
 import { allPages } from "@/data/pages";
 import { PageCard } from "@/components/page-card";
-import { FileText } from "lucide-react";
+import Link from "next/link";
+import { FileText, BarChart3 } from "lucide-react";
 
 export default function Dashboard() {
   return (
@@ -11,7 +12,7 @@ export default function Dashboard() {
             <div className="rounded-lg bg-primary p-2.5">
               <FileText className="h-6 w-6 text-primary-foreground" />
             </div>
-            <div>
+            <div className="flex-1">
               <h1 className="text-2xl font-bold tracking-tight">
                 Page Template Portal
               </h1>
@@ -20,6 +21,13 @@ export default function Dashboard() {
                 for typical website pages
               </p>
             </div>
+            <Link
+              href="/analytics"
+              className="flex items-center gap-1.5 rounded-md bg-muted px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <BarChart3 className="h-4 w-4" />
+              Analytics
+            </Link>
           </div>
         </div>
       </header>
