@@ -4,12 +4,14 @@ import { NextResponse } from "next/server";
 const propertyId = process.env.GA4_PROPERTY_ID;
 
 function getPrivateKey() {
-  const raw = process.env.GA4_PRIVATE_KEY || "";
-  // Handle both literal \n strings and already-real newlines
-  if (raw.includes("\\n")) {
-    return raw.replace(/\\n/g, "\n");
+  // Prefer base64-encoded key (avoids all newline/escaping issues)
+  const b64 = process.env.GA4_PRIVATE_KEY_BASE64;
+  if (b64) {
+    return Buffer.from(b64, "base64").toString("utf-8");
   }
-  return raw;
+  // Fallback: raw key with \n handling
+  const raw = process.env.GA4_PRIVATE_KEY || "";
+  return raw.replace(/\\n/g, "\n");
 }
 
 function getAuth() {
