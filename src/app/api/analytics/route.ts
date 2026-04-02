@@ -3,11 +3,20 @@ import { NextResponse } from "next/server";
 
 const propertyId = process.env.GA4_PROPERTY_ID;
 
+function getPrivateKey() {
+  const raw = process.env.GA4_PRIVATE_KEY || "";
+  // Handle both literal \n strings and already-real newlines
+  if (raw.includes("\\n")) {
+    return raw.replace(/\\n/g, "\n");
+  }
+  return raw;
+}
+
 function getAuth() {
   return new google.auth.GoogleAuth({
     credentials: {
       client_email: process.env.GA4_SERVICE_ACCOUNT_EMAIL,
-      private_key: process.env.GA4_PRIVATE_KEY?.replace(/\\n/g, "\n"),
+      private_key: getPrivateKey(),
     },
     scopes: ["https://www.googleapis.com/auth/analytics.readonly"],
   });
