@@ -64,7 +64,7 @@ export async function GET(request: Request) {
             orderBys: [
               { metric: { metricName: "screenPageViews" }, desc: true },
             ],
-            limit: 10,
+            limit: "10",
           },
         }),
 
@@ -76,7 +76,7 @@ export async function GET(request: Request) {
             dimensions: [{ name: "sessionDefaultChannelGroup" }],
             metrics: [{ name: "sessions" }, { name: "totalUsers" }],
             orderBys: [{ metric: { metricName: "sessions" }, desc: true }],
-            limit: 10,
+            limit: "10",
           },
         }),
 
@@ -99,7 +99,7 @@ export async function GET(request: Request) {
             dimensions: [{ name: "country" }],
             metrics: [{ name: "sessions" }, { name: "totalUsers" }],
             orderBys: [{ metric: { metricName: "sessions" }, desc: true }],
-            limit: 10,
+            limit: "10",
           },
         }),
 
