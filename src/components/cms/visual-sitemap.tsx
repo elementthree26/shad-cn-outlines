@@ -84,7 +84,7 @@ function SitemapCard({
       {/* The card itself */}
       <div
         className={`
-          relative group rounded border-2 bg-card px-3 py-2 min-w-[140px] max-w-[180px] text-center
+          relative group rounded border-2 bg-card px-2 py-1.5 min-w-[100px] max-w-[130px] text-center
           transition-all cursor-pointer hover:shadow-md
           ${isTopLevel
             ? "border-amber-400 bg-amber-50/50 shadow-sm"
@@ -106,11 +106,11 @@ function SitemapCard({
             <button onClick={() => setEditing(false)} className="text-muted-foreground"><X className="h-3 w-3" /></button>
           </div>
         ) : (
-          <p className="text-xs font-medium leading-tight truncate">{page.name}</p>
+          <p className="text-[10px] font-medium leading-tight truncate">{page.name}</p>
         )}
 
         {page.purpose && (
-          <p className="text-[9px] text-muted-foreground mt-0.5 truncate">{page.purpose}</p>
+          <p className="text-[8px] text-muted-foreground mt-0.5 truncate">{page.purpose}</p>
         )}
 
         {/* Status icons */}
@@ -240,7 +240,7 @@ function AddPageInline({
         onChange={(e) => setName(e.target.value)}
         onKeyDown={(e) => { if (e.key === "Enter") handleAdd(); }}
         placeholder="Page name"
-        className="rounded border border-dashed border-amber-300 bg-transparent px-2 py-1 text-xs outline-none focus:border-amber-500 w-28 text-center"
+        className="rounded border border-dashed border-amber-300 bg-transparent px-1.5 py-0.5 text-[10px] outline-none focus:border-amber-500 w-20 text-center"
       />
       <button
         onClick={handleAdd}
@@ -356,7 +356,7 @@ export function VisualSitemap({
         )}
 
         {/* Top-level nav columns */}
-        <div className="relative flex gap-4 items-start">
+        <div className="relative flex gap-2 items-start">
           {/* Horizontal line across all columns */}
           {mainNavPages.length > 1 && (
             <div
@@ -410,7 +410,7 @@ export function VisualSitemap({
                 {footerPages.map((page) => (
                   <div
                     key={page.id}
-                    className="group relative rounded border border-amber-300/50 bg-amber-50/30 px-3 py-1.5 text-xs cursor-pointer hover:border-amber-400 hover:shadow-sm transition-all"
+                    className="group relative rounded border border-amber-300/50 bg-amber-50/30 px-2 py-1 text-[10px] cursor-pointer hover:border-amber-400 hover:shadow-sm transition-all"
                     onClick={() => onPageClick?.(page.id)}
                   >
                     {page.name}
