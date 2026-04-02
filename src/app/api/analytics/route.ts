@@ -3,29 +3,31 @@ import { NextResponse } from "next/server";
 
 const propertyId = process.env.GA4_PROPERTY_ID;
 
-function getPrivateKey() {
-  // Prefer base64-encoded key (avoids all newline/escaping issues)
-  const b64 = process.env.GA4_PRIVATE_KEY_BASE64;
-  if (b64) {
-    return Buffer.from(b64, "base64").toString("utf-8");
-  }
-  // Fallback: raw key with \n handling
-  const raw = process.env.GA4_PRIVATE_KEY || "";
-  return raw.replace(/\\n/g, "\n");
-}
-
 function getAuth() {
+  // Prefer base64-encoded full JSON credentials (avoids all encoding issues)
+  const b64 = process.env.GOOGLE_CREDENTIALS_BASE64;
+  if (b64) {
+    const credentials = JSON.parse(
+      Buffer.from(b64, "base64").toString("utf-8")
+    );
+    return new google.auth.GoogleAuth({
+      credentials,
+      scopes: ["https://www.googleapis.com/auth/analytics.readonly"],
+    });
+  }
+  // Fallback: individual env vars
+  const rawKey = process.env.GA4_PRIVATE_KEY || "";
   return new google.auth.GoogleAuth({
     credentials: {
       client_email: process.env.GA4_SERVICE_ACCOUNT_EMAIL,
-      private_key: getPrivateKey(),
+      private_key: rawKey.replace(/\\n/g, "\n"),
     },
     scopes: ["https://www.googleapis.com/auth/analytics.readonly"],
   });
 }
 
 export async function GET(request: Request) {
-  if (!propertyId || !process.env.GA4_PRIVATE_KEY) {
+  if (!propertyId || (!process.env.GOOGLE_CREDENTIALS_BASE64 && !process.env.GA4_PRIVATE_KEY)) {
     return NextResponse.json(
       { error: "GA4 credentials not configured" },
       { status: 500 }
