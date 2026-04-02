@@ -127,7 +127,44 @@ export function SiteAuditPanel({
 }) {
   const [loading, setLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [ga4Connected, setGa4Connected] = useState(false);
+  const [ga4Properties, setGa4Properties] = useState<{ name: string; displayName: string; propertyId: string }[]>([]);
+  const [selectedProperty, setSelectedProperty] = useState("");
+  const [ga4Loading, setGa4Loading] = useState(false);
   const audit = project.audit || { lastRunAt: null, pagespeed: { mobile: null, desktop: null }, ga4: null, searchConsole: null };
+
+  // Check if Google is connected and load properties
+  useState(() => {
+    fetch("/api/ga4?action=properties")
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.properties) {
+          setGa4Connected(true);
+          setGa4Properties(d.properties);
+        }
+      })
+      .catch(() => {});
+  });
+
+  const fetchGA4Data = async () => {
+    if (!selectedProperty) return;
+    setGa4Loading(true);
+    try {
+      const res = await fetch(`/api/ga4?action=report&propertyId=${selectedProperty}`);
+      if (!res.ok) throw new Error("Failed");
+      const data = await res.json();
+      const newAudit = {
+        ...audit,
+        lastRunAt: new Date().toISOString(),
+        ga4: { ...data, fetchedAt: new Date().toISOString(), dateRange: "Last 90 days" },
+      };
+      onUpdate({ ...project, audit: newAudit });
+    } catch {
+      setError("Failed to pull GA4 data");
+    } finally {
+      setGa4Loading(false);
+    }
+  };
 
   const runPageSpeed = async (strategy: "mobile" | "desktop") => {
     const url = project.currentSiteUrl;
@@ -205,14 +242,112 @@ export function SiteAuditPanel({
         </div>
       )}
 
-      {/* Future integrations placeholder */}
-      <div className="rounded-lg border border-dashed p-4 text-center">
-        <p className="text-xs text-muted-foreground">
-          <strong>Coming soon:</strong> Google Analytics 4, Search Console, SEMrush integration
-        </p>
-        <p className="text-[10px] text-muted-foreground/60 mt-1">
-          Connect via OAuth to auto-pull traffic data, keyword rankings, and indexing status
-        </p>
+      {/* Google Analytics 4 Integration */}
+      <div className="rounded-lg border p-4">
+        <div className="flex items-center justify-between mb-3">
+          <h4 className="text-xs font-bold flex items-center gap-1.5">
+            <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" fill="#F9AB00"/><path d="M12 2v10l8.66 5A10 10 0 0012 2z" fill="#E37400"/></svg>
+            Google Analytics 4
+          </h4>
+          {!ga4Connected ? (
+            <Button
+              size="xs"
+              variant="outline"
+              className="gap-1"
+              onClick={() => {
+                window.location.href = `/api/auth/google?projectId=${project.id}`;
+              }}
+            >
+              Connect GA4
+            </Button>
+          ) : (
+            <Badge variant="outline" className="text-[9px] bg-green-50 text-green-700 border-green-300">Connected</Badge>
+          )}
+        </div>
+
+        {ga4Connected && (
+          <div className="space-y-3">
+            {/* Property selector */}
+            {ga4Properties.length > 0 && (
+              <select
+                className="w-full rounded border border-border bg-background px-2.5 py-1.5 text-xs outline-none"
+                value={selectedProperty}
+                onChange={(e) => setSelectedProperty(e.target.value)}
+              >
+                <option value="">Select a GA4 property...</option>
+                {ga4Properties.map((p) => (
+                  <option key={p.propertyId} value={p.propertyId}>{p.displayName}</option>
+                ))}
+              </select>
+            )}
+
+            {selectedProperty && (
+              <Button size="xs" onClick={fetchGA4Data} disabled={ga4Loading}>
+                {ga4Loading ? <Loader2 className="h-3 w-3 animate-spin mr-1" /> : <Zap className="h-3 w-3 mr-1" />}
+                Pull GA4 Data
+              </Button>
+            )}
+
+            {/* GA4 Results */}
+            {audit.ga4 && (
+              <div className="space-y-3">
+                <div className="grid grid-cols-4 gap-3">
+                  {[
+                    { label: "Sessions", value: audit.ga4.totalSessions.toLocaleString() },
+                    { label: "Users", value: audit.ga4.totalUsers.toLocaleString() },
+                    { label: "Bounce Rate", value: `${audit.ga4.bounceRate.toFixed(1)}%` },
+                    { label: "Avg Duration", value: `${Math.round(audit.ga4.avgSessionDuration)}s` },
+                  ].map((s) => (
+                    <div key={s.label} className="rounded border p-2.5 text-center">
+                      <p className="text-lg font-bold">{s.value}</p>
+                      <p className="text-[10px] text-muted-foreground">{s.label}</p>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Top Pages */}
+                {audit.ga4.topPages.length > 0 && (
+                  <div>
+                    <p className="text-xs font-bold mb-2">Top Pages (90 days)</p>
+                    <div className="space-y-1 max-h-40 overflow-y-auto">
+                      {audit.ga4.topPages.slice(0, 10).map((p, i) => (
+                        <div key={i} className="flex items-center justify-between text-[10px] py-0.5">
+                          <span className="font-mono truncate flex-1">{p.path}</span>
+                          <span className="font-bold ml-2">{p.sessions.toLocaleString()}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Traffic Sources */}
+                {audit.ga4.trafficSources.length > 0 && (
+                  <div>
+                    <p className="text-xs font-bold mb-2">Traffic Sources</p>
+                    <div className="space-y-1">
+                      {audit.ga4.trafficSources.map((s, i) => (
+                        <div key={i} className="flex items-center gap-2 text-[10px]">
+                          <span className="flex-1">{s.source}</span>
+                          <div className="w-20 h-1.5 rounded-full bg-muted overflow-hidden">
+                            <div className="h-full rounded-full bg-primary" style={{ width: `${s.percentage}%` }} />
+                          </div>
+                          <span className="font-mono w-10 text-right">{s.percentage.toFixed(0)}%</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {!ga4Connected && (
+          <p className="text-[10px] text-muted-foreground">
+            Connect your Google account to pull sessions, users, bounce rate, top pages, and traffic sources directly from GA4.
+            Requires GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET env vars.
+          </p>
+        )}
       </div>
     </div>
   );
